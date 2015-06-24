@@ -30,75 +30,17 @@ public class Foo {
 
     public static final String TAG = "Foo";
 
-    private static final long UPDATE_INTERVAL = 2000;
-
-    private MainActivityPresenter mPresenter;
-
-    public Foo(MainActivityPresenter mainActivityPresenter) {
-        mPresenter = mainActivityPresenter;
-    }
-
-    private double mLatitude;
-    private double mLongitude;
-
-    private LocationManagerProxy mLocationManagerProxy;
-    private AMapLocationListener mAMapLocationListener;
-    public void init() {
-        mLocationManagerProxy = LocationManagerProxy.getInstance(MeetUApplication.getApplication());
-        mAMapLocationListener = new AMapLocationListener() {
-            @Override
-            public void onLocationChanged(AMapLocation aMapLocation) {
-                mLatitude = aMapLocation.getLatitude();
-                mLongitude = aMapLocation.getLongitude();
-
-                Log.d(TAG, String.format("onLocationChanged: '%f' '%f'", mLatitude, mLongitude));
-            }
-
-            @Override
-            public void onLocationChanged(Location location) {
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-        mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, UPDATE_INTERVAL, 0, mAMapLocationListener);
-    }
-
-    public void release() {
-        mLocationManagerProxy.removeUpdates(mAMapLocationListener);
-    }
-
-    public Location getLocation() {
-        Location location = new Location("");
-        location.setLatitude(mLatitude);
-        location.setLongitude(mLongitude);
-
-        return location;
-    }
-
-    public String toUrlRequest(Location location) {
+    public static String toUrlRequest(Location location) {
         String id = ((TelephonyManager) (MeetUApplication.getApplication().getSystemService(Context.TELEPHONY_SERVICE))).getDeviceId();
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         return String.format("http://45.55.26.123:8080/meetu/meet?id=%s&latitude=%.6f&longitude=%.6f", id, latitude, longitude);
     }
 
-    public interface onHttpPostResponse {
+    public static interface onHttpPostResponse {
         void onResponse(String response);
     }
-    public void httpPost(final String request, final onHttpPostResponse onHttpPostResponse) {
+    public static void httpPost(final String request, final onHttpPostResponse onHttpPostResponse) {
         new AsyncTask<Void, Integer, String>() {
             @Override
             protected String doInBackground(Void... params) {

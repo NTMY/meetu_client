@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
         mPresenter = new MainActivityPresenter(this);
 
         mSwitch = (Switch) findViewById(R.id.btn_switch);
+        mSwitch.setChecked(mPresenter.getServiceState());
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
