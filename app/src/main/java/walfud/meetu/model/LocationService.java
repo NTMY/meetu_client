@@ -14,6 +14,7 @@ import com.amap.api.location.LocationProviderProxy;
 
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.ServiceBinder;
+import walfud.meetu.Utils;
 
 /**
  * Created by song on 2015/6/24.
@@ -33,7 +34,7 @@ public class LocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mLocationManagerProxy = LocationManagerProxy.getInstance(MeetUApplication.getApplication());
+        mLocationManagerProxy = LocationManagerProxy.getInstance(MeetUApplication.getContext());
         mAMapLocationListener = new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
@@ -82,7 +83,7 @@ public class LocationService extends Service {
         return new ServiceBinder<>(this);
     }
 
-    //
+    // Model Function
     public Location getLocation() {
         Location location = new Location("");
         location.setLatitude(mLatitude);
@@ -91,11 +92,14 @@ public class LocationService extends Service {
         return location;
     }
 
-    public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getApplication(), LocationService.class);
+    public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), LocationService.class);
     public static void startService() {
-        MeetUApplication.getApplication().startService(SERVICE_INTENT);
+        MeetUApplication.getContext().startService(SERVICE_INTENT);
     }
     public static void stopService() {
-        MeetUApplication.getApplication().stopService(SERVICE_INTENT);
+        MeetUApplication.getContext().stopService(SERVICE_INTENT);
+    }
+    public static boolean isServiceRunning() {
+        return Utils.isServiceRunning(MeetUApplication.getContext(), SERVICE_INTENT);
     }
 }

@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import walfud.meetu.R;
 import walfud.meetu.presenter.MainActivityPresenter;
@@ -60,5 +61,10 @@ public class MainActivity extends Activity {
 
     public void onClick(View v) {
         mPresenter.onClick();
+    }
+
+    // View Funtion
+    public void onBindingSuccess() {
+        Toast.makeText(this, "Binding service successfully", Toast.LENGTH_SHORT).show();
     }
 }

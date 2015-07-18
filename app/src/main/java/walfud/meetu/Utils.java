@@ -3,13 +3,15 @@ package walfud.meetu;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PointF;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
+import android.os.AsyncTask;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -28,5 +30,43 @@ public class Utils {
         }
 
         return false;
+    }
+
+    public static interface OnHttpPostResponse {
+        void onResponse(String response);
+    }
+    public static void httpPost(final String request, final OnHttpPostResponse onHttpPostResponse) {
+        new AsyncTask<Void, Integer, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                HttpClient httpClient = new DefaultHttpClient();
+                // TODO: set timeout
+                try {
+                    HttpPost httpPost = new HttpPost(request);
+                    HttpResponse httpResponse = httpClient.execute(httpPost);
+
+                    HttpEntity httpEntity = httpResponse.getEntity();
+                    if (httpEntity != null) {
+                        InputStream inputStream = httpEntity.getContent();
+                        byte[] buf = new byte[2048];        // TODO: while != -1
+                        inputStream.read(buf);
+                        inputStream.close();
+
+                        return new String(buf);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return "";
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                onHttpPostResponse.onResponse(s);
+            }
+        }.execute();
     }
 }

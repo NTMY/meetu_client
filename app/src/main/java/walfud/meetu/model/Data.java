@@ -1,40 +1,52 @@
 package walfud.meetu.model;
 
+import android.content.Context;
+import android.location.Location;
+import android.telephony.TelephonyManager;
+
+import walfud.meetu.MeetUApplication;
+
 /**
  * Created by song on 2015/6/23.
  */
 public class Data {
-    private String id;
-    private double latitude;
-    private double longitude;
+    private String mId;
+    private double mLatitude;
+    private double mLongitude;
 
     public Data(String id, double latitude, double longitude) {
-        this.id = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        mId = id;
+        mLatitude = latitude;
+        mLongitude = longitude;
+    }
+
+    public Data(Location location) {
+        mId = ((TelephonyManager) (MeetUApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE))).getDeviceId();
+        mLatitude = location.getLatitude();
+        mLongitude = location.getLongitude();
     }
 
     public String getId() {
-        return id;
+        return mId;
     }
 
     public void setId(String id) {
-        this.id = id;
+        mId = id;
     }
 
     public double getLatitude() {
-        return latitude;
+        return mLatitude;
     }
 
     public void setLatitude(double latitude) {
-        this.latitude = latitude;
+        mLatitude = latitude;
     }
 
     public double getLongitude() {
-        return longitude;
+        return mLongitude;
     }
 
     public void setLongitude(double longitude) {
-        this.longitude = longitude;
+        mLongitude = longitude;
     }
 }

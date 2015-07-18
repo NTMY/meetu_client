@@ -1,7 +1,6 @@
 package walfud.meetu.presenter;
 
 import android.content.ComponentName;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.location.Location;
 import android.os.IBinder;
@@ -9,8 +8,8 @@ import android.widget.Toast;
 
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.ServiceBinder;
-import walfud.meetu.Utils;
-import walfud.meetu.model.Foo;
+import walfud.meetu.model.Data;
+import walfud.meetu.model.DataRequest;
 import walfud.meetu.model.LocationService;
 import walfud.meetu.view.MainActivity;
 
@@ -32,6 +31,10 @@ public class MainActivityPresenter {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mModel = ((ServiceBinder<LocationService>) service).getService();
+
+                if (mModel != null) {
+                    mView.onBindingSuccess();
+                }
             }
 
             @Override
@@ -40,42 +43,30 @@ public class MainActivityPresenter {
             }
         };
 
-        if (getServiceState()) {
-            MeetUApplication.getApplication().bindService(LocationService.SERVICE_INTENT, mServiceConnection, 0);
+        if (LocationService.isServiceRunning()) {
+            MeetUApplication.getContext().bindService(LocationService.SERVICE_INTENT, mServiceConnection, 0);
         }
     }
 
-    // On Event
+    // View Event
     public void onSwitchChanged(boolean isChecked) {
         if (isChecked) {
             LocationService.startService();
-            MeetUApplication.getApplication().bindService(LocationService.SERVICE_INTENT, mServiceConnection, 0);
+            MeetUApplication.getContext().bindService(LocationService.SERVICE_INTENT, mServiceConnection, 0);
         } else {
-            MeetUApplication.getApplication().unbindService(mServiceConnection);
+            MeetUApplication.getContext().unbindService(mServiceConnection);
             LocationService.stopService();
         }
     }
 
     public void onClick() {
+        // TODO: debug
         Location location = mModel.getLocation();
-        String httpRequest = Foo.toUrlRequest(location);
-
-        Toast.makeText(MeetUApplication.getApplication(), String.format("request(%s)",
-                        httpRequest),
-                Toast.LENGTH_SHORT).show();
-
-        Foo.httpPost(httpRequest, new Foo.onHttpPostResponse() {
-            @Override
-            public void onResponse(String response) {
-                Toast.makeText(MeetUApplication.getApplication(), String.format("response(%s)",
-                                response),
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        Toast.makeText(MeetUApplication.getContext(), new DataRequest(new Data(location), null).toUrlRequest(), Toast.LENGTH_SHORT).show();
     }
 
     // Presenter Function
     public boolean getServiceState() {
-        return Utils.isServiceRunning(MeetUApplication.getApplication(), LocationService.SERVICE_INTENT);
+        return LocationService.isServiceRunning();
     }
 }
