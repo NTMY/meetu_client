@@ -4,6 +4,8 @@ import android.content.Context;
 import android.location.Location;
 import android.telephony.TelephonyManager;
 
+import java.util.Date;
+
 import walfud.meetu.MeetUApplication;
 
 /**
@@ -13,18 +15,21 @@ public class Data {
     private String mImei;
     private double mLatitude;
     private double mLongitude;
+    private Date mUploadTime;
 
     public Data() {
     }
-    public Data(String imei, double latitude, double longitude) {
+    public Data(String imei, double latitude, double longitude, Date uploadTime) {
         mImei = imei;
         mLatitude = latitude;
         mLongitude = longitude;
+        mUploadTime = uploadTime;
     }
     public Data(Location location) {
         mImei = ((TelephonyManager) (MeetUApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE))).getDeviceId();
         mLatitude = location.getLatitude();
         mLongitude = location.getLongitude();
+        mUploadTime = new Date();
     }
 
     public String getImei() {
@@ -49,5 +54,13 @@ public class Data {
 
     public void setLongitude(double longitude) {
         mLongitude = longitude;
+    }
+
+    public Date getUploadTime() {
+        return mUploadTime;
+    }
+
+    public void setUploadTime(Date uploadTime) {
+        mUploadTime = uploadTime;
     }
 }

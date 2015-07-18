@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,21 +47,24 @@ public class DataRequest {
 
                 // Parse server response
                 // <beans>
-                //   <list>
-                //       <locationCurr>
-                //           <imei>12345678</imei>
-                //           <longitude>50.000000</longitude>
-                //           <latitude>10.000000</latitude>
-                //       </locationCurr>
-                //   </list>
+                //     <list>
+                //         <locationCurr>
+                //             <imei>imei001</imei>
+                //             <longitude>50.0</longitude>
+                //             <latitude>10.0</latitude>
+                //             <uploadTime>2015-07-18 21:52:47</uploadTime>
+                //         </locationCurr>
+                //     </list>
                 // </beans>
-//                String strXmlResponse = "<beans><list></list></beans>";
+                String strXmlResponse = "<beans><list><locationCurr><imei>imei002</imei><longitude>50.0</longitude><latitude>10.0</latitude><uploadTime>2015-07-18 21:52:47</uploadTime></locationCurr></list></beans>";
 
                 List<Data> friendsList = new ArrayList<>();
 
                 try {
                     ObjectMapper jsonMapper = new ObjectMapper();
-                    JSONObject beansNode = XML.toJSONObject(response);
+                    jsonMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
+                    JSONObject beansNode = XML.toJSONObject(strXmlResponse);
                     JSONObject listNode = beansNode.getJSONObject("beans");
                     Object locationCurrNode = listNode.get("list");
                     if (locationCurrNode instanceof JSONObject) {
