@@ -87,11 +87,15 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="jackson-module-jaxb-annotations-2.6.0-rc4" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="java-json" level="project" />
     <orderEntry type="library" exported="" name="jackson-annotations-2.6.0" level="project" />
     <orderEntry type="library" exported="" name="jackson-core-2.6.0" level="project" />
-    <orderEntry type="library" exported="" name="jackson-databind-2.6.0-rc3" level="project" />
     <orderEntry type="library" exported="" name="Android_Location_V1.3.2" level="project" />
+    <orderEntry type="library" exported="" name="stax2-api-3.1.4" level="project" />
+    <orderEntry type="library" exported="" name="jackson-dataformat-xml-2.6.0-rc4" level="project" />
+    <orderEntry type="library" exported="" name="jackson-databind-2.6.0-rc4" level="project" />
   </component>
 </module>
 

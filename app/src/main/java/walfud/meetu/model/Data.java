@@ -10,28 +10,29 @@ import walfud.meetu.MeetUApplication;
  * Created by song on 2015/6/23.
  */
 public class Data {
-    private String mId;
+    private String mImei;
     private double mLatitude;
     private double mLongitude;
 
-    public Data(String id, double latitude, double longitude) {
-        mId = id;
+    public Data() {
+    }
+    public Data(String imei, double latitude, double longitude) {
+        mImei = imei;
         mLatitude = latitude;
         mLongitude = longitude;
     }
-
     public Data(Location location) {
-        mId = ((TelephonyManager) (MeetUApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE))).getDeviceId();
+        mImei = ((TelephonyManager) (MeetUApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE))).getDeviceId();
         mLatitude = location.getLatitude();
         mLongitude = location.getLongitude();
     }
 
-    public String getId() {
-        return mId;
+    public String getImei() {
+        return mImei;
     }
 
-    public void setId(String id) {
-        mId = id;
+    public void setImei(String imei) {
+        mImei = imei;
     }
 
     public double getLatitude() {

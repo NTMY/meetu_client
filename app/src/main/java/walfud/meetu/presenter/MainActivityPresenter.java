@@ -62,7 +62,9 @@ public class MainActivityPresenter {
     public void onClick() {
         // TODO: debug
         Location location = mModel.getLocation();
-        Toast.makeText(MeetUApplication.getContext(), new DataRequest(new Data(location), null).toUrlRequest(), Toast.LENGTH_SHORT).show();
+        DataRequest dataRequest = new DataRequest(new Data(location), null);
+        dataRequest.send();
+        Toast.makeText(MeetUApplication.getContext(), dataRequest.toUrlRequest(), Toast.LENGTH_SHORT).show();
     }
 
     // Presenter Function
