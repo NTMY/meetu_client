@@ -5,35 +5,36 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.Switch;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import walfud.meetu.R;
+import walfud.meetu.model.Data;
+import walfud.meetu.model.DataRequest;
 import walfud.meetu.presenter.MainActivityPresenter;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener, DataRequest.OnDataRequestListener {
 
-    private Switch mSwitch;
-
+    private RadarView mRadarView;
+    private ListView mNearbyFriendsListView;
     private MainActivityPresenter mPresenter;
 
+    // Event bus
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPresenter = new MainActivityPresenter(this);
+        mRadarView = (RadarView) findViewById(R.id.radar_view);
+        mNearbyFriendsListView = (ListView) findViewById(R.id.nearby_friends_list);
 
-        mSwitch = (Switch) findViewById(R.id.btn_switch);
-        mSwitch.setChecked(mPresenter.getServiceState());
-        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mPresenter.onSwitchChanged(isChecked);
-            }
-        });
+        mPresenter = new MainActivityPresenter(this);
+        mRadarView.setOnClickListener(this);
+        mRadarView.start();
     }
 
 
@@ -59,12 +60,40 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
     public void onClick(View v) {
-        mPresenter.onClick();
+        switch (v.getId()) {
+            case R.id.radar_view:
+                mPresenter.onRadarViewClick();
+                break;
+
+            default:
+                break;
+        }
     }
 
-    // View Funtion
+    // View Function
     public void onBindingSuccess() {
         Toast.makeText(this, "Binding service successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNoFriendNearby() {
+        mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[] {}));
+    }
+
+    @Override
+    public void onFoundFriends(List<Data> nearbyFriendList) {
+        String[] nearbyFriends = new String[nearbyFriendList.size()];
+        for (int i = 0; i < nearbyFriends.length; i++) {
+            nearbyFriends[i] = nearbyFriendList.get(i).getImei();
+        }
+
+        mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, nearbyFriends));
+    }
+
+    @Override
+    public void onError(int errorCode) {
+        Toast.makeText(this, String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
     }
 }

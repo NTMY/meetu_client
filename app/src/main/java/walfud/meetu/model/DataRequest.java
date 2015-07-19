@@ -23,7 +23,7 @@ public class DataRequest {
     public static final String TAG = "DataSender";
 
     public static final int ERROR_UNKNOWN = 0;
-    public interface OnRequestListener {
+    public interface OnDataRequestListener {
         void onNoFriendNearby();
 
         void onFoundFriends(List<Data> nearbyFriendList);
@@ -32,18 +32,14 @@ public class DataRequest {
     }
 
     private Data mData;
-    private OnRequestListener mListener;
+    private OnDataRequestListener mListener;
 
-    public DataRequest(Data data, OnRequestListener listener) {
+    public DataRequest(Data data, OnDataRequestListener listener) {
         mData = data;
         mListener = listener;
         mOnHttpPostResponse = new Utils.OnHttpPostResponse() {
             @Override
             public void onResponse(String response) {
-
-                Toast.makeText(MeetUApplication.getContext(), String.format("response(%s)",
-                                response),
-                        Toast.LENGTH_SHORT).show();
 
                 // Parse server response
                 // <beans>
@@ -110,10 +106,6 @@ public class DataRequest {
 
     public boolean send() {
         String httpRequest = toUrlRequest();
-
-        Toast.makeText(MeetUApplication.getContext(), String.format("request(%s)",
-                        httpRequest),
-                Toast.LENGTH_SHORT).show();
 
         Utils.httpPost(httpRequest, mOnHttpPostResponse);
 
