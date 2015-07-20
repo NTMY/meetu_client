@@ -11,7 +11,8 @@
 
     </RelativeLayout>
 
-    <LinearLayout        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/title_bar_layout"
         android:gravity="center_horizontal"
@@ -19,8 +20,16 @@
 
         <walfud.meetu.view.RadarView
             android:id="@+id/radar_view"
-            android:layout_width="210dp"
-            android:layout_height="210dp" />
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/radar_stub"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:onClick="onClick"
+            android:text="点击我查看\n附近好友"/>
 
         <ListView
             android:id="@+id/nearby_friends_list"

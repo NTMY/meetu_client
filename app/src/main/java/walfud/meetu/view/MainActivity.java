@@ -64,6 +64,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.radar_view:
+            case R.id.radar_stub:
                 mPresenter.onRadarViewClick();
                 break;
 
