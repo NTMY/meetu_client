@@ -4,9 +4,7 @@ import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.location.Location;
 import android.os.IBinder;
-import android.widget.Toast;
-
-import java.util.List;
+import android.util.Log;
 
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.ServiceBinder;
@@ -24,6 +22,22 @@ public class MainActivityPresenter {
 
     private MainActivity mView;
     private LocationService mLocationService;
+    private static class MyLocationListener implements LocationService.OnLocationListener {
+        private Location mLastLocation = new Location("");
+
+        @Override
+        public void onLocation(Location location) {
+            mLastLocation = location;
+
+            // Upload my location to server
+            DataRequest dataRequest = new DataRequest(new Data(mLastLocation), null);
+            dataRequest.send();
+
+            // Debug
+            Log.d(TAG, String.format("onLocation: latitude(%.6f), longitude(%.6f)", location.getLatitude(), location.getLongitude()));
+        }
+    }
+    private MyLocationListener mLocationListener = new MyLocationListener();
 
     private ServiceConnection mServiceConnection;
 
@@ -33,6 +47,7 @@ public class MainActivityPresenter {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mLocationService = ((ServiceBinder<LocationService>) service).getService();
+                mLocationService.setOnLocationListener(mLocationListener);
 
                 if (mLocationService != null) {
                     mView.onBindingSuccess();
@@ -56,8 +71,7 @@ public class MainActivityPresenter {
 
     // View Event
     public void onRadarViewClick() {
-        Location location = mLocationService.getLocation();
-        DataRequest dataRequest = new DataRequest(new Data(location), mView);
+        DataRequest dataRequest = new DataRequest(new Data(mLocationListener.mLastLocation), mView);
         dataRequest.send();
     }
 

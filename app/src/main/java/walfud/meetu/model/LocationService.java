@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.ServiceBinder;
@@ -23,25 +25,38 @@ public class LocationService extends Service {
 
     public static final String TAG = "LocationService";
 
+    public interface OnLocationListener {
+        /**
+         * Called from NON-UI thread.
+         * @param location
+         */
+        void onLocation(Location location);
+    }
+    private OnLocationListener mLocationListener;
+
     private static final long UPDATE_INTERVAL = 2000;
 
     private LocationManagerProxy mLocationManagerProxy;
-    private AMapLocationListener mAMapLocationListener;
 
-    private double mLatitude;
-    private double mLongitude;
+    private Timer mTimer = new Timer();
+    private TimerTask mReportSelfTimerTask = new TimerTask() {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mLocationManagerProxy = LocationManagerProxy.getInstance(MeetUApplication.getContext());
-        mAMapLocationListener = new AMapLocationListener() {
+//        private Object mWaiter = new Object();
+
+        private AMapLocationListener mAMapLocationListener = new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
-                mLatitude = aMapLocation.getLatitude();
-                mLongitude = aMapLocation.getLongitude();
 
-                Log.d(TAG, String.format("onLocationChanged: '%f' '%f'", mLatitude, mLongitude));
+                if (mLocationListener != null) {
+
+                    Location location = new Location("");
+                    location.setLatitude(aMapLocation.getLatitude());
+                    location.setLongitude(aMapLocation.getLongitude());
+
+                    mLocationListener.onLocation(location);
+                }
+
+//                mWaiter.notify();
             }
 
             @Override
@@ -63,7 +78,38 @@ public class LocationService extends Service {
 
             }
         };
-        mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, UPDATE_INTERVAL, 0, mAMapLocationListener);
+
+        @Override
+        public void run() {
+            mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, -1, 0, mAMapLocationListener);
+//            mLocationManagerProxy.setGpsEnable(false);
+
+//            try {
+//                mWaiter.wait(UPDATE_INTERVAL / 2);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            mLocationManagerProxy.removeUpdates(mAMapLocationListener);
+        }
+    };
+    private TimerTask mSearchOthersTimerTask = new TimerTask() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        // Location SDK
+        mLocationManagerProxy = LocationManagerProxy.getInstance(MeetUApplication.getContext());
+
+        // Driver
+        mTimer.schedule(mReportSelfTimerTask, 0, UPDATE_INTERVAL);
+        mTimer.schedule(mSearchOthersTimerTask, 0, UPDATE_INTERVAL);
     }
 
     @Override
@@ -75,7 +121,8 @@ public class LocationService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        mLocationManagerProxy.removeUpdates(mAMapLocationListener);
+        mTimer.cancel();
+        mLocationManagerProxy.destroy();
     }
 
     @Override
@@ -84,12 +131,8 @@ public class LocationService extends Service {
     }
 
     // Model Function
-    public Location getLocation() {
-        Location location = new Location("");
-        location.setLatitude(mLatitude);
-        location.setLongitude(mLongitude);
-
-        return location;
+    public void setOnLocationListener(OnLocationListener locationListener) {
+        mLocationListener = locationListener;
     }
 
     public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), LocationService.class);

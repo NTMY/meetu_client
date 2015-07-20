@@ -87,17 +87,23 @@ public class DataRequest {
                         } else {
 
                             // Error
-                            mListener.onError(ERROR_UNKNOWN);
+                            if (mListener != null) {
+                                mListener.onError(ERROR_UNKNOWN);
+                            }
                         }
                     } else {
                         // No friend nearby
-                        mListener.onNoFriendNearby();
+                        if (mListener != null) {
+                            mListener.onNoFriendNearby();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                mListener.onFoundFriends(friendsList);
+                if (mListener != null) {
+                    mListener.onFoundFriends(friendsList);
+                }
             }
         };
     }
