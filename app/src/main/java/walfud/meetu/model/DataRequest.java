@@ -1,6 +1,6 @@
 package walfud.meetu.model;
 
-import android.widget.Toast;
+import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import walfud.meetu.MeetUApplication;
 import walfud.meetu.Utils;
 
 /**
@@ -40,6 +39,8 @@ public class DataRequest {
         mOnHttpPostResponse = new Utils.OnHttpPostResponse() {
             @Override
             public void onResponse(String response) {
+
+                Log.d(TAG, String.format("`DataRequest.onResponse` response(%s)", response));
 
                 // Parse server response
                 // <beans>
@@ -114,6 +115,8 @@ public class DataRequest {
         String httpRequest = toUrlRequest();
 
         Utils.httpPost(httpRequest, mOnHttpPostResponse);
+
+        Log.d(TAG, String.format("`DataRequest.send` url(%s)", httpRequest));
 
         return true;
     }

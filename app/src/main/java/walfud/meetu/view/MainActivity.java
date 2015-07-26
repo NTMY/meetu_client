@@ -16,19 +16,17 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import walfud.meetu.R;
 import walfud.meetu.StaticHandler;
 import walfud.meetu.model.Data;
-import walfud.meetu.model.DataRequest;
 import walfud.meetu.presenter.MainActivityPresenter;
 
 
 public class MainActivity extends Activity
-        implements View.OnClickListener, DataRequest.OnDataRequestListener, StaticHandler.OnHandleMessage {
+        implements View.OnClickListener, StaticHandler.OnHandleMessage {
 
     private Button mRadarView;
     private ListView mNearbyFriendsListView;
@@ -69,7 +67,7 @@ public class MainActivity extends Activity
         mExit = (Button) findViewById(R.id.exit);
 
         mPresenter = new MainActivityPresenter(this);
-        mPresenter.init(this);
+        mPresenter.init();
         mRadarView.setOnClickListener(this);
         mNavigation.setOnClickListener(this);
         mAutoReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -148,24 +146,13 @@ public class MainActivity extends Activity
     }
 
     // View Function
-    @Override
-    public void onNoFriendNearby() {
-        mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{}));
-    }
-
-    @Override
-    public void onFoundFriends(List<Data> nearbyFriendList) {
-        String[] nearbyFriends = new String[nearbyFriendList.size()];
+    public void showSearchResult(List<Data> friendList) {
+        String[] nearbyFriends = new String[friendList.size()];
         for (int i = 0; i < nearbyFriends.length; i++) {
-            nearbyFriends[i] = nearbyFriendList.get(i).getImei();
+            nearbyFriends[i] = friendList.get(i).getImei();
         }
 
         mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, nearbyFriends));
-    }
-
-    @Override
-    public void onError(int errorCode) {
-        Toast.makeText(this, String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
     }
 
     private boolean mIsNavShowing = false;

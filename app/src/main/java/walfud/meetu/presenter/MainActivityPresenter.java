@@ -3,11 +3,14 @@ package walfud.meetu.presenter;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.os.Message;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.ServiceBinder;
+import walfud.meetu.model.Data;
 import walfud.meetu.model.DataRequest;
 import walfud.meetu.model.Model;
 import walfud.meetu.view.MainActivity;
@@ -22,6 +25,24 @@ public class MainActivityPresenter {
     private MainActivity mView;
     private Model mModel;
     private ServiceConnection mEngineServiceConnection = new ServiceConnection() {
+
+        private DataRequest.OnDataRequestListener mOnSearchListener = new DataRequest.OnDataRequestListener() {
+            @Override
+            public void onNoFriendNearby() {
+                mView.showSearchResult(new ArrayList<Data>());
+            }
+
+            @Override
+            public void onFoundFriends(List<Data> nearbyFriendList) {
+                mView.showSearchResult(nearbyFriendList);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                Toast.makeText(MeetUApplication.getContext(), String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
+            }
+        };
+
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mModel = ((ServiceBinder<Model>) service).getService();
@@ -81,10 +102,7 @@ public class MainActivityPresenter {
     }
 
     // Presenter Function
-    private DataRequest.OnDataRequestListener mOnSearchListener;
-    public void init(DataRequest.OnDataRequestListener listener) {
-        mOnSearchListener = listener;
-
+    public void init() {
         if (mModel == null) {
             Model.startService();
             MeetUApplication.getContext().bindService(Model.SERVICE_INTENT, mEngineServiceConnection, 0);
