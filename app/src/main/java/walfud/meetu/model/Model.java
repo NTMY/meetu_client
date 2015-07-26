@@ -41,6 +41,7 @@ public class Model extends Service {
         super.onCreate();
 
         mLocationHelper = new LocationHelper();
+        mLocationHelper.init();
     }
 
     @Override
@@ -53,6 +54,7 @@ public class Model extends Service {
         super.onDestroy();
 
         mTimer.cancel();
+        mLocationHelper.destroy();
     }
 
     @Override
