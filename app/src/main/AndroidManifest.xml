@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".model.EngineService" />
+        <service android:name=".model.Model" />
     </application>
 
 </manifest>

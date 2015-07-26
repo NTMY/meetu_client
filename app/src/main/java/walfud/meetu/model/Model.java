@@ -1,84 +1,98 @@
 package walfud.meetu.model;
 
-import android.content.ComponentName;
-import android.content.ServiceConnection;
+import android.app.Service;
+import android.content.Intent;
 import android.os.IBinder;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.ServiceBinder;
-import walfud.meetu.presenter.MainActivityPresenter;
+import walfud.meetu.Utils;
 
 /**
- * It's a wrapper class, transit method call to the `EngineService` class.
- * Created by song on 2015/7/26.
+ * Created by song on 2015/6/24.
  */
-public class Model {
+public class Model extends Service {
 
-    public static final String TAG = "Model";
+    public static final String TAG = "EngineService";
 
-    private MainActivityPresenter mPresenter;
-    private EngineService mEngineService;
-    private ServiceConnection mEngineServiceConnection = new ServiceConnection() {
+    private LocationHelper mLocationHelper;
+
+    private static final long UPDATE_INTERVAL = 2000;
+
+    private Timer mTimer = new Timer();
+    private TimerTask mReportSelfTimerTask = new TimerTask() {
         @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mEngineService = ((ServiceBinder<EngineService>) service).getService();
-
-            mEngineService.startAutoReportSelf();
-            mEngineService.startAutoSearchNearby();
+        public void run() {
+            mLocationHelper.reportSelf();
         }
-
+    };
+    private TimerTask mSearchOthersTimerTask = new TimerTask() {
         @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mEngineService = null;
+        public void run() {
+            mLocationHelper.searchNearby();
         }
     };
 
-    public Model(MainActivityPresenter presenter) {
-        mPresenter = presenter;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        mLocationHelper = new LocationHelper();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mTimer.cancel();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return new ServiceBinder<>(this);
     }
 
     // Function
-    public void init() {
-        bindEngineService();
-    }
-    public void destroy() {
-        MeetUApplication.getContext().unbindService(mEngineServiceConnection);
-        EngineService.stopService();
-    }
-
     public void setOnSearchListener(DataRequest.OnDataRequestListener listener) {
-        mEngineService.setOnSearchListener(listener);
+        mLocationHelper.setOnSearchListener(listener);
     }
 
     public void reportSelf() {
-        mEngineService.reportSelf();
+        mLocationHelper.reportSelf();
     }
     public void searchNearby() {
-        mEngineService.searchNearby();
+        mLocationHelper.searchNearby();
     }
 
     public void startAutoReportSelf() {
-        if (mEngineService != null) {
-            mEngineService.startAutoReportSelf();
-        } else {
-            bindEngineService();
-        }
+        mTimer.schedule(mReportSelfTimerTask, 0, UPDATE_INTERVAL);
     }
     public void stopAutoReportSelf() {
     }
 
     public void startAutoSearchNearby() {
-        if (mEngineService != null) {
-            mEngineService.startAutoSearchNearby();
-        } else {
-            bindEngineService();
-        }
+        mTimer.schedule(mSearchOthersTimerTask, 0, UPDATE_INTERVAL);
     }
     public void stopAutoSearchNearby() {
     }
 
-    private void bindEngineService() {
-        EngineService.startService();
-        MeetUApplication.getContext().bindService(EngineService.SERVICE_INTENT, mEngineServiceConnection, 0);
+    //
+    public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), Model.class);
+    public static void startService() {
+        MeetUApplication.getContext().startService(SERVICE_INTENT);
+    }
+    public static void stopService() {
+        MeetUApplication.getContext().stopService(SERVICE_INTENT);
+    }
+    public static boolean isServiceRunning() {
+        return Utils.isServiceRunning(MeetUApplication.getContext(), SERVICE_INTENT);
     }
 }
