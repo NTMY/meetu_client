@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".model.Model" />
+        <service android:name=".model.ModelHub" />
     </application>
 
 </manifest>

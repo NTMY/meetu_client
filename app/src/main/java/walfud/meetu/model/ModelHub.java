@@ -2,6 +2,7 @@ package walfud.meetu.model;
 
 import android.app.Service;
 import android.content.Intent;
+import android.location.Location;
 import android.os.IBinder;
 
 import java.util.Timer;
@@ -14,9 +15,9 @@ import walfud.meetu.Utils;
 /**
  * Created by song on 2015/6/24.
  */
-public class Model extends Service {
+public class ModelHub extends Service {
 
-    public static final String TAG = "Model";
+    public static final String TAG = "ModelHub";
 
     private LocationHelper mLocationHelper;
 
@@ -51,15 +52,30 @@ public class Model extends Service {
     }
 
     // Function
+    private DataRequest.OnDataRequestListener mOnSearchListener;
     public void setOnSearchListener(DataRequest.OnDataRequestListener listener) {
-        mLocationHelper.setOnSearchListener(listener);
+        mOnSearchListener = listener;
     }
 
     public void reportSelf() {
-        mLocationHelper.reportSelf();
+        mLocationHelper.getLocation(new LocationHelper.OnLocationListener() {
+            @Override
+            public void onLocation(Location location) {
+                // Report location only
+                DataRequest dataRequest = new DataRequest(new Data(location), null);   // Do NOT concern network response
+                dataRequest.send();
+            }
+        });
     }
     public void searchNearby() {
-        mLocationHelper.searchNearby();
+        mLocationHelper.getLocation(new LocationHelper.OnLocationListener() {
+            @Override
+            public void onLocation(Location location) {
+                // Report location & get network result
+                DataRequest dataRequest = new DataRequest(new Data(location), mOnSearchListener);
+                dataRequest.send();
+            }
+        });
     }
 
     private TimerTask mReportSelfTimerTask;
@@ -71,7 +87,7 @@ public class Model extends Service {
             mReportSelfTimerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    mLocationHelper.reportSelf();
+                    reportSelf();
                 }
             };
             mEngineTimer.schedule(mReportSelfTimerTask, 0, UPDATE_INTERVAL);
@@ -94,7 +110,7 @@ public class Model extends Service {
             mSearchOthersTimerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    mLocationHelper.searchNearby();
+                    searchNearby();
                 }
             };
             mEngineTimer.schedule(mSearchOthersTimerTask, 0, UPDATE_INTERVAL);
@@ -109,7 +125,7 @@ public class Model extends Service {
     }
 
     //
-    public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), Model.class);
+    public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), ModelHub.class);
     public static void startService() {
         MeetUApplication.getContext().startService(SERVICE_INTENT);
     }
