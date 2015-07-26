@@ -52,7 +52,7 @@ public class DataRequest {
                 //         </locationCurr>
                 //     </list>
                 // </beans>
-                String strXmlResponse = "<beans><list><locationCurr><imei>imei002</imei><longitude>50.0</longitude><latitude>10.0</latitude><uploadTime>2015-07-18 21:52:47</uploadTime></locationCurr></list></beans>";
+//                String strXmlResponse = "<beans><list><locationCurr><imei>imei002</imei><longitude>50.0</longitude><latitude>10.0</latitude><uploadTime>2015-07-18 21:52:47</uploadTime></locationCurr></list></beans>";
 
                 List<Data> friendsList = new ArrayList<>();
 
@@ -60,7 +60,7 @@ public class DataRequest {
                     ObjectMapper jsonMapper = new ObjectMapper();
                     jsonMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
-                    JSONObject beansNode = XML.toJSONObject(strXmlResponse);
+                    JSONObject beansNode = XML.toJSONObject(response);
                     JSONObject listNode = beansNode.getJSONObject("beans");
                     Object locationCurrNode = listNode.get("list");
                     if (locationCurrNode instanceof JSONObject) {

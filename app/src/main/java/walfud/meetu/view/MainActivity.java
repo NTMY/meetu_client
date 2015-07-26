@@ -33,6 +33,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
         mNearbyFriendsListView = (ListView) findViewById(R.id.nearby_friends_list);
 
         mPresenter = new MainActivityPresenter(this);
+        mPresenter.setOnSearchListener(this);
         mRadarView.setOnClickListener(this);
         mRadarView.start();
     }

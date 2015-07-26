@@ -3,11 +3,11 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         debug {
-            storeFile file('/Users/walfud/.android/debug.keystore')
+            storeFile file('C:\\Users\\song\\.android\\debug.keystore')
         }
     }
     compileSdkVersion 22
-    buildToolsVersion '23.0.0 rc3'
+    buildToolsVersion '22.0.1'
     defaultConfig {
         applicationId "walfud.meetu"
         minSdkVersion 15
