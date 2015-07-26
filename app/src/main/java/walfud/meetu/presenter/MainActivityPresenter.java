@@ -3,6 +3,8 @@ package walfud.meetu.presenter;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.Message;
+import android.widget.Toast;
 
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.ServiceBinder;
@@ -24,9 +26,12 @@ public class MainActivityPresenter {
         public void onServiceConnected(ComponentName name, IBinder service) {
             mModel = ((ServiceBinder<Model>) service).getService();
 
+            // Init model
             mModel.setOnSearchListener(mOnSearchListener);
-//            mModel.startAutoReportSelf();
-            mModel.startAutoSearchNearby();
+
+            // Update Main UI
+            mView.setAutoReportSwitch(mModel.isAutoReport());
+            mView.setAutoSearchSwitch(mModel.isAutoSearch());
         }
 
         @Override
@@ -37,7 +42,6 @@ public class MainActivityPresenter {
 
     public MainActivityPresenter(MainActivity view) {
         mView = view;
-        mModel = new Model();
     }
 
     // View Event
@@ -49,20 +53,71 @@ public class MainActivityPresenter {
         mView.switchNavigation();
     }
 
+    public void onClickAutoReport(boolean isChecked) {
+        if (!checkModelBind()) {
+            return;
+        }
+
+        if (isChecked) {
+            mModel.startAutoReportSelf();
+        } else {
+            mModel.stopAutoReportSelf();
+        }
+    }
+    public void onClickAutoSearch(boolean isChecked) {
+        if (!checkModelBind()) {
+            return;
+        }
+
+        if (isChecked) {
+            mModel.startAutoSearchNearby();
+        } else {
+            mModel.stopAutoSearchNearby();
+        }
+    }
+    public void onClickExit() {
+        release(true);
+        mView.finish();
+    }
+
     // Presenter Function
     private DataRequest.OnDataRequestListener mOnSearchListener;
     public void init(DataRequest.OnDataRequestListener listener) {
         mOnSearchListener = listener;
-        bindEngineService();
+
+        if (mModel == null) {
+            Model.startService();
+            MeetUApplication.getContext().bindService(Model.SERVICE_INTENT, mEngineServiceConnection, 0);
+        }
     }
-    public void destory() {
-        MeetUApplication.getContext().unbindService(mEngineServiceConnection);
-        Model.stopService();
+
+    /**
+     *
+     * @param stopService `false` if only unbind service, `true` will unbind and stop service.
+     */
+    public void release(boolean stopService) {
+        if (mModel != null) {
+            MeetUApplication.getContext().unbindService(mEngineServiceConnection);
+            mModel = null;
+        }
+
+        if (stopService) {
+            if (Model.isServiceRunning()) {
+                Model.stopService();
+            }
+        }
     }
 
     //
-    private void bindEngineService() {
-        Model.startService();
-        MeetUApplication.getContext().bindService(Model.SERVICE_INTENT, mEngineServiceConnection, 0);
+    /**
+     * Check if the model service has been bound successfully.
+     */
+    private boolean checkModelBind() {
+        if (mModel == null) {
+            Toast.makeText(MeetUApplication.getContext(), "Model Service Unbinding", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 }

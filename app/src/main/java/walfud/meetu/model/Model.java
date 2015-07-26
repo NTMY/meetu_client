@@ -16,36 +16,24 @@ import walfud.meetu.Utils;
  */
 public class Model extends Service {
 
-    public static final String TAG = "EngineService";
+    public static final String TAG = "Model";
 
     private LocationHelper mLocationHelper;
 
     private static final long UPDATE_INTERVAL = 2000;
 
-    private Timer mTimer = new Timer();
-    private TimerTask mReportSelfTimerTask = new TimerTask() {
-        @Override
-        public void run() {
-            mLocationHelper.reportSelf();
-        }
-    };
-    private TimerTask mSearchOthersTimerTask = new TimerTask() {
-        @Override
-        public void run() {
-            mLocationHelper.searchNearby();
-        }
-    };
+    private Timer mEngineTimer = new Timer();
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        mLocationHelper = new LocationHelper();
-        mLocationHelper.init();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        mLocationHelper = new LocationHelper();
+        mLocationHelper.init();
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -53,7 +41,7 @@ public class Model extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        mTimer.cancel();
+        mEngineTimer.cancel();
         mLocationHelper.destroy();
     }
 
@@ -74,16 +62,50 @@ public class Model extends Service {
         mLocationHelper.searchNearby();
     }
 
+    private TimerTask mReportSelfTimerTask;
+    public boolean isAutoReport() {
+        return mReportSelfTimerTask != null;
+    }
     public void startAutoReportSelf() {
-        mTimer.schedule(mReportSelfTimerTask, 0, UPDATE_INTERVAL);
+        if (mReportSelfTimerTask == null) {
+            mReportSelfTimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    mLocationHelper.reportSelf();
+                }
+            };
+            mEngineTimer.schedule(mReportSelfTimerTask, 0, UPDATE_INTERVAL);
+        }
     }
     public void stopAutoReportSelf() {
+        if (mReportSelfTimerTask != null) {
+            mReportSelfTimerTask.cancel();
+            mReportSelfTimerTask = null;
+            mEngineTimer.purge();
+        }
     }
 
+    private TimerTask mSearchOthersTimerTask;
+    public boolean isAutoSearch() {
+        return mSearchOthersTimerTask != null;
+    }
     public void startAutoSearchNearby() {
-        mTimer.schedule(mSearchOthersTimerTask, 0, UPDATE_INTERVAL);
+        if (mSearchOthersTimerTask == null) {
+            mSearchOthersTimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    mLocationHelper.searchNearby();
+                }
+            };
+            mEngineTimer.schedule(mSearchOthersTimerTask, 0, UPDATE_INTERVAL);
+        }
     }
     public void stopAutoSearchNearby() {
+        if (mSearchOthersTimerTask != null) {
+            mSearchOthersTimerTask.cancel();
+            mSearchOthersTimerTask = null;
+            mEngineTimer.purge();
+        }
     }
 
     //

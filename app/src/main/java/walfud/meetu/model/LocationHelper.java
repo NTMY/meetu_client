@@ -14,7 +14,7 @@ import walfud.meetu.MeetUApplication;
  */
 public class LocationHelper {
 
-    public static final String TAG = "Model";
+    public static final String TAG = "LocationHelper";
 
     private interface OnLocationListener {
         /**

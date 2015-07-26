@@ -2,53 +2,45 @@ package walfud.meetu.view;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import walfud.meetu.R;
+import walfud.meetu.StaticHandler;
 import walfud.meetu.model.Data;
 import walfud.meetu.model.DataRequest;
 import walfud.meetu.presenter.MainActivityPresenter;
 
 
-public class MainActivity extends Activity implements View.OnClickListener, DataRequest.OnDataRequestListener {
+public class MainActivity extends Activity
+        implements View.OnClickListener, DataRequest.OnDataRequestListener, StaticHandler.OnHandleMessage {
 
     private Button mRadarView;
     private ListView mNearbyFriendsListView;
     private MainActivityPresenter mPresenter;
 
     private DrawerLayout mDrawerLayout;
-    private DrawerLayout.DrawerListener mDrawerListener = new DrawerLayout.SimpleDrawerListener() {
-        @Override
-        public void onDrawerSlide(View drawerView, float slideOffset) {
-            super.onDrawerSlide(drawerView, slideOffset);
-        }
-
-        @Override
-        public void onDrawerOpened(View drawerView) {
-            super.onDrawerOpened(drawerView);
-        }
-
-        @Override
-        public void onDrawerClosed(View drawerView) {
-            super.onDrawerClosed(drawerView);
-        }
-
-        @Override
-        public void onDrawerStateChanged(int newState) {
-            super.onDrawerStateChanged(newState);
-        }
-    };
     private Button mNavigation;
+
+    // Navigation
+    private Switch mAutoReport;
+    private Switch mAutoSearch;
+    private Button mExit;
 
     // Event bus
     @Override
@@ -60,13 +52,40 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
         mNearbyFriendsListView = (ListView) findViewById(R.id.nearby_friends_list);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigation = (Button) findViewById(R.id.navigation);
+        {
+            RelativeLayout autoReportLayout = (RelativeLayout) findViewById(R.id.auto_report);
+            TextView autoReportDescription = (TextView) autoReportLayout.findViewById(R.id.description);
+            autoReportDescription.setText("自动更新我的位置");
 
+            mAutoReport = (Switch) autoReportLayout.findViewById(R.id.toggle);
+        }
+        {
+            RelativeLayout autoSearchLayout = (RelativeLayout) findViewById(R.id.auto_search);
+            TextView autoSearchDescription = (TextView) autoSearchLayout.findViewById(R.id.description);
+            autoSearchDescription.setText("自动搜索附近的好友");
+
+            mAutoSearch = (Switch) autoSearchLayout.findViewById(R.id.toggle);
+        }
+        mExit = (Button) findViewById(R.id.exit);
 
         mPresenter = new MainActivityPresenter(this);
         mPresenter.init(this);
         mRadarView.setOnClickListener(this);
-        mDrawerLayout.setDrawerListener(mDrawerListener);
         mNavigation.setOnClickListener(this);
+        mAutoReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPresenter.onClickAutoReport(isChecked);
+            }
+        });
+        mAutoSearch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPresenter.onClickAutoSearch(isChecked);
+            }
+        });
+        mExit.setOnClickListener(this);
+        mHandler = new StaticHandler<>(this);
     }
 
 
@@ -103,16 +122,32 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
                 mPresenter.onClickNavigation();
                 break;
 
+            case R.id.exit:
+                mPresenter.onClickExit();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mPresenter.release(false);      // Just unbind service but keep service running
+    }
+
+    private StaticHandler<MainActivity> mHandler;
+    @Override
+    public void handleMessage(Message msg) {
+        switch (msg.what) {
             default:
                 break;
         }
     }
 
     // View Function
-    public void onBindingSuccess() {
-        Toast.makeText(this, "Binding service successfully", Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public void onNoFriendNearby() {
         mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{}));
@@ -138,9 +173,20 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
         if (mIsNavShowing) {
             mDrawerLayout.closeDrawers();
         } else {
-            mDrawerLayout.openDrawer(Gravity.START);
+            mDrawerLayout.openDrawer(GravityCompat.START);
         }
 
         mIsNavShowing = !mIsNavShowing;
+    }
+
+    public void setAutoReportSwitch(boolean check) {
+        mAutoReport.setChecked(check);
+    }
+    public void setAutoSearchSwitch(boolean check) {
+        mAutoSearch.setChecked(check);
+    }
+
+    public Handler getMainActivityHandler() {
+        return mHandler;
     }
 }
