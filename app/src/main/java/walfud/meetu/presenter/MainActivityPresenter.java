@@ -25,7 +25,7 @@ public class MainActivityPresenter {
             mModel = ((ServiceBinder<Model>) service).getService();
 
             mModel.setOnSearchListener(mOnSearchListener);
-            mModel.startAutoReportSelf();
+//            mModel.startAutoReportSelf();
             mModel.startAutoSearchNearby();
         }
 
@@ -41,8 +41,12 @@ public class MainActivityPresenter {
     }
 
     // View Event
-    public void onRadarViewClick() {
+    public void onClickRadarView() {
         mModel.searchNearby();
+    }
+
+    public void onClickNavigation() {
+        mView.switchNavigation();
     }
 
     // Presenter Function

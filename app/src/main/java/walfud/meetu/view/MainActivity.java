@@ -2,10 +2,13 @@ package walfud.meetu.view;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,9 +22,33 @@ import walfud.meetu.presenter.MainActivityPresenter;
 
 public class MainActivity extends Activity implements View.OnClickListener, DataRequest.OnDataRequestListener {
 
-    private RadarView mRadarView;
+    private Button mRadarView;
     private ListView mNearbyFriendsListView;
     private MainActivityPresenter mPresenter;
+
+    private DrawerLayout mDrawerLayout;
+    private DrawerLayout.DrawerListener mDrawerListener = new DrawerLayout.SimpleDrawerListener() {
+        @Override
+        public void onDrawerSlide(View drawerView, float slideOffset) {
+            super.onDrawerSlide(drawerView, slideOffset);
+        }
+
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            super.onDrawerOpened(drawerView);
+        }
+
+        @Override
+        public void onDrawerClosed(View drawerView) {
+            super.onDrawerClosed(drawerView);
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+            super.onDrawerStateChanged(newState);
+        }
+    };
+    private Button mNavigation;
 
     // Event bus
     @Override
@@ -29,13 +56,17 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRadarView = (RadarView) findViewById(R.id.radar_view);
+        mRadarView = (Button) findViewById(R.id.radar_view);
         mNearbyFriendsListView = (ListView) findViewById(R.id.nearby_friends_list);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigation = (Button) findViewById(R.id.navigation);
+
 
         mPresenter = new MainActivityPresenter(this);
         mPresenter.init(this);
         mRadarView.setOnClickListener(this);
-        mRadarView.start();
+        mDrawerLayout.setDrawerListener(mDrawerListener);
+        mNavigation.setOnClickListener(this);
     }
 
 
@@ -65,8 +96,11 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.radar_view:
-            case R.id.radar_stub:
-                mPresenter.onRadarViewClick();
+                mPresenter.onClickRadarView();
+                break;
+
+            case R.id.navigation:
+                mPresenter.onClickNavigation();
                 break;
 
             default:
@@ -81,7 +115,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
 
     @Override
     public void onNoFriendNearby() {
-        mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[] {}));
+        mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{}));
     }
 
     @Override
@@ -97,5 +131,16 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
     @Override
     public void onError(int errorCode) {
         Toast.makeText(this, String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
+    }
+
+    private boolean mIsNavShowing = false;
+    public void switchNavigation() {
+        if (mIsNavShowing) {
+            mDrawerLayout.closeDrawers();
+        } else {
+            mDrawerLayout.openDrawer(Gravity.START);
+        }
+
+        mIsNavShowing = !mIsNavShowing;
     }
 }
