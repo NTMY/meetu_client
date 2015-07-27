@@ -1,6 +1,8 @@
 package walfud.meetu.presenter;
 
+import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.widget.Toast;
@@ -9,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import walfud.meetu.MeetUApplication;
+import walfud.meetu.R;
 import walfud.meetu.ServiceBinder;
+import walfud.meetu.Utils;
 import walfud.meetu.model.Data;
 import walfud.meetu.model.DataRequest;
 import walfud.meetu.model.ModelHub;
@@ -35,6 +39,12 @@ public class MainActivityPresenter {
             @Override
             public void onFoundFriends(List<Data> nearbyFriendList) {
                 mView.showSearchResult(nearbyFriendList);
+
+                // Notify
+                Intent intent = new Intent(MeetUApplication.getContext(), MainActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(MeetUApplication.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                Utils.showNotification(MeetUApplication.getContext(), pendingIntent, null, R.mipmap.ic_launcher,
+                        String.format("%d 个好友就在附近", nearbyFriendList.size()), null, null, null);
             }
 
             @Override

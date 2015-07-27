@@ -1,8 +1,12 @@
 package walfud.meetu;
 
 import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import org.apache.http.HttpEntity;
@@ -68,5 +72,22 @@ public class Utils {
                 onHttpPostResponse.onResponse(s);
             }
         }.execute();
+    }
+
+    public static void showNotification(Context context, PendingIntent pendingIntent,
+                                           Bitmap largeIcon, int smallIconResId,
+                                           CharSequence contentTitle, CharSequence contentText, CharSequence subText,
+                                           String person) {
+        Notification notification = new Notification.Builder(context)
+                .setWhen(System.currentTimeMillis())
+                .setLargeIcon(largeIcon).setSmallIcon(smallIconResId)
+                .setContentTitle(contentTitle).setContentText(contentText).setSubText(subText)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setContentIntent(pendingIntent)
+//                .addPerson(person)
+                .setAutoCancel(true)
+                .build();
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, notification);
     }
 }
