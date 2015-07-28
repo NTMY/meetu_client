@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -36,6 +37,7 @@ public class MainActivity extends Activity
     private Button mNavigation;
 
     // Navigation
+    private EditText mUserId;
     private Switch mAutoReport;
     private Switch mAutoSearch;
     private Button mExit;
@@ -50,6 +52,7 @@ public class MainActivity extends Activity
         mNearbyFriendsListView = (ListView) findViewById(R.id.nearby_friends_list);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigation = (Button) findViewById(R.id.navigation);
+        mUserId = (EditText) findViewById(R.id.user_id);
         {
             RelativeLayout autoReportLayout = (RelativeLayout) findViewById(R.id.auto_report);
             TextView autoReportDescription = (TextView) autoReportLayout.findViewById(R.id.description);
@@ -149,7 +152,7 @@ public class MainActivity extends Activity
     public void showSearchResult(List<Data> friendList) {
         String[] nearbyFriends = new String[friendList.size()];
         for (int i = 0; i < nearbyFriends.length; i++) {
-            nearbyFriends[i] = friendList.get(i).getImei();
+            nearbyFriends[i] = String.valueOf(friendList.get(i).getUserId());
         }
 
         mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, nearbyFriends));
@@ -164,6 +167,10 @@ public class MainActivity extends Activity
         }
 
         mIsNavShowing = !mIsNavShowing;
+    }
+
+    public int getUserId() {
+        return Integer.valueOf(mUserId.getText().toString());
     }
 
     public void setAutoReportSwitch(boolean check) {

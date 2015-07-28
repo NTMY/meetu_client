@@ -3,14 +3,22 @@ package walfud.meetu.model;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.IBinder;
 
+import org.meetu.client.handler.MeetuHandler;
+import org.meetu.client.listener.MeetuListener;
+import org.meetu.model.LocationCurr;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.ServiceBinder;
 import walfud.meetu.Utils;
+import walfud.meetu.view.MainActivity;
 
 /**
  * Created by song on 2015/6/24.
@@ -52,28 +60,73 @@ public class ModelHub extends Service {
     }
 
     // Function
-    private DataRequest.OnDataRequestListener mOnSearchListener;
-    public void setOnSearchListener(DataRequest.OnDataRequestListener listener) {
+    public static final int ERROR_UNKNOWN = 0;
+    public interface OnDataRequestListener {
+        void onNoFriendNearby();
+
+        void onFoundFriends(List<Data> nearbyFriendList);
+
+        void onError(int errorCode);
+    }
+    private OnDataRequestListener mOnSearchListener;
+
+    public void setOnSearchListener(OnDataRequestListener listener) {
         mOnSearchListener = listener;
     }
 
     public void reportSelf() {
-        mLocationHelper.getLocation(new LocationHelper.OnLocationListener() {
-            @Override
-            public void onLocation(Location location) {
-                // Report location only
-                DataRequest dataRequest = new DataRequest(new Data(location), null);   // Do NOT concern network response
-                dataRequest.send();
-            }
-        });
+        requestLocation(null);
     }
+
     public void searchNearby() {
+        requestLocation(mOnSearchListener);
+    }
+
+    private void requestLocation(final OnDataRequestListener onSearchListener) {
         mLocationHelper.getLocation(new LocationHelper.OnLocationListener() {
             @Override
-            public void onLocation(Location location) {
+            public void onLocation(final Location location) {
                 // Report location & get network result
-                DataRequest dataRequest = new DataRequest(new Data(location), mOnSearchListener);
-                dataRequest.send();
+                new AsyncTask<Void, Void, List<LocationCurr>>() {
+
+                    private List<LocationCurr> mLocationCurrList;
+                    private MeetuListener mMeetUListener = new MeetuListener() {
+                        @Override
+                        public void meetu(List<LocationCurr> list) {
+                            mLocationCurrList = list;
+                        }
+                    };
+
+                    @Override
+                    protected List<LocationCurr> doInBackground(Void... params) {
+                        try {
+                            // TODO: debug
+//                            new MeetuHandler().onMeetu(mMeetUListener, new Data(location).toLocationCurr());
+                            new MeetuHandler().onMeetu(mMeetUListener, new Data(mMainActivity.getUserId(), location).toLocationCurr());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        return mLocationCurrList;
+                    }
+
+                    @Override
+                    protected void onPostExecute(List<LocationCurr> locationCurrs) {
+                        super.onPostExecute(locationCurrs);
+
+                        if (locationCurrs != null && onSearchListener != null) {
+                            if (locationCurrs.size() == 0) {
+                                onSearchListener.onNoFriendNearby();
+                            } else {
+                                List<Data> dataList = new ArrayList<>();
+                                for (LocationCurr locationCurr : locationCurrs) {
+                                    dataList.add(new Data(locationCurr));
+                                }
+                                onSearchListener.onFoundFriends(dataList);
+                            }
+                        }
+                    }
+                }.execute();
             }
         });
     }
@@ -134,5 +187,12 @@ public class ModelHub extends Service {
     }
     public static boolean isServiceRunning() {
         return Utils.isServiceRunning(MeetUApplication.getContext(), SERVICE_INTENT);
+    }
+
+
+    // Debug
+    private MainActivity mMainActivity;
+    public void setDebug(MainActivity mainActivity) {
+        mMainActivity = mainActivity;
     }
 }

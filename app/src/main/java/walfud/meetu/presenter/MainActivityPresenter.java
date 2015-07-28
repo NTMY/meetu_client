@@ -15,7 +15,6 @@ import walfud.meetu.R;
 import walfud.meetu.ServiceBinder;
 import walfud.meetu.Utils;
 import walfud.meetu.model.Data;
-import walfud.meetu.model.DataRequest;
 import walfud.meetu.model.ModelHub;
 import walfud.meetu.view.MainActivity;
 
@@ -30,7 +29,7 @@ public class MainActivityPresenter {
     private ModelHub mModelHub;
     private ServiceConnection mEngineServiceConnection = new ServiceConnection() {
 
-        private DataRequest.OnDataRequestListener mOnSearchListener = new DataRequest.OnDataRequestListener() {
+        private ModelHub.OnDataRequestListener mOnSearchListener = new ModelHub.OnDataRequestListener() {
             @Override
             public void onNoFriendNearby() {
                 mView.showSearchResult(new ArrayList<Data>());
@@ -43,7 +42,7 @@ public class MainActivityPresenter {
                 // Notify
                 Intent intent = new Intent(MeetUApplication.getContext(), MainActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(MeetUApplication.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                Utils.showNotification(MeetUApplication.getContext(), pendingIntent, null, R.mipmap.ic_launcher,
+                Utils.showNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID, pendingIntent, null, R.mipmap.ic_launcher,
                         String.format("%d 个好友就在附近", nearbyFriendList.size()), null, null, null);
             }
 
@@ -59,6 +58,7 @@ public class MainActivityPresenter {
 
             // Init model
             mModelHub.setOnSearchListener(mOnSearchListener);
+            mModelHub.setDebug(mView);
 
             // Update Main UI
             mView.setAutoReportSwitch(mModelHub.isAutoReport());
@@ -108,6 +108,7 @@ public class MainActivityPresenter {
     }
     public void onClickExit() {
         release(true);
+        Utils.clearNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID);
         mView.finish();
     }
 

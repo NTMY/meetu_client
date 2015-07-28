@@ -74,7 +74,8 @@ public class Utils {
         }.execute();
     }
 
-    public static void showNotification(Context context, PendingIntent pendingIntent,
+    public static final int NOTIFICATION_ID = 0x10000;
+    public static void showNotification(Context context, int id, PendingIntent pendingIntent,
                                            Bitmap largeIcon, int smallIconResId,
                                            CharSequence contentTitle, CharSequence contentText, CharSequence subText,
                                            String person) {
@@ -88,6 +89,10 @@ public class Utils {
                 .setAutoCancel(true)
                 .build();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notification);
+        notificationManager.notify(id, notification);
+    }
+    public static void clearNotification(Context context, int id) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(id);
     }
 }
