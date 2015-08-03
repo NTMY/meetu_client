@@ -1,6 +1,8 @@
 package walfud.meetu.view;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -182,5 +184,11 @@ public class MainActivity extends Activity
 
     public Handler getMainActivityHandler() {
         return mHandler;
+    }
+
+    //
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
     }
 }

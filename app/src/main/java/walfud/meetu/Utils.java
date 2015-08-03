@@ -36,7 +36,7 @@ public class Utils {
         return false;
     }
 
-    public static interface OnHttpPostResponse {
+    public interface OnHttpPostResponse {
         void onResponse(String response);
     }
     public static void httpPost(final String request, final OnHttpPostResponse onHttpPostResponse) {

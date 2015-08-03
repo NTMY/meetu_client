@@ -7,7 +7,10 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 
 import org.meetu.client.handler.MeetuHandler;
+import org.meetu.client.handler.MeetuUploadHandler;
 import org.meetu.client.listener.MeetuListener;
+import org.meetu.client.listener.MeetuUploadListener;
+import org.meetu.dto.BaseDto;
 import org.meetu.model.LocationCurr;
 
 import java.util.ArrayList;
@@ -75,14 +78,36 @@ public class ModelHub extends Service {
     }
 
     public void reportSelf() {
-        requestLocation(null);
+        mLocationHelper.getLocation(new LocationHelper.OnLocationListener() {
+            @Override
+            public void onLocation(final Location location) {
+                // Report location only
+                new AsyncTask<Void, Void, BaseDto>() {
+
+                    private BaseDto mBaseDto;
+                    private MeetuUploadListener mUploadListener = new MeetuUploadListener() {
+                        @Override
+                        public void upload(BaseDto baseDto) {
+                            mBaseDto = baseDto;
+                        }
+                    };
+
+                    @Override
+                    protected BaseDto doInBackground(Void... params) {
+                        try {
+                            new MeetuUploadHandler().onUpload(mUploadListener, new Data(location).toLocationCurr());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        return mBaseDto;
+                    }
+                }.execute();
+            }
+        });
     }
 
     public void searchNearby() {
-        requestLocation(mOnSearchListener);
-    }
-
-    private void requestLocation(final OnDataRequestListener onSearchListener) {
         mLocationHelper.getLocation(new LocationHelper.OnLocationListener() {
             @Override
             public void onLocation(final Location location) {
@@ -114,15 +139,15 @@ public class ModelHub extends Service {
                     protected void onPostExecute(List<LocationCurr> locationCurrs) {
                         super.onPostExecute(locationCurrs);
 
-                        if (locationCurrs != null && onSearchListener != null) {
+                        if (locationCurrs != null && mOnSearchListener != null) {
                             if (locationCurrs.size() == 0) {
-                                onSearchListener.onNoFriendNearby();
+                                mOnSearchListener.onNoFriendNearby();
                             } else {
                                 List<Data> dataList = new ArrayList<>();
                                 for (LocationCurr locationCurr : locationCurrs) {
                                     dataList.add(new Data(locationCurr));
                                 }
-                                onSearchListener.onFoundFriends(dataList);
+                                mOnSearchListener.onFoundFriends(dataList);
                             }
                         }
                     }
