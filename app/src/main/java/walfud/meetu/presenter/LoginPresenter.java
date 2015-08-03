@@ -1,7 +1,6 @@
 package walfud.meetu.presenter;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import org.meetu.client.handler.UserAccessHandler;
 import org.meetu.client.listener.UserAccessListener;
@@ -9,6 +8,7 @@ import org.meetu.constant.Constant;
 import org.meetu.dto.UserAccessDto;
 import org.meetu.model.User;
 
+import walfud.meetu.model.SettingModel;
 import walfud.meetu.view.LoginActivity;
 import walfud.meetu.view.MainActivity;
 
@@ -64,6 +64,8 @@ public class LoginPresenter {
                     // Register success
                     MainActivity.startActivity(mView);
                     mView.finish();
+
+                    SettingModel.getInstance().saveToken(String.valueOf(userAccessDto.getUser().getId()));
 
                     if (mOnLoginListener != null) {
                         mOnLoginListener.onRegister(userAccessDto.getUser());
