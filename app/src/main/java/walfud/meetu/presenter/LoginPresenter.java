@@ -59,6 +59,15 @@ public class LoginPresenter {
             protected void onPostExecute(UserAccessDto userAccessDto) {
                 super.onPostExecute(userAccessDto);
 
+                if (userAccessDto == null) {
+                    // Fail
+                    if (mOnLoginListener != null) {
+                        mOnLoginListener.onFail(userAccessDto);
+                    }
+
+                    return;
+                }
+
                 if (false) {
                 } else if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())) {
                     // Register success

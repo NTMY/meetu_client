@@ -54,7 +54,7 @@ public class MainActivity extends Activity
         mNearbyFriendsListView = (ListView) findViewById(R.id.nearby_friends_list);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigation = (Button) findViewById(R.id.navigation);
-        mUserId = (EditText) findViewById(R.id.user_id);
+        mUserId = (EditText) findViewById(R.id.user_name);
         {
             RelativeLayout autoReportLayout = (RelativeLayout) findViewById(R.id.auto_report);
             TextView autoReportDescription = (TextView) autoReportLayout.findViewById(R.id.description);
