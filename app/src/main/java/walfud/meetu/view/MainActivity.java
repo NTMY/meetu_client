@@ -1,27 +1,48 @@
 package walfud.meetu.view;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import java.util.List;
 
 import walfud.meetu.R;
+import walfud.meetu.StaticHandler;
 import walfud.meetu.model.Data;
-import walfud.meetu.model.DataRequest;
 import walfud.meetu.presenter.MainActivityPresenter;
 
 
-public class MainActivity extends Activity implements View.OnClickListener, DataRequest.OnDataRequestListener {
+public class MainActivity extends Activity
+        implements View.OnClickListener, StaticHandler.OnHandleMessage {
 
-    private RadarView mRadarView;
+    private Button mRadarView;
     private ListView mNearbyFriendsListView;
     private MainActivityPresenter mPresenter;
+
+    private DrawerLayout mDrawerLayout;
+    private Button mNavigation;
+
+    // Navigation
+    private EditText mUserId;
+    private Switch mAutoReport;
+    private Switch mAutoSearch;
+    private Button mExit;
 
     // Event bus
     @Override
@@ -29,12 +50,45 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRadarView = (RadarView) findViewById(R.id.radar_view);
+        mRadarView = (Button) findViewById(R.id.radar_view);
         mNearbyFriendsListView = (ListView) findViewById(R.id.nearby_friends_list);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigation = (Button) findViewById(R.id.navigation);
+        mUserId = (EditText) findViewById(R.id.user_id);
+        {
+            RelativeLayout autoReportLayout = (RelativeLayout) findViewById(R.id.auto_report);
+            TextView autoReportDescription = (TextView) autoReportLayout.findViewById(R.id.description);
+            autoReportDescription.setText("自动更新我的位置");
+
+            mAutoReport = (Switch) autoReportLayout.findViewById(R.id.toggle);
+        }
+        {
+            RelativeLayout autoSearchLayout = (RelativeLayout) findViewById(R.id.auto_search);
+            TextView autoSearchDescription = (TextView) autoSearchLayout.findViewById(R.id.description);
+            autoSearchDescription.setText("自动搜索附近的好友");
+
+            mAutoSearch = (Switch) autoSearchLayout.findViewById(R.id.toggle);
+        }
+        mExit = (Button) findViewById(R.id.exit);
 
         mPresenter = new MainActivityPresenter(this);
+        mPresenter.init();
         mRadarView.setOnClickListener(this);
-        mRadarView.start();
+        mNavigation.setOnClickListener(this);
+        mAutoReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPresenter.onClickAutoReport(isChecked);
+            }
+        });
+        mAutoSearch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPresenter.onClickAutoSearch(isChecked);
+            }
+        });
+        mExit.setOnClickListener(this);
+        mHandler = new StaticHandler<>(this);
     }
 
 
@@ -64,8 +118,15 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.radar_view:
-            case R.id.radar_stub:
-                mPresenter.onRadarViewClick();
+                mPresenter.onClickRadarView();
+                break;
+
+            case R.id.navigation:
+                mPresenter.onClickNavigation();
+                break;
+
+            case R.id.exit:
+                mPresenter.onClickExit();
                 break;
 
             default:
@@ -73,28 +134,61 @@ public class MainActivity extends Activity implements View.OnClickListener, Data
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mPresenter.release(false);      // Just unbind service but keep service running
+    }
+
+    private StaticHandler<MainActivity> mHandler;
+    @Override
+    public void handleMessage(Message msg) {
+        switch (msg.what) {
+            default:
+                break;
+        }
+    }
+
     // View Function
-    public void onBindingSuccess() {
-        Toast.makeText(this, "Binding service successfully", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onNoFriendNearby() {
-        mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[] {}));
-    }
-
-    @Override
-    public void onFoundFriends(List<Data> nearbyFriendList) {
-        String[] nearbyFriends = new String[nearbyFriendList.size()];
+    public void showSearchResult(List<Data> friendList) {
+        String[] nearbyFriends = new String[friendList.size()];
         for (int i = 0; i < nearbyFriends.length; i++) {
-            nearbyFriends[i] = nearbyFriendList.get(i).getImei();
+            nearbyFriends[i] = String.valueOf(friendList.get(i).getUserId());
         }
 
         mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, nearbyFriends));
     }
 
-    @Override
-    public void onError(int errorCode) {
-        Toast.makeText(this, String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
+    private boolean mIsNavShowing = false;
+    public void switchNavigation() {
+        if (mIsNavShowing) {
+            mDrawerLayout.closeDrawers();
+        } else {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+        }
+
+        mIsNavShowing = !mIsNavShowing;
+    }
+
+    public int getUserId() {
+        return Integer.valueOf(mUserId.getText().toString());
+    }
+
+    public void setAutoReportSwitch(boolean check) {
+        mAutoReport.setChecked(check);
+    }
+    public void setAutoSearchSwitch(boolean check) {
+        mAutoSearch.setChecked(check);
+    }
+
+    public Handler getMainActivityHandler() {
+        return mHandler;
+    }
+
+    //
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
     }
 }

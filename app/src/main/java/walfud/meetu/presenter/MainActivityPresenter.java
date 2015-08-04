@@ -1,16 +1,21 @@
 package walfud.meetu.presenter;
 
+import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.ServiceConnection;
-import android.location.Location;
 import android.os.IBinder;
-import android.util.Log;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import walfud.meetu.MeetUApplication;
+import walfud.meetu.R;
 import walfud.meetu.ServiceBinder;
+import walfud.meetu.Utils;
 import walfud.meetu.model.Data;
-import walfud.meetu.model.DataRequest;
-import walfud.meetu.model.LocationService;
+import walfud.meetu.model.ModelHub;
 import walfud.meetu.view.MainActivity;
 
 /**
@@ -21,59 +26,127 @@ public class MainActivityPresenter {
     public static final String TAG = "MainActivityPresenter";
 
     private MainActivity mView;
-    private LocationService mLocationService;
-    private static class MyLocationListener implements LocationService.OnLocationListener {
-        private Location mLastLocation = new Location("");
+    private ModelHub mModelHub;
+    private ServiceConnection mEngineServiceConnection = new ServiceConnection() {
 
-        @Override
-        public void onLocation(Location location) {
-            mLastLocation = location;
-
-            // Upload my location to server
-            DataRequest dataRequest = new DataRequest(new Data(mLastLocation), null);
-            dataRequest.send();
-
-            // Debug
-            Log.d(TAG, String.format("onLocation: latitude(%.6f), longitude(%.6f)", location.getLatitude(), location.getLongitude()));
-        }
-    }
-    private MyLocationListener mLocationListener = new MyLocationListener();
-
-    private ServiceConnection mServiceConnection;
-
-    public MainActivityPresenter(MainActivity view) {
-        mView = view;
-        mServiceConnection = new ServiceConnection() {
+        private ModelHub.OnDataRequestListener mOnSearchListener = new ModelHub.OnDataRequestListener() {
             @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mLocationService = ((ServiceBinder<LocationService>) service).getService();
-                mLocationService.setOnLocationListener(mLocationListener);
-
-                if (mLocationService != null) {
-                    mView.onBindingSuccess();
-                }
+            public void onNoFriendNearby() {
+                mView.showSearchResult(new ArrayList<Data>());
             }
 
             @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mLocationService = null;
+            public void onFoundFriends(List<Data> nearbyFriendList) {
+                mView.showSearchResult(nearbyFriendList);
+
+                // Notify
+                Intent intent = new Intent(MeetUApplication.getContext(), MainActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(MeetUApplication.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                Utils.showNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID, pendingIntent, null, R.mipmap.ic_launcher,
+                        String.format("%d 个好友就在附近", nearbyFriendList.size()), null, null, null);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                Toast.makeText(MeetUApplication.getContext(), String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
             }
         };
 
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mModelHub = ((ServiceBinder<ModelHub>) service).getService();
 
+            // Init model
+            mModelHub.setOnSearchListener(mOnSearchListener);
+            mModelHub.setDebug(mView);
 
-        // Start service
-        LocationService.startService();
-        MeetUApplication.getContext().bindService(LocationService.SERVICE_INTENT, mServiceConnection, 0);
-//        MeetUApplication.getContext().unbindService(mServiceConnection);
-//        LocationService.stopService();
+            // Update Main UI
+            mView.setAutoReportSwitch(mModelHub.isAutoReport());
+            mView.setAutoSearchSwitch(mModelHub.isAutoSearch());
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mModelHub = null;
+        }
+    };
+
+    public MainActivityPresenter(MainActivity view) {
+        mView = view;
     }
 
     // View Event
-    public void onRadarViewClick() {
-        DataRequest dataRequest = new DataRequest(new Data(mLocationListener.mLastLocation), mView);
-        dataRequest.send();
+    public void onClickRadarView() {
+        mModelHub.searchNearby();
+    }
+
+    public void onClickNavigation() {
+        mView.switchNavigation();
+    }
+
+    public void onClickAutoReport(boolean isChecked) {
+        if (!checkModelBind()) {
+            return;
+        }
+
+        if (isChecked) {
+            mModelHub.startAutoReportSelf();
+        } else {
+            mModelHub.stopAutoReportSelf();
+        }
+    }
+    public void onClickAutoSearch(boolean isChecked) {
+        if (!checkModelBind()) {
+            return;
+        }
+
+        if (isChecked) {
+            mModelHub.startAutoSearchNearby();
+        } else {
+            mModelHub.stopAutoSearchNearby();
+        }
+    }
+    public void onClickExit() {
+        release(true);
+        Utils.clearNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID);
+        mView.finish();
     }
 
     // Presenter Function
+    public void init() {
+        if (mModelHub == null) {
+            ModelHub.startService();
+            MeetUApplication.getContext().bindService(ModelHub.SERVICE_INTENT, mEngineServiceConnection, 0);
+        }
+    }
+
+    /**
+     *
+     * @param stopService `false` if only unbind service, `true` will unbind and stop service.
+     */
+    public void release(boolean stopService) {
+        if (mModelHub != null) {
+            MeetUApplication.getContext().unbindService(mEngineServiceConnection);
+            mModelHub = null;
+        }
+
+        if (stopService) {
+            if (ModelHub.isServiceRunning()) {
+                ModelHub.stopService();
+            }
+        }
+    }
+
+    //
+    /**
+     * Check if the model service has been bound successfully.
+     */
+    private boolean checkModelBind() {
+        if (mModelHub == null) {
+            Toast.makeText(MeetUApplication.getContext(), "Model Service Unbinding", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -13,20 +13,21 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
 
+    <!--..-->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
+        android:name=".MeetUApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".MeetUApplication">
+        android:theme="@style/AppTheme">
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="683063b32b50af2279434e921b269c80" />
 
-        <activity
-            android:name="walfud.meetu.view.MainActivity"
-            android:label="@string/app_name" >
+        <activity android:name=".view.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +35,12 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".model.LocationService" />
+        <activity
+            android:name=".view.MainActivity"
+            android:label="@string/app_name">
+        </activity>
+
+        <service android:name=".model.ModelHub" />
     </application>
 
 </manifest>
