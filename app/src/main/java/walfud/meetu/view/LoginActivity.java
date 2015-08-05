@@ -1,14 +1,16 @@
 package walfud.meetu.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import org.meetu.dto.UserAccessDto;
 import org.meetu.model.User;
 
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 import walfud.meetu.R;
 import walfud.meetu.presenter.LoginPresenter;
 
@@ -16,12 +18,16 @@ import walfud.meetu.presenter.LoginPresenter;
 /**
  * Created by walfud on 2015/8/2.
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends RoboActivity {
 
     public static final String TAG = "LoginActivity";
 
+    @InjectView(R.id.phone_num)
     private EditText mPhoneNum;
+    @InjectView(R.id.password)
     private EditText mPassword;
+    @InjectView(R.id.ok)
+    private Button mOk;
 
     private LoginPresenter mPresenter;
 
@@ -54,9 +60,6 @@ public class LoginActivity extends Activity {
                         Toast.LENGTH_LONG).show();
             }
         });
-
-        mPhoneNum = (EditText) findViewById(R.id.phone_num);
-        mPassword = (EditText) findViewById(R.id.password);
     }
 
     public void onClick(View v) {
@@ -65,5 +68,30 @@ public class LoginActivity extends Activity {
         user.setPwd(mPassword.getText().toString());
 
         mPresenter.onClickLogin(user);
+    }
+
+    // View Function
+    public static final int UI_DISABLE  = 1 << 0;
+    public static final int UI_ENABLE   = 1 << 1;
+    public void setUiState(int state) {
+        switch (state) {
+            case UI_DISABLE:
+                setEnable(false);
+                break;
+
+            case UI_ENABLE:
+                setEnable(true);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    //
+    private void setEnable(boolean enable) {
+        mPhoneNum.setEnabled(enable);
+        mPassword.setEnabled(enable);
+        mOk.setEnabled(enable);
     }
 }

@@ -40,6 +40,13 @@ public class LoginPresenter {
             private UserAccessDto mUserAccessDto;
 
             @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+                mView.setUiState(LoginActivity.UI_DISABLE);
+            }
+
+            @Override
             protected UserAccessDto doInBackground(Void... params) {
                 try {
                     new UserHandler().onAccess(new UserAccessListener() {
@@ -62,6 +69,7 @@ public class LoginPresenter {
                 if (userAccessDto == null) {
                     // Fail
                     if (mOnLoginListener != null) {
+                        mView.setUiState(LoginActivity.UI_ENABLE);
                         mOnLoginListener.onFail(userAccessDto);
                     }
 
@@ -90,6 +98,7 @@ public class LoginPresenter {
                 } else {
                     // Fail
                     if (mOnLoginListener != null) {
+                        mView.setUiState(LoginActivity.UI_ENABLE);
                         mOnLoginListener.onFail(userAccessDto);
                     }
                 }
