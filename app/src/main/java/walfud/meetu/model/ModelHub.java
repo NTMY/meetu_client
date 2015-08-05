@@ -32,7 +32,7 @@ public class ModelHub extends Service {
 
     private LocationHelper mLocationHelper;
 
-    private static final long UPDATE_INTERVAL = 2000;
+    private static final long UPDATE_INTERVAL = 10 * 60 * 1000; // 10 min
 
     private Timer mEngineTimer = new Timer();
 
@@ -172,7 +172,7 @@ public class ModelHub extends Service {
                     reportSelf();
                 }
             };
-            mEngineTimer.schedule(mReportSelfTimerTask, 0, UPDATE_INTERVAL);
+            mEngineTimer.schedule(mReportSelfTimerTask, UPDATE_INTERVAL, UPDATE_INTERVAL);
         }
     }
 
@@ -198,7 +198,7 @@ public class ModelHub extends Service {
                     searchNearby();
                 }
             };
-            mEngineTimer.schedule(mSearchOthersTimerTask, 0, UPDATE_INTERVAL);
+            mEngineTimer.schedule(mSearchOthersTimerTask, UPDATE_INTERVAL, UPDATE_INTERVAL);
         }
     }
 
