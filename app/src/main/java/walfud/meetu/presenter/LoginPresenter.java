@@ -2,7 +2,7 @@ package walfud.meetu.presenter;
 
 import android.os.AsyncTask;
 
-import org.meetu.client.handler.UserAccessHandler;
+import org.meetu.client.handler.UserHandler;
 import org.meetu.client.listener.UserAccessListener;
 import org.meetu.constant.Constant;
 import org.meetu.dto.UserAccessDto;
@@ -42,7 +42,7 @@ public class LoginPresenter {
             @Override
             protected UserAccessDto doInBackground(Void... params) {
                 try {
-                    new UserAccessHandler().onAccess(new UserAccessListener() {
+                    new UserHandler().onAccess(new UserAccessListener() {
                         @Override
                         public void access(UserAccessDto userAccessDto) {
                             mUserAccessDto = userAccessDto;

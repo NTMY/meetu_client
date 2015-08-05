@@ -1,6 +1,5 @@
 package walfud.meetu.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -22,26 +22,42 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 import walfud.meetu.R;
 import walfud.meetu.StaticHandler;
 import walfud.meetu.model.Data;
 import walfud.meetu.presenter.MainActivityPresenter;
 
 
-public class MainActivity extends Activity
+public class MainActivity extends RoboActivity
         implements View.OnClickListener, StaticHandler.OnHandleMessage {
 
+    @InjectView(R.id.radar_view)
     private Button mRadarView;
+    @InjectView(R.id.nearby_friends_list)
     private ListView mNearbyFriendsListView;
     private MainActivityPresenter mPresenter;
 
+    @InjectView(R.id.drawer_layout)
     private DrawerLayout mDrawerLayout;
+    @InjectView(R.id.navigation)
     private Button mNavigation;
 
     // Navigation
-    private EditText mUserId;
+    @InjectView(R.id.navigation_layout)
+    private LinearLayout mNavLayout;
+    @InjectView(R.id.user_id)
+    private TextView mUserId;
+    @InjectView(R.id.current_location)
+    private TextView mLocation;
+    @InjectView(R.id.user_name)
+    private EditText mUserName;
+    @InjectView(R.id.say_hi)
+    private EditText mSayHi;
     private Switch mAutoReport;
     private Switch mAutoSearch;
+    @InjectView(R.id.exit)
     private Button mExit;
 
     // Event bus
@@ -50,11 +66,6 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRadarView = (Button) findViewById(R.id.radar_view);
-        mNearbyFriendsListView = (ListView) findViewById(R.id.nearby_friends_list);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigation = (Button) findViewById(R.id.navigation);
-        mUserId = (EditText) findViewById(R.id.user_name);
         {
             RelativeLayout autoReportLayout = (RelativeLayout) findViewById(R.id.auto_report);
             TextView autoReportDescription = (TextView) autoReportLayout.findViewById(R.id.description);
@@ -69,7 +80,6 @@ public class MainActivity extends Activity
 
             mAutoSearch = (Switch) autoSearchLayout.findViewById(R.id.toggle);
         }
-        mExit = (Button) findViewById(R.id.exit);
 
         mPresenter = new MainActivityPresenter(this);
         mPresenter.init();
@@ -160,15 +170,12 @@ public class MainActivity extends Activity
         mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, nearbyFriends));
     }
 
-    private boolean mIsNavShowing = false;
     public void switchNavigation() {
-        if (mIsNavShowing) {
+        if (mDrawerLayout.isDrawerOpen(mNavLayout)) {
             mDrawerLayout.closeDrawers();
         } else {
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
-
-        mIsNavShowing = !mIsNavShowing;
     }
 
     public int getUserId() {

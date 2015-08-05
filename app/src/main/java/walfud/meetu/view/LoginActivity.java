@@ -49,7 +49,8 @@ public class LoginActivity extends Activity {
             @Override
             public void onFail(UserAccessDto userAccessDto) {
                 Toast.makeText(LoginActivity.this,
-                        String.format("注册/登陆失败: %s(%s)", userAccessDto.getErrMsg(), userAccessDto.getErrCode()),
+                        userAccessDto == null ? "网络失败"
+                                        : String.format("注册/登陆失败: %s(%s)", userAccessDto.getErrMsg(), userAccessDto.getErrCode()),
                         Toast.LENGTH_LONG).show();
             }
         });

@@ -7,11 +7,11 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 
 import org.meetu.client.handler.MeetuHandler;
-import org.meetu.client.handler.MeetuUploadHandler;
 import org.meetu.client.listener.MeetuListener;
 import org.meetu.client.listener.MeetuUploadListener;
 import org.meetu.dto.BaseDto;
 import org.meetu.model.LocationCurr;
+import org.meetu.util.ListBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +64,7 @@ public class ModelHub extends Service {
 
     // Function
     public static final int ERROR_UNKNOWN = 0;
+
     public interface OnDataRequestListener {
         void onNoFriendNearby();
 
@@ -71,6 +72,7 @@ public class ModelHub extends Service {
 
         void onError(int errorCode);
     }
+
     private OnDataRequestListener mOnSearchListener;
 
     public void setOnSearchListener(OnDataRequestListener listener) {
@@ -95,7 +97,7 @@ public class ModelHub extends Service {
                     @Override
                     protected BaseDto doInBackground(Void... params) {
                         try {
-                            new MeetuUploadHandler().onUpload(mUploadListener, new Data(location).toLocationCurr());
+                            new MeetuHandler().onUpload(mUploadListener, new Data(location).toLocationCurr());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -117,8 +119,8 @@ public class ModelHub extends Service {
                     private List<LocationCurr> mLocationCurrList;
                     private MeetuListener mMeetUListener = new MeetuListener() {
                         @Override
-                        public void meetu(List<LocationCurr> list) {
-                            mLocationCurrList = list;
+                        public void meetu(ListBean listBean) {
+                            mLocationCurrList = listBean.getList();
                         }
                     };
 
@@ -157,9 +159,11 @@ public class ModelHub extends Service {
     }
 
     private TimerTask mReportSelfTimerTask;
+
     public boolean isAutoReport() {
         return mReportSelfTimerTask != null;
     }
+
     public void startAutoReportSelf() {
         if (mReportSelfTimerTask == null) {
             mReportSelfTimerTask = new TimerTask() {
@@ -171,6 +175,7 @@ public class ModelHub extends Service {
             mEngineTimer.schedule(mReportSelfTimerTask, 0, UPDATE_INTERVAL);
         }
     }
+
     public void stopAutoReportSelf() {
         if (mReportSelfTimerTask != null) {
             mReportSelfTimerTask.cancel();
@@ -180,9 +185,11 @@ public class ModelHub extends Service {
     }
 
     private TimerTask mSearchOthersTimerTask;
+
     public boolean isAutoSearch() {
         return mSearchOthersTimerTask != null;
     }
+
     public void startAutoSearchNearby() {
         if (mSearchOthersTimerTask == null) {
             mSearchOthersTimerTask = new TimerTask() {
@@ -194,6 +201,7 @@ public class ModelHub extends Service {
             mEngineTimer.schedule(mSearchOthersTimerTask, 0, UPDATE_INTERVAL);
         }
     }
+
     public void stopAutoSearchNearby() {
         if (mSearchOthersTimerTask != null) {
             mSearchOthersTimerTask.cancel();
@@ -204,12 +212,15 @@ public class ModelHub extends Service {
 
     //
     public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), ModelHub.class);
+
     public static void startService() {
         MeetUApplication.getContext().startService(SERVICE_INTENT);
     }
+
     public static void stopService() {
         MeetUApplication.getContext().stopService(SERVICE_INTENT);
     }
+
     public static boolean isServiceRunning() {
         return Utils.isServiceRunning(MeetUApplication.getContext(), SERVICE_INTENT);
     }
@@ -217,6 +228,7 @@ public class ModelHub extends Service {
 
     // Debug
     private MainActivity mMainActivity;
+
     public void setDebug(MainActivity mainActivity) {
         mMainActivity = mainActivity;
     }
