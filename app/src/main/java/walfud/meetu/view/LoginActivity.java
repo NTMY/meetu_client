@@ -2,8 +2,8 @@ package walfud.meetu.view;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.meetu.dto.UserAccessDto;
@@ -22,12 +22,12 @@ public class LoginActivity extends RoboActivity {
 
     public static final String TAG = "LoginActivity";
 
+    @InjectView(R.id.ok)
+    private ImageButton mOk;
     @InjectView(R.id.phone_num)
     private EditText mPhoneNum;
     @InjectView(R.id.password)
     private EditText mPassword;
-    @InjectView(R.id.ok)
-    private Button mOk;
 
     private LoginPresenter mPresenter;
 
@@ -35,6 +35,11 @@ public class LoginActivity extends RoboActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+//        if (BuildConfig.DEBUG) {
+//            finish();
+//            MainActivity.startActivity(this, null);
+//        }
 
         mPresenter = new LoginPresenter(this);
         mPresenter.setOnLoginListener(new LoginPresenter.OnLoginListener() {

@@ -7,6 +7,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import org.meetu.model.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +44,7 @@ public class MainActivityPresenter {
                 // Notify
                 Intent intent = new Intent(MeetUApplication.getContext(), MainActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(MeetUApplication.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                Utils.showNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID, pendingIntent, null, R.mipmap.ic_launcher,
+                Utils.showNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID, pendingIntent, null, R.drawable.portrait,
                         String.format("%d 个好友就在附近", nearbyFriendList.size()), null, null, null);
             }
 
@@ -59,6 +61,7 @@ public class MainActivityPresenter {
             // Init model
             mModelHub.setOnSearchListener(mOnSearchListener);
             mModelHub.setDebug(mView);
+            mModelHub.setUser(mUser);
 
             // Update Main UI
             mView.setAutoReportSwitch(mModelHub.isAutoReport());
@@ -119,7 +122,6 @@ public class MainActivityPresenter {
             MeetUApplication.getContext().bindService(ModelHub.SERVICE_INTENT, mEngineServiceConnection, 0);
         }
     }
-
     /**
      *
      * @param stopService `false` if only unbind service, `true` will unbind and stop service.
@@ -135,6 +137,11 @@ public class MainActivityPresenter {
                 ModelHub.stopService();
             }
         }
+    }
+
+    private User mUser;
+    public void setUser(User user) {
+        mUser = user;
     }
 
     //

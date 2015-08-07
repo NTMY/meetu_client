@@ -11,6 +11,7 @@ import org.meetu.client.listener.MeetuListener;
 import org.meetu.client.listener.MeetuUploadListener;
 import org.meetu.dto.BaseDto;
 import org.meetu.model.LocationCurr;
+import org.meetu.model.User;
 import org.meetu.util.ListBean;
 
 import java.util.ArrayList;
@@ -74,9 +75,13 @@ public class ModelHub extends Service {
     }
 
     private OnDataRequestListener mOnSearchListener;
-
     public void setOnSearchListener(OnDataRequestListener listener) {
         mOnSearchListener = listener;
+    }
+
+    private User mUser;
+    public void setUser(User user) {
+        mUser = user;
     }
 
     public void reportSelf() {
@@ -97,7 +102,9 @@ public class ModelHub extends Service {
                     @Override
                     protected BaseDto doInBackground(Void... params) {
                         try {
-                            new MeetuHandler().onUpload(mUploadListener, new Data(location).toLocationCurr());
+                            Data data = new Data(location);
+                            data.setUserId(mUser.getId());
+                            new MeetuHandler().onUpload(mUploadListener, data.toLocationCurr());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -127,9 +134,7 @@ public class ModelHub extends Service {
                     @Override
                     protected List<LocationCurr> doInBackground(Void... params) {
                         try {
-                            // TODO: debug
-//                            new MeetuHandler().onMeetu(mMeetUListener, new Data(location).toLocationCurr());
-                            new MeetuHandler().onMeetu(mMeetUListener, new Data(mMainActivity.getUserId(), location).toLocationCurr());
+                            new MeetuHandler().onMeetu(mMeetUListener, new Data(mUser.getId(), location).toLocationCurr());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

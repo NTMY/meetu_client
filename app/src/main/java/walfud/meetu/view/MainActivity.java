@@ -24,9 +24,11 @@ import java.util.List;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+import walfud.meetu.Constants;
 import walfud.meetu.R;
 import walfud.meetu.StaticHandler;
 import walfud.meetu.model.Data;
+import walfud.meetu.model.ParcelableUser;
 import walfud.meetu.presenter.MainActivityPresenter;
 
 
@@ -66,6 +68,7 @@ public class MainActivity extends RoboActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mDrawerLayout.setAlpha(1);
         {
             RelativeLayout autoReportLayout = (RelativeLayout) findViewById(R.id.auto_report);
             TextView autoReportDescription = (TextView) autoReportLayout.findViewById(R.id.description);
@@ -83,6 +86,7 @@ public class MainActivity extends RoboActivity
 
         mPresenter = new MainActivityPresenter(this);
         mPresenter.init();
+        mPresenter.setUser(((ParcelableUser) getIntent().getParcelableExtra(Constants.KEY_USER)).toUser());
         mRadarView.setOnClickListener(this);
         mNavigation.setOnClickListener(this);
         mAutoReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -100,7 +104,6 @@ public class MainActivity extends RoboActivity
         mExit.setOnClickListener(this);
         mHandler = new StaticHandler<>(this);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -194,8 +197,11 @@ public class MainActivity extends RoboActivity
     }
 
     //
-    public static void startActivity(Context context) {
+    public static void startActivity(Context context, Bundle bundle) {
         Intent intent = new Intent(context, MainActivity.class);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
         context.startActivity(intent);
     }
 }
