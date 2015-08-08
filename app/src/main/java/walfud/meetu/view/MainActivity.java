@@ -20,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.meetu.model.LocationCurr;
+
 import java.util.List;
 
 import roboguice.activity.RoboActivity;
@@ -27,7 +29,6 @@ import roboguice.inject.InjectView;
 import walfud.meetu.Constants;
 import walfud.meetu.R;
 import walfud.meetu.StaticHandler;
-import walfud.meetu.model.Data;
 import walfud.meetu.model.ParcelableUser;
 import walfud.meetu.presenter.MainActivityPresenter;
 
@@ -164,7 +165,7 @@ public class MainActivity extends RoboActivity
     }
 
     // View Function
-    public void showSearchResult(List<Data> friendList) {
+    public void showSearchResult(List<LocationCurr> friendList) {
         String[] nearbyFriends = new String[friendList.size()];
         for (int i = 0; i < nearbyFriends.length; i++) {
             nearbyFriends[i] = String.valueOf(friendList.get(i).getUserId());

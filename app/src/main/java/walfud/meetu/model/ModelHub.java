@@ -2,9 +2,10 @@ package walfud.meetu.model;
 
 import android.app.Service;
 import android.content.Intent;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.IBinder;
+
+import com.amap.api.location.AMapLocation;
 
 import org.meetu.client.handler.MeetuHandler;
 import org.meetu.client.listener.MeetuListener;
@@ -14,7 +15,6 @@ import org.meetu.model.LocationCurr;
 import org.meetu.model.User;
 import org.meetu.util.ListBean;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -69,7 +69,7 @@ public class ModelHub extends Service {
     public interface OnDataRequestListener {
         void onNoFriendNearby();
 
-        void onFoundFriends(List<Data> nearbyFriendList);
+        void onFoundFriends(List<LocationCurr> nearbyFriendList);
 
         void onError(int errorCode);
     }
@@ -87,9 +87,9 @@ public class ModelHub extends Service {
     public void reportSelf() {
         mLocationHelper.getLocation(new LocationHelper.OnLocationListener() {
             @Override
-            public void onLocation(final Location location) {
+            public void onLocation(AMapLocation aMapLocation) {
                 // Report location only
-                new AsyncTask<Void, Void, BaseDto>() {
+                new AsyncTask<AMapLocation, Void, BaseDto>() {
 
                     private BaseDto mBaseDto;
                     private MeetuUploadListener mUploadListener = new MeetuUploadListener() {
@@ -100,18 +100,25 @@ public class ModelHub extends Service {
                     };
 
                     @Override
-                    protected BaseDto doInBackground(Void... params) {
+                    protected BaseDto doInBackground(AMapLocation... params) {
                         try {
-                            Data data = new Data(location);
-                            data.setUserId(mUser.getId());
-                            new MeetuHandler().onUpload(mUploadListener, data.toLocationCurr());
+                            AMapLocation aMapLocation = params[0];
+
+                            LocationCurr locationCurr = new LocationCurr();
+                            locationCurr.setUserId(mUser.getId());
+                            locationCurr.setLatitude(aMapLocation.getLatitude());
+                            locationCurr.setLongitude(aMapLocation.getLongitude());
+                            locationCurr.setAddress(aMapLocation.getAddress());
+                            locationCurr.setBusiness(aMapLocation.getDistrict());
+
+                            new MeetuHandler().onUpload(mUploadListener, locationCurr);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
                         return mBaseDto;
                     }
-                }.execute();
+                }.execute(aMapLocation);
             }
         });
     }
@@ -119,9 +126,9 @@ public class ModelHub extends Service {
     public void searchNearby() {
         mLocationHelper.getLocation(new LocationHelper.OnLocationListener() {
             @Override
-            public void onLocation(final Location location) {
+            public void onLocation(AMapLocation aMapLocation) {
                 // Report location & get network result
-                new AsyncTask<Void, Void, List<LocationCurr>>() {
+                new AsyncTask<AMapLocation, Void, List<LocationCurr>>() {
 
                     private List<LocationCurr> mLocationCurrList;
                     private MeetuListener mMeetUListener = new MeetuListener() {
@@ -132,9 +139,18 @@ public class ModelHub extends Service {
                     };
 
                     @Override
-                    protected List<LocationCurr> doInBackground(Void... params) {
+                    protected List<LocationCurr> doInBackground(AMapLocation... params) {
                         try {
-                            new MeetuHandler().onMeetu(mMeetUListener, new Data(mUser.getId(), location).toLocationCurr());
+                            AMapLocation aMapLocation = params[0];
+
+                            LocationCurr locationCurr = new LocationCurr();
+                            locationCurr.setUserId(mUser.getId());
+                            locationCurr.setLatitude(aMapLocation.getLatitude());
+                            locationCurr.setLongitude(aMapLocation.getLongitude());
+                            locationCurr.setAddress(aMapLocation.getAddress());
+                            locationCurr.setBusiness(aMapLocation.getDistrict());
+
+                            new MeetuHandler().onMeetu(mMeetUListener, locationCurr);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -143,22 +159,18 @@ public class ModelHub extends Service {
                     }
 
                     @Override
-                    protected void onPostExecute(List<LocationCurr> locationCurrs) {
-                        super.onPostExecute(locationCurrs);
+                    protected void onPostExecute(List<LocationCurr> locationCurrList) {
+                        super.onPostExecute(locationCurrList);
 
-                        if (locationCurrs != null && mOnSearchListener != null) {
-                            if (locationCurrs.size() == 0) {
+                        if (mOnSearchListener != null) {
+                            if (locationCurrList == null || locationCurrList.size() == 0) {
                                 mOnSearchListener.onNoFriendNearby();
                             } else {
-                                List<Data> dataList = new ArrayList<>();
-                                for (LocationCurr locationCurr : locationCurrs) {
-                                    dataList.add(new Data(locationCurr));
-                                }
-                                mOnSearchListener.onFoundFriends(dataList);
+                                mOnSearchListener.onFoundFriends(locationCurrList);
                             }
                         }
                     }
-                }.execute();
+                }.execute(aMapLocation);
             }
         });
     }

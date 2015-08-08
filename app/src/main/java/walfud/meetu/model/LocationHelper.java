@@ -20,9 +20,9 @@ public class LocationHelper {
         /**
          * Called from NON-UI thread.
          *
-         * @param location
+         * @param aMapLocation
          */
-        void onLocation(android.location.Location location);
+        void onLocation(AMapLocation aMapLocation);
     }
 
     private LocationManagerProxy mLocationManagerProxy;
@@ -43,12 +43,8 @@ public class LocationHelper {
         mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, -1, 0, new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
-                android.location.Location location = new android.location.Location("");
-                location.setLatitude(aMapLocation.getLatitude());
-                location.setLongitude(aMapLocation.getLongitude());
-
                 if (listener != null) {
-                    listener.onLocation(location);
+                    listener.onLocation(aMapLocation);
                 }
             }
 

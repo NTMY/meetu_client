@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import org.meetu.model.LocationCurr;
 import org.meetu.model.User;
 
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import walfud.meetu.MeetUApplication;
 import walfud.meetu.R;
 import walfud.meetu.ServiceBinder;
 import walfud.meetu.Utils;
-import walfud.meetu.model.Data;
 import walfud.meetu.model.ModelHub;
 import walfud.meetu.view.MainActivity;
 
@@ -34,11 +34,11 @@ public class MainActivityPresenter {
         private ModelHub.OnDataRequestListener mOnSearchListener = new ModelHub.OnDataRequestListener() {
             @Override
             public void onNoFriendNearby() {
-                mView.showSearchResult(new ArrayList<Data>());
+                mView.showSearchResult(new ArrayList<LocationCurr>());
             }
 
             @Override
-            public void onFoundFriends(List<Data> nearbyFriendList) {
+            public void onFoundFriends(List<LocationCurr> nearbyFriendList) {
                 mView.showSearchResult(nearbyFriendList);
 
                 // Notify
