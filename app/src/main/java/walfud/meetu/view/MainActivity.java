@@ -87,7 +87,7 @@ public class MainActivity extends RoboActivity
 
         mPresenter = new MainActivityPresenter(this);
         mPresenter.init();
-        mPresenter.setUser(((ParcelableUser) getIntent().getParcelableExtra(Constants.KEY_USER)).toUser());
+        mPresenter.setUser(((ParcelableUser) getIntent().getParcelableExtra(Constants.KEY_USER)));
         mRadarView.setOnClickListener(this);
         mNavigation.setOnClickListener(this);
         mAutoReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

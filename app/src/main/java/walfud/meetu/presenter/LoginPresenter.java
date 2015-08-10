@@ -3,6 +3,8 @@ package walfud.meetu.presenter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.baoyz.pg.PG;
+
 import org.meetu.client.handler.UserHandler;
 import org.meetu.client.listener.UserAccessListener;
 import org.meetu.constant.Constant;
@@ -83,7 +85,7 @@ public class LoginPresenter {
                 } else if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())) {
                     // Register success
                     Bundle bundle = new Bundle();
-                    bundle.putParcelable(Constants.KEY_USER, new ParcelableUser(userAccessDto.getUser()));
+                    bundle.putParcelable(Constants.KEY_USER, PG.convertParcelable(new ParcelableUser(userAccessDto.getUser())));
                     MainActivity.startActivity(mView, bundle);
                     mView.finish();
 
@@ -95,7 +97,7 @@ public class LoginPresenter {
                 } else if (Constant.ACCESS_STATUS_LOGIN.equals(userAccessDto.getAccess_status())) {
                     // Login success
                     Bundle bundle = new Bundle();
-                    bundle.putParcelable(Constants.KEY_USER, new ParcelableUser(userAccessDto.getUser()));
+                    bundle.putParcelable(Constants.KEY_USER, PG.convertParcelable(new ParcelableUser(userAccessDto.getUser())));
                     MainActivity.startActivity(mView, bundle);
                     mView.finish();
 
