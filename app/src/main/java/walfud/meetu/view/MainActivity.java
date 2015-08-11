@@ -82,7 +82,7 @@ public class MainActivity extends RoboActivity
 //                super.onDrawerSlide(drawerView, slideOffset);
 
                 mNavigation.setTransformationOffset(
-                        MaterialMenuDrawable.AnimationState.BURGER_ARROW,
+                        MaterialMenuDrawable.AnimationState.BURGER_CHECK,
                         isDrawerOpened ? 2 - slideOffset : slideOffset);
             }
 
@@ -94,6 +94,8 @@ public class MainActivity extends RoboActivity
             @Override
             public void onDrawerClosed(View drawerView) {
                 isDrawerOpened = false;
+
+                mPresenter.onNavigationClosed();
             }
         });
         {

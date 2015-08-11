@@ -115,6 +115,11 @@ public class MainActivityPresenter {
         mView.finish();
     }
 
+    public void onNavigationClosed() {
+        // Save Settings
+        // TODO:
+    }
+
     // Presenter Function
     public void init() {
         if (mModelHub == null) {

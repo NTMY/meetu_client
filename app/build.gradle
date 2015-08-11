@@ -36,12 +36,12 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.+'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.+'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.6.+'
+    compile 'com.balysv.materialmenu:material-menu:1.+'
     //    compile 'org.codehaus.woodstox:woodstox-core-asl:4.4.+'
     compile 'com.android.support:support-v4:22.2.1'
     compile 'org.roboguice:roboguice:3.+'
     provided 'org.roboguice:roboblender:3.+'
     provided 'com.baoyz.pg:compiler:2.1.0'
     compile 'com.baoyz.pg:core:2.1.0'
-    compile project(':drawerarrowdrawable')
 }
 
