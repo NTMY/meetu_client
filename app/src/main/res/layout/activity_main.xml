@@ -9,14 +9,13 @@
         android:layout_height="@dimen/title_bar_height"
         android:padding="6dp">
 
-        <ImageView
+        <com.balysv.materialmenu.MaterialMenuView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/navigation"
-            android:layout_width="@dimen/actionbar_dimen"
-            android:layout_height="@dimen/actionbar_dimen"
-            android:scaleType="centerInside"
-            android:background="@drawable/drawer_selector"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_gravity="start"
-            />
+            app:mm_color="@color/navigation" />
 
     </RelativeLayout>
 

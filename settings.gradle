@@ -1,1 +1,1 @@
-include ':app', ':drawerarrowdrawable'
+include ':app'

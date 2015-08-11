@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
-  <dimen name="actionbar_dimen">56dp</dimen>
+    <color name="navigation">#88123456</color>
 </resources>
