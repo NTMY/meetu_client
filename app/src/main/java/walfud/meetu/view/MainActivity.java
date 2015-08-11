@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -24,6 +25,7 @@ import org.meetu.model.LocationCurr;
 
 import java.util.List;
 
+import chrisrenke.drawerarrowdrawable.DrawerArrowDrawable;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import walfud.meetu.Constants;
@@ -45,7 +47,7 @@ public class MainActivity extends RoboActivity
     @InjectView(R.id.drawer_layout)
     private DrawerLayout mDrawerLayout;
     @InjectView(R.id.navigation)
-    private Button mNavigation;
+    private ImageView mNavigation;
 
     // Navigation
     @InjectView(R.id.navigation_layout)
@@ -63,13 +65,36 @@ public class MainActivity extends RoboActivity
     @InjectView(R.id.exit)
     private Button mExit;
 
+    private DrawerArrowDrawable mDrawerArrowDrawable;
+
     // Event bus
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDrawerLayout.setAlpha(1);
+        mDrawerArrowDrawable = new DrawerArrowDrawable(getResources());
+        mDrawerArrowDrawable.setStrokeColor(getResources().getColor(R.color.black));
+        mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+
+            private boolean flipped;
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+//                super.onDrawerSlide(drawerView, slideOffset);
+
+                // Sometimes slideOffset ends up so close to but not quite 1 or 0.
+                if (slideOffset >= .995) {
+                    flipped = true;
+                    mDrawerArrowDrawable.setFlip(flipped);
+                } else if (slideOffset <= .005) {
+                    flipped = false;
+                    mDrawerArrowDrawable.setFlip(flipped);
+                }
+
+                mDrawerArrowDrawable.setParameter(slideOffset);
+            }
+        });
         {
             RelativeLayout autoReportLayout = (RelativeLayout) findViewById(R.id.auto_report);
             TextView autoReportDescription = (TextView) autoReportLayout.findViewById(R.id.description);
@@ -90,6 +115,7 @@ public class MainActivity extends RoboActivity
         mPresenter.setUser(((ParcelableUser) getIntent().getParcelableExtra(Constants.KEY_USER)));
         mRadarView.setOnClickListener(this);
         mNavigation.setOnClickListener(this);
+        mNavigation.setImageDrawable(mDrawerArrowDrawable);
         mAutoReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
