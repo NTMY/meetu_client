@@ -192,6 +192,12 @@ public class MainActivity extends RoboActivity
         }
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        moveTaskToBack(true);
+    }
+
     // View Function
     public void showSearchResult(List<LocationCurr> friendList) {
         String[] nearbyFriends = new String[friendList.size()];
