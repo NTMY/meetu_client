@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
         android:gravity="center"
-        android:hint="手机号"/>
+        android:hint="手机号"
+        android:text="13911592475"/>
 
     <EditText
         android:id="@+id/password"
@@ -29,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:hint="密码"/>
+        android:hint="密码"
+        android:text="abc"/>
 
 </LinearLayout>

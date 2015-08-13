@@ -20,6 +20,9 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.balysv.materialmenu.MaterialMenuDrawable;
+import com.balysv.materialmenu.MaterialMenuView;
+
 import org.meetu.model.LocationCurr;
 
 import java.util.List;
@@ -45,7 +48,7 @@ public class MainActivity extends RoboActivity
     @InjectView(R.id.drawer_layout)
     private DrawerLayout mDrawerLayout;
     @InjectView(R.id.navigation)
-    private Button mNavigation;
+    private MaterialMenuView mNavigation;
 
     // Navigation
     @InjectView(R.id.navigation_layout)
@@ -69,7 +72,32 @@ public class MainActivity extends RoboActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDrawerLayout.setAlpha(1);
+        mNavigation = (MaterialMenuView) findViewById(R.id.navigation);
+        mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+
+            private boolean isDrawerOpened;
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+//                super.onDrawerSlide(drawerView, slideOffset);
+
+                mNavigation.setTransformationOffset(
+                        MaterialMenuDrawable.AnimationState.BURGER_CHECK,
+                        isDrawerOpened ? 2 - slideOffset : slideOffset);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                isDrawerOpened = true;
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                isDrawerOpened = false;
+
+                mPresenter.onNavigationClosed();
+            }
+        });
         {
             RelativeLayout autoReportLayout = (RelativeLayout) findViewById(R.id.auto_report);
             TextView autoReportDescription = (TextView) autoReportLayout.findViewById(R.id.description);
@@ -87,7 +115,7 @@ public class MainActivity extends RoboActivity
 
         mPresenter = new MainActivityPresenter(this);
         mPresenter.init();
-        mPresenter.setUser(((ParcelableUser) getIntent().getParcelableExtra(Constants.KEY_USER)).toUser());
+        mPresenter.setUser(((ParcelableUser) getIntent().getParcelableExtra(Constants.KEY_USER)));
         mRadarView.setOnClickListener(this);
         mNavigation.setOnClickListener(this);
         mAutoReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
