@@ -7,16 +7,16 @@ import android.content.Context;
  * Created by song on 2015/6/22.
  */
 public class MeetUApplication extends Application {
-    private static Context mApplicationContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        mApplicationContext = this;
+        sApplicationContext = this;
     }
 
+    private static Context sApplicationContext;
     public static Context getContext() {
-        return mApplicationContext;
+        return sApplicationContext;
     }
 }
