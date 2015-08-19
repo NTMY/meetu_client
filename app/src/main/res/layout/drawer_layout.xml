@@ -144,9 +144,13 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Feedback"/>
+    <Button
         android:id="@+id/exit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="退出" />
+        android:text="Exit" />
 </LinearLayout>

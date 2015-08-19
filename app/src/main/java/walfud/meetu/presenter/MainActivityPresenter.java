@@ -18,6 +18,7 @@ import walfud.meetu.R;
 import walfud.meetu.ServiceBinder;
 import walfud.meetu.Utils;
 import walfud.meetu.model.ModelHub;
+import walfud.meetu.view.FeedbackActivity;
 import walfud.meetu.view.MainActivity;
 
 /**
@@ -108,6 +109,9 @@ public class MainActivityPresenter {
         } else {
             mModelHub.stopAutoSearchNearby();
         }
+    }
+    public void onClickFeedback() {
+        FeedbackActivity.startActivity(mView);
     }
     public void onClickExit() {
         release(true);

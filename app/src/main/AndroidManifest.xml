@@ -38,6 +38,7 @@
         <activity android:name=".view.SplashActivity" />
         <activity android:name=".view.LoginActivity" />
         <activity android:name=".view.MainActivity" />
+        <activity android:name=".view.FeedbackActivity" />
 
         <service android:name=".model.ModelHub" />
     </application>

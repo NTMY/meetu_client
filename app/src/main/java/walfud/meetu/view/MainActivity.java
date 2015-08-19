@@ -63,6 +63,8 @@ public class MainActivity extends RoboActivity
     private EditText mSayHi;
     private Switch mAutoReport;
     private Switch mAutoSearch;
+    @InjectView(R.id.feedback)
+    private Button mFeedback;
     @InjectView(R.id.exit)
     private Button mExit;
 
@@ -130,6 +132,7 @@ public class MainActivity extends RoboActivity
                 mPresenter.onClickAutoSearch(isChecked);
             }
         });
+        mFeedback.setOnClickListener(this);
         mExit.setOnClickListener(this);
         mHandler = new StaticHandler<>(this);
     }
@@ -165,6 +168,10 @@ public class MainActivity extends RoboActivity
 
             case R.id.navigation:
                 mPresenter.onClickNavigation();
+                break;
+
+            case R.id.feedback:
+                mPresenter.onClickFeedback();
                 break;
 
             case R.id.exit:

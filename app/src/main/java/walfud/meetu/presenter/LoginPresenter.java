@@ -13,7 +13,7 @@ import org.meetu.model.User;
 
 import walfud.meetu.Constants;
 import walfud.meetu.model.ParcelableUser;
-import walfud.meetu.model.SettingModel;
+import walfud.meetu.model.PrefsModel;
 import walfud.meetu.view.LoginActivity;
 import walfud.meetu.view.MainActivity;
 
@@ -89,7 +89,7 @@ public class LoginPresenter {
                     MainActivity.startActivity(mView, bundle);
                     mView.finish();
 
-                    SettingModel.getInstance().saveToken(String.valueOf(userAccessDto.getUser().getId()));
+                    PrefsModel.getInstance().setUserId(userAccessDto.getUser().getId());
 
                     if (mOnLoginListener != null) {
                         mOnLoginListener.onRegister(userAccessDto.getUser());
