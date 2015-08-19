@@ -56,15 +56,16 @@ public class FeedbackActivity extends RoboActivity {
     }
 
     public void onSendResult(BaseDto result) {
-        if (true) {
+        if (result.getErrCode() == null) {
             // Feedback Success
             mSuccess.loadUrl("http://123.57.158.124:8081");
             mSuccess.setVisibility(View.VISIBLE);
             mContent.setVisibility(View.GONE);
+            mSend.setVisibility(View.GONE);
         } else {
             // Feedback Fail
             Toast.makeText(this,
-                    String.format("Feedback failed. Code(%d), Message(%s)", result.getErrCode(), result.getErrMsg()),
+                    String.format("Feedback failed. Code(%s), Message(%s)", result.getErrCode(), result.getErrMsg()),
                     Toast.LENGTH_LONG).show();
         }
     }
