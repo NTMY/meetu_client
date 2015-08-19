@@ -3,7 +3,9 @@ package walfud.meetu.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -25,7 +27,7 @@ public class FeedbackActivity extends RoboActivity {
     private FeedbackPresenter mPreseneter;
 
     @InjectView(R.id.content)
-    private EditText mFeedbackContent;
+    private EditText mContent;
     @InjectView(R.id.success)
     private WebView mSuccess;
     @InjectView(R.id.send)
@@ -38,18 +40,27 @@ public class FeedbackActivity extends RoboActivity {
 
         mPreseneter = new FeedbackPresenter(this);
 
+        mSuccess.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
         mSend.setOnClickListener(mPreseneter);
     }
 
     // View Function
     public String getFeedbackContent() {
-        return mFeedbackContent.getText().toString();
+        return mContent.getText().toString();
     }
 
     public void onSendResult(BaseDto result) {
         if (true) {
             // Feedback Success
-            mSuccess.loadUrl("file:///android_asset/feedback_thanks.html");
+            mSuccess.loadUrl("http://123.57.158.124:8081");
+            mSuccess.setVisibility(View.VISIBLE);
+            mContent.setVisibility(View.GONE);
         } else {
             // Feedback Fail
             Toast.makeText(this,
