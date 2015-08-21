@@ -31,6 +31,6 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:hint="密码"
-        android:text="abc"/>
+        android:text="walfud"/>
 
 </LinearLayout>

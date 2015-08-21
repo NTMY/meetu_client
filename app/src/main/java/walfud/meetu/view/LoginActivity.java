@@ -13,7 +13,6 @@ import org.meetu.model.User;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
-import walfud.meetu.BuildConfig;
 import walfud.meetu.R;
 import walfud.meetu.presenter.LoginPresenter;
 
@@ -39,10 +38,10 @@ public class LoginActivity extends RoboActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if (BuildConfig.DEBUG) {
-            finish();
-            MainActivity.startActivity(this, null);
-        }
+//        if (BuildConfig.DEBUG) {
+//            finish();
+//            MainActivity.startActivity(this, null);
+//        }
 
         mPresenter = new LoginPresenter(this);
         mPresenter.setOnLoginListener(new LoginPresenter.OnLoginListener() {

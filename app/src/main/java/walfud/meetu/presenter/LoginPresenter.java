@@ -82,8 +82,8 @@ public class LoginPresenter {
                 }
 
                 if (false) {
-                } else if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())) {
-                    // Register success
+                } else if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())
+                        || Constant.ACCESS_STATUS_LOGIN.equals(userAccessDto.getAccess_status())) {
                     Bundle bundle = new Bundle();
                     bundle.putParcelable(Constants.KEY_USER, PG.convertParcelable(new ParcelableUser(userAccessDto.getUser())));
                     MainActivity.startActivity(mView, bundle);
@@ -92,17 +92,13 @@ public class LoginPresenter {
                     PrefsModel.getInstance().setUserId(userAccessDto.getUser().getId());
 
                     if (mOnLoginListener != null) {
-                        mOnLoginListener.onRegister(userAccessDto.getUser());
-                    }
-                } else if (Constant.ACCESS_STATUS_LOGIN.equals(userAccessDto.getAccess_status())) {
-                    // Login success
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable(Constants.KEY_USER, PG.convertParcelable(new ParcelableUser(userAccessDto.getUser())));
-                    MainActivity.startActivity(mView, bundle);
-                    mView.finish();
-
-                    if (mOnLoginListener != null) {
-                        mOnLoginListener.onLogin(userAccessDto.getUser());
+                        if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())) {
+                            // Register
+                            mOnLoginListener.onRegister(userAccessDto.getUser());
+                        } else {
+                            // Login
+                            mOnLoginListener.onLogin(userAccessDto.getUser());
+                        }
                     }
                 } else {
                     // Fail
