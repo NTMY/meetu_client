@@ -110,7 +110,7 @@ public class MainActivity extends RoboActivity
         {
             RelativeLayout autoSearchLayout = (RelativeLayout) findViewById(R.id.auto_search);
             TextView autoSearchDescription = (TextView) autoSearchLayout.findViewById(R.id.description);
-            autoSearchDescription.setText("自动搜索附近的好友");
+            autoSearchDescription.setText("自动搜索附近好友");
 
             mAutoSearch = (Switch) autoSearchLayout.findViewById(R.id.toggle);
         }
