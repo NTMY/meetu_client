@@ -10,27 +10,37 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginTop="72dp"
-        android:src="@drawable/meet_u"
+        android:onClick="onClick"
         android:scaleType="fitCenter"
-        android:onClick="onClick"/>
+        android:src="@drawable/meet_u" />
 
 
-    <EditText
-        android:id="@+id/phone_num"
-        android:layout_width="210dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:gravity="center"
-        android:hint="手机号"
-        android:text="13911592475"/>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="210dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:hint="密码"
-        android:text="abc"/>
+        <EditText
+            android:id="@+id/phone_num"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="72dp"
+            android:gravity="center"
+            android:hint="Phone Number"
+            android:text="13911592475" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:hint="Password"
+            android:text="walfud" />
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>
