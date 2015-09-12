@@ -100,6 +100,8 @@ public class MainActivityPresenter {
         } else {
             mModelHub.stopAutoReportSelf();
         }
+
+        PrefsModel.getInstance().setAutoReport(isChecked);
     }
     public void onClickAutoSearch(boolean isChecked) {
         if (!checkModelBind()) {
@@ -111,6 +113,8 @@ public class MainActivityPresenter {
         } else {
             mModelHub.stopAutoSearchNearby();
         }
+
+        PrefsModel.getInstance().setAutoSearch(isChecked);
     }
     public void onClickFeedback() {
         FeedbackActivity.startActivity(mView);
