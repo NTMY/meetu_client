@@ -42,7 +42,7 @@
         <activity android:name=".view.MainActivity" />
         <activity android:name=".view.FeedbackActivity" />
 
-        <service android:name=".model.ModelHub" android:process=":Service" />
+        <service android:name=".model.ModelHub" />
     </application>
 
 </manifest>
