@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.meetu.constant.Constant;
 import org.meetu.dto.BaseDto;
 
 import roboguice.activity.RoboActivity;
@@ -58,7 +59,7 @@ public class FeedbackActivity extends RoboActivity {
     public void onSendResult(BaseDto result) {
         if (result.getErrCode() == null) {
             // Feedback Success
-            mSuccess.loadUrl("http://123.57.158.124:8081");
+            mSuccess.loadUrl(Constant.DOMAIN);
             mSuccess.setVisibility(View.VISIBLE);
             mContent.setVisibility(View.GONE);
             mSend.setVisibility(View.GONE);

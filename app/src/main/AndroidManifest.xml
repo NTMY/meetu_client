@@ -15,6 +15,8 @@
 
     <!--..-->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!--<uses-permission android:name="android.permission.DEVICE_POWER"/>-->
 
     <application
         android:name=".MeetUApplication"
@@ -40,7 +42,7 @@
         <activity android:name=".view.MainActivity" />
         <activity android:name=".view.FeedbackActivity" />
 
-        <service android:name=".model.ModelHub" />
+        <service android:name=".model.ModelHub" android:process=":Service" />
     </application>
 
 </manifest>
