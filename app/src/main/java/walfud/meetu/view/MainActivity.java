@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.balysv.materialmenu.MaterialMenuView;
+import com.kanak.emptylayout.EmptyLayout;
 
 import org.meetu.model.LocationCurr;
 
@@ -39,11 +40,15 @@ import walfud.meetu.presenter.MainActivityPresenter;
 public class MainActivity extends RoboActivity
         implements View.OnClickListener, StaticHandler.OnHandleMessage {
 
+    public static final String TAG = "MainActivity";
+
+    private MainActivityPresenter mPresenter;
+    private EmptyLayout mFriendList;
+
     @InjectView(R.id.radar_view)
     private Button mRadarView;
     @InjectView(R.id.nearby_friends_list)
     private ListView mNearbyFriendsListView;
-    private MainActivityPresenter mPresenter;
 
     @InjectView(R.id.drawer_layout)
     private DrawerLayout mDrawerLayout;
@@ -135,6 +140,8 @@ public class MainActivity extends RoboActivity
         mFeedback.setOnClickListener(this);
         mExit.setOnClickListener(this);
         mHandler = new StaticHandler<>(this);
+
+        mFriendList = new EmptyLayout(this, mNearbyFriendsListView);
     }
 
     @Override
@@ -207,12 +214,18 @@ public class MainActivity extends RoboActivity
 
     // View Function
     public void showSearchResult(List<LocationCurr> friendList) {
-        String[] nearbyFriends = new String[friendList.size()];
-        for (int i = 0; i < nearbyFriends.length; i++) {
-            nearbyFriends[i] = String.valueOf(friendList.get(i).getUserId());
-        }
 
-        mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, nearbyFriends));
+        if (friendList.size() == 0) {
+            // No friend nearby
+            mFriendList.showEmpty();
+        } else {
+            String[] nearbyFriends = new String[friendList.size()];
+            for (int i = 0; i < nearbyFriends.length; i++) {
+                nearbyFriends[i] = String.valueOf(friendList.get(i).getUserId());
+            }
+
+            mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, nearbyFriends));
+        }
     }
 
     public void switchNavigation() {
@@ -232,6 +245,10 @@ public class MainActivity extends RoboActivity
     }
     public void setAutoSearchSwitch(boolean check) {
         mAutoSearch.setChecked(check);
+    }
+
+    public void showSearching() {
+        mFriendList.showLoading();
     }
 
     public Handler getMainActivityHandler() {

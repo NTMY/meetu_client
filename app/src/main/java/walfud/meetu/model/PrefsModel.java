@@ -16,35 +16,48 @@ public class PrefsModel {
     private static PrefsModel sInstance;
     public static PrefsModel getInstance() {
         if (sInstance == null) {
-            sInstance = new PrefsModel();
-            sInstance.init();
+            sInstance = new PrefsModel(MeetUApplication.getContext());
         }
 
         return sInstance;
     }
 
-    private Context mContext;
     private SharedPreferences mSharePreference;
-    private void init() {
-        mContext = MeetUApplication.getContext();
-        mSharePreference = PreferenceManager.getDefaultSharedPreferences(mContext);
+    protected PrefsModel(Context context) {
+        mSharePreference = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     //
-    public static final String KEY_USER_TOKEN = "KEY_USER_TOKEN";
-    public static final int VALUE_INVALID_USER_ID = -1;
+    private static final String PREFS_USER_TOKEN = "PREFS_USER_TOKEN";
+    private static final int VALUE_INVALID_USER_ID = -1;
     public void setUserId(int userId) {
-        mSharePreference.edit().putInt(KEY_USER_TOKEN, userId).commit();
+        mSharePreference.edit().putInt(PREFS_USER_TOKEN, userId).apply();
     }
     public int getUserId() {
-        return mSharePreference.getInt(KEY_USER_TOKEN, VALUE_INVALID_USER_ID);
+        return mSharePreference.getInt(PREFS_USER_TOKEN, VALUE_INVALID_USER_ID);
     }
 
-    private static final String KEY_SPLASH = "KEY_SPLASH";
+    private static final String PREFS_AUTO_REPORT = "PREFS_AUTO_REPORT";
+    public boolean isAutoReport() {
+        return mSharePreference.getBoolean(PREFS_AUTO_REPORT, true);
+    }
+    public void setAutoReport(boolean autoReport) {
+        mSharePreference.edit().putBoolean(PREFS_AUTO_REPORT, autoReport).apply();
+    }
+
+    private static final String PREFS_AUTO_SEARCH = "PREFS_AUTO_SEARCH";
+    public boolean isAutoSearch() {
+        return mSharePreference.getBoolean(PREFS_AUTO_SEARCH, true);
+    }
+    public void setAutoSearch(boolean autoSearch) {
+        mSharePreference.edit().putBoolean(PREFS_AUTO_SEARCH, autoSearch).apply();
+    }
+
+    private static final String PREFS_SPLASH = "PREFS_SPLASH";
     public void setShowSplash(boolean showSplash) {
-        mSharePreference.edit().putBoolean(KEY_SPLASH, showSplash).commit();
+        mSharePreference.edit().putBoolean(PREFS_SPLASH, showSplash).apply();
     }
     public boolean getShowSplash() {
-        return mSharePreference.getBoolean(KEY_SPLASH, true);
+        return mSharePreference.getBoolean(PREFS_SPLASH, true);
     }
 }

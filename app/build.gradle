@@ -33,13 +33,11 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:design:22.2.1'
-
     compile 'com.balysv.materialmenu:material-menu:1.+'
-
     compile 'org.roboguice:roboguice:3.+'
     provided 'org.roboguice:roboblender:3.+'
-
     provided 'com.baoyz.pg:compiler:2.1.0'
     compile 'com.baoyz.pg:core:2.1.0'
+    compile project(':emptyLayout')
 }
 

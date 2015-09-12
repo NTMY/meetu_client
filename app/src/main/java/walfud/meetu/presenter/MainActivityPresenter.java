@@ -18,6 +18,7 @@ import walfud.meetu.R;
 import walfud.meetu.ServiceBinder;
 import walfud.meetu.Utils;
 import walfud.meetu.model.ModelHub;
+import walfud.meetu.model.PrefsModel;
 import walfud.meetu.view.FeedbackActivity;
 import walfud.meetu.view.MainActivity;
 
@@ -64,9 +65,9 @@ public class MainActivityPresenter {
             mModelHub.setDebug(mView);
             mModelHub.setUser(mUser);
 
-            // Update Main UI
-            mView.setAutoReportSwitch(mModelHub.isAutoReport());
-            mView.setAutoSearchSwitch(mModelHub.isAutoSearch());
+            //
+            mView.setAutoReportSwitch(PrefsModel.getInstance().isAutoReport());
+            mView.setAutoSearchSwitch(PrefsModel.getInstance().isAutoSearch());
         }
 
         @Override
@@ -81,6 +82,7 @@ public class MainActivityPresenter {
 
     // View Event
     public void onClickRadarView() {
+        mView.showSearching();
         mModelHub.searchNearby();
     }
 
