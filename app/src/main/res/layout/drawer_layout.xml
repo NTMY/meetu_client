@@ -35,7 +35,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="你的 ID: " />
+                    android:text="ID: " />
 
                 <TextView
                     android:id="@+id/user_id"
@@ -54,7 +54,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="当前位置: " />
+                    android:text="Current Location: " />
 
                 <TextView
                     android:id="@+id/current_location"
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
                     android:maxEms="7"
-                    android:text="北京市 xx 区 yyy 大街 zzzz 单元附近" />
+                    android:text="Some Place on Earth..." />
 
             </LinearLayout>
 
@@ -83,13 +83,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="用户名: " />
+                    android:text="User Name: " />
 
                 <EditText
                     android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="某某" />
+                    android:text="walfud" />
 
             </LinearLayout>
 

@@ -27,7 +27,6 @@ public class Waker {
         }
     }
 
-    //释放设备电源锁
     private void release() {
         if (null != mWakeLock) {
             mWakeLock.release();

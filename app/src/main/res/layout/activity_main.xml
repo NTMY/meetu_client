@@ -38,7 +38,7 @@
                 android:layout_width="180dp"
                 android:layout_height="180dp"
                 android:onClick="onClick"
-                android:text="点击我刷新\n附近好友" />
+                android:text="Click Me\nSearch Nearby Friend" />
 
             <ListView
                 android:id="@+id/nearby_friends_list"

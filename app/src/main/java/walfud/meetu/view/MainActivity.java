@@ -108,14 +108,14 @@ public class MainActivity extends RoboActivity
         {
             RelativeLayout autoReportLayout = (RelativeLayout) findViewById(R.id.auto_report);
             TextView autoReportDescription = (TextView) autoReportLayout.findViewById(R.id.description);
-            autoReportDescription.setText("自动更新我的位置");
+            autoReportDescription.setText("Auto Report My Location");
 
             mAutoReport = (Switch) autoReportLayout.findViewById(R.id.toggle);
         }
         {
             RelativeLayout autoSearchLayout = (RelativeLayout) findViewById(R.id.auto_search);
             TextView autoSearchDescription = (TextView) autoSearchLayout.findViewById(R.id.description);
-            autoSearchDescription.setText("自动搜索附近好友");
+            autoSearchDescription.setText("Auto Search Nearby Friend");
 
             mAutoSearch = (Switch) autoSearchLayout.findViewById(R.id.toggle);
         }

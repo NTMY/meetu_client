@@ -48,22 +48,22 @@ public class LoginActivity extends RoboActivity {
             @Override
             public void onRegister(User user) {
                 Toast.makeText(LoginActivity.this,
-                        String.format("注册成功: id(%s)", user.getId()),
+                        String.format("Register Success: id(%s)", user.getId()),
                         Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onLogin(User user) {
                 Toast.makeText(LoginActivity.this,
-                        String.format("登陆成功: id(%s)", user.getId()),
+                        String.format("Login Success: id(%s)", user.getId()),
                         Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFail(UserAccessDto userAccessDto) {
                 Toast.makeText(LoginActivity.this,
-                        userAccessDto == null ? "网络失败"
-                                        : String.format("注册/登陆失败: %s(%s)", userAccessDto.getErrMsg(), userAccessDto.getErrCode()),
+                        userAccessDto == null ? "Network fail"
+                                        : String.format("Register/Login fail: %s(%s)", userAccessDto.getErrMsg(), userAccessDto.getErrCode()),
                         Toast.LENGTH_LONG).show();
             }
         });
