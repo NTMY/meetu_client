@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 
@@ -27,14 +28,14 @@ import walfud.meetu.view.MainActivity;
 /**
  * Created by song on 2015/6/24.
  */
-public class ModelHub extends Service {
+public class MainService extends Service {
 
-    public static final String TAG = "ModelHub";
-
-    private LocationHelper mLocationHelper;
-
+    public static final String TAG = "MainService";
+    public static final String EXTRA_AUTO_REPORT = "EXTRA_AUTO_REPORT";
+    public static final String EXTRA_AUTO_SEARCH = "EXTRA_AUTO_SEARCH";
     private static final long UPDATE_INTERVAL = 10 * 60 * 1000; // 10 min
 
+    private LocationHelper mLocationHelper;
     private Timer mEngineTimer = new Timer();
 
     @Override
@@ -44,10 +45,23 @@ public class ModelHub extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null) {
+            return START_REDELIVER_INTENT;
+        }
+
         mLocationHelper = new LocationHelper();
         mLocationHelper.init();
 
-        return super.onStartCommand(intent, flags, startId);
+        if (intent.getBooleanExtra(EXTRA_AUTO_REPORT, false)) {
+            startAutoReportSelf();
+        }
+        if (intent.getBooleanExtra(EXTRA_AUTO_SEARCH, false)) {
+            startAutoSearchNearby();
+        }
+
+        Toast.makeText(MeetUApplication.getContext(), "Nice to Meet U", Toast.LENGTH_SHORT).show();
+
+        return START_REDELIVER_INTENT;
     }
 
     @Override
@@ -228,7 +242,7 @@ public class ModelHub extends Service {
     }
 
     //
-    public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), ModelHub.class);
+    public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), MainService.class);
 
     public static void startService() {
         MeetUApplication.getContext().startService(SERVICE_INTENT);
