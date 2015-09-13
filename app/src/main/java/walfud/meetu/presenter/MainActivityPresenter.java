@@ -133,7 +133,7 @@ public class MainActivityPresenter {
     // Presenter Function
     public void init() {
         if (mMainService == null) {
-            MainService.startService();
+            MainService.startServiceIgnoreSetting();
             MeetUApplication.getContext().bindService(MainService.SERVICE_INTENT, mEngineServiceConnection, 0);
         }
     }

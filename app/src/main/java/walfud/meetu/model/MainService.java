@@ -1,8 +1,10 @@
 package walfud.meetu.model;
 
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
@@ -31,8 +33,7 @@ import walfud.meetu.view.MainActivity;
 public class MainService extends Service {
 
     public static final String TAG = "MainService";
-    public static final String EXTRA_AUTO_REPORT = "EXTRA_AUTO_REPORT";
-    public static final String EXTRA_AUTO_SEARCH = "EXTRA_AUTO_SEARCH";
+    public static final String EXTRA_READ_SETTING = "EXTRA_READ_SETTING";
     private static final long UPDATE_INTERVAL = 10 * 60 * 1000; // 10 min
 
     private LocationHelper mLocationHelper;
@@ -52,11 +53,13 @@ public class MainService extends Service {
         mLocationHelper = new LocationHelper();
         mLocationHelper.init();
 
-        if (intent.getBooleanExtra(EXTRA_AUTO_REPORT, false)) {
-            startAutoReportSelf();
-        }
-        if (intent.getBooleanExtra(EXTRA_AUTO_SEARCH, false)) {
-            startAutoSearchNearby();
+        if (intent.getBooleanExtra(EXTRA_READ_SETTING, true)) {
+            if (PrefsModel.getInstance().isAutoReport()) {
+                startAutoReportSelf();
+            }
+            if (PrefsModel.getInstance().isAutoSearch()) {
+                startAutoSearchNearby();
+            }
         }
 
         Toast.makeText(MeetUApplication.getContext(), "Nice to Meet U", Toast.LENGTH_SHORT).show();
@@ -244,8 +247,36 @@ public class MainService extends Service {
     //
     public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), MainService.class);
 
-    public static void startService() {
+    @Override
+    public ComponentName startService(Intent service) {
+        return super.startService(service);
+    }
+
+    public static void startService(Bundle extras) {
+        if (extras != null) {
+            SERVICE_INTENT.putExtras(extras);
+        }
+
         MeetUApplication.getContext().startService(SERVICE_INTENT);
+    }
+
+    /**
+     * Start service and do action by preference value
+     */
+    public static void startServiceWithSetting() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(EXTRA_READ_SETTING, true);
+
+        startService(bundle);
+    }
+    /**
+     * Start service and do nothing ( ignore preference )
+     */
+    public static void startServiceIgnoreSetting() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(EXTRA_READ_SETTING, false);
+
+        MainService.startService(bundle);
     }
 
     public static void stopService() {

@@ -15,7 +15,7 @@ public class MainBroadcastReceiver extends BroadcastReceiver {
         if (false) {
         } else if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             // Boot Complete
-            MainService.startService();
+            MainService.startServiceWithSetting();
         }
     }
 }
