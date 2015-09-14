@@ -17,7 +17,7 @@ import walfud.meetu.MeetUApplication;
 import walfud.meetu.R;
 import walfud.meetu.ServiceBinder;
 import walfud.meetu.Utils;
-import walfud.meetu.model.MainService;
+import walfud.meetu.model.MainModel;
 import walfud.meetu.model.PrefsModel;
 import walfud.meetu.view.FeedbackActivity;
 import walfud.meetu.view.MainActivity;
@@ -30,10 +30,10 @@ public class MainActivityPresenter {
     public static final String TAG = "MainActivityPresenter";
 
     private MainActivity mView;
-    private MainService mMainService;
+    private MainModel mMainModel;
     private ServiceConnection mEngineServiceConnection = new ServiceConnection() {
 
-        private MainService.OnDataRequestListener mOnSearchListener = new MainService.OnDataRequestListener() {
+        private MainModel.OnDataRequestListener mOnSearchListener = new MainModel.OnDataRequestListener() {
             @Override
             public void onNoFriendNearby() {
                 mView.showSearchResult(new ArrayList<LocationCurr>());
@@ -58,12 +58,12 @@ public class MainActivityPresenter {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mMainService = ((ServiceBinder<MainService>) service).getService();
+            mMainModel = ((ServiceBinder<MainModel>) service).getService();
 
             // Init model
-            mMainService.setOnSearchListener(mOnSearchListener);
-            mMainService.setDebug(mView);
-            mMainService.setUser(mUser);
+            mMainModel.setOnSearchListener(mOnSearchListener);
+            mMainModel.setDebug(mView);
+            mMainModel.setUser(mUser);
 
             //
             mView.setAutoReportSwitch(PrefsModel.getInstance().isAutoReport());
@@ -72,7 +72,7 @@ public class MainActivityPresenter {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mMainService = null;
+            mMainModel = null;
         }
     };
 
@@ -83,7 +83,7 @@ public class MainActivityPresenter {
     // View Event
     public void onClickRadarView() {
         mView.showSearching();
-        mMainService.searchNearby();
+        mMainModel.searchNearby();
     }
 
     public void onClickNavigation() {
@@ -96,9 +96,9 @@ public class MainActivityPresenter {
         }
 
         if (isChecked) {
-            mMainService.startAutoReportSelf();
+            mMainModel.startAutoReportSelf();
         } else {
-            mMainService.stopAutoReportSelf();
+            mMainModel.stopAutoReportSelf();
         }
 
         PrefsModel.getInstance().setAutoReport(isChecked);
@@ -109,9 +109,9 @@ public class MainActivityPresenter {
         }
 
         if (isChecked) {
-            mMainService.startAutoSearchNearby();
+            mMainModel.startAutoSearchNearby();
         } else {
-            mMainService.stopAutoSearchNearby();
+            mMainModel.stopAutoSearchNearby();
         }
 
         PrefsModel.getInstance().setAutoSearch(isChecked);
@@ -132,9 +132,9 @@ public class MainActivityPresenter {
 
     // Presenter Function
     public void init() {
-        if (mMainService == null) {
-            MainService.startServiceIgnoreSetting();
-            MeetUApplication.getContext().bindService(MainService.SERVICE_INTENT, mEngineServiceConnection, 0);
+        if (mMainModel == null) {
+            MainModel.startServiceIgnoreSetting();
+            MeetUApplication.getContext().bindService(MainModel.SERVICE_INTENT, mEngineServiceConnection, 0);
         }
     }
     /**
@@ -142,14 +142,14 @@ public class MainActivityPresenter {
      * @param stopService `false` if only unbind service, `true` will unbind and stop service.
      */
     public void release(boolean stopService) {
-        if (mMainService != null) {
+        if (mMainModel != null) {
             MeetUApplication.getContext().unbindService(mEngineServiceConnection);
-            mMainService = null;
+            mMainModel = null;
         }
 
         if (stopService) {
-            if (MainService.isServiceRunning()) {
-                MainService.stopService();
+            if (MainModel.isServiceRunning()) {
+                MainModel.stopService();
             }
         }
     }
@@ -164,7 +164,7 @@ public class MainActivityPresenter {
      * Check if the model service has been bound successfully.
      */
     private boolean checkModelBind() {
-        if (mMainService == null) {
+        if (mMainModel == null) {
             Toast.makeText(MeetUApplication.getContext(), "Model Service Unbinding", Toast.LENGTH_SHORT).show();
             return false;
         }

@@ -30,9 +30,9 @@ import walfud.meetu.view.MainActivity;
 /**
  * Created by song on 2015/6/24.
  */
-public class MainService extends Service {
+public class MainModel extends Service {
 
-    public static final String TAG = "MainService";
+    public static final String TAG = "MainModel";
     public static final String EXTRA_READ_SETTING = "EXTRA_READ_SETTING";
     private static final long UPDATE_INTERVAL = 10 * 60 * 1000; // 10 min
 
@@ -128,7 +128,10 @@ public class MainService extends Service {
                             locationCurr.setAddress(aMapLocation.getAddress());
                             locationCurr.setBusiness(aMapLocation.getDistrict());
 
-                            new MeetuHandler().onUpload(mUploadListener, locationCurr);
+                            if (locationCurr.getLatitude() != 0
+                                    && locationCurr.getLongitude() != 0) {
+                                new MeetuHandler().onUpload(mUploadListener, locationCurr);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -167,7 +170,10 @@ public class MainService extends Service {
                             locationCurr.setAddress(aMapLocation.getAddress());
                             locationCurr.setBusiness(aMapLocation.getDistrict());
 
-                            new MeetuHandler().onMeetu(mMeetUListener, locationCurr);
+                            if (locationCurr.getLatitude() != 0
+                                    && locationCurr.getLongitude() != 0) {
+                                new MeetuHandler().onMeetu(mMeetUListener, locationCurr);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -245,7 +251,7 @@ public class MainService extends Service {
     }
 
     //
-    public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), MainService.class);
+    public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), MainModel.class);
 
     @Override
     public ComponentName startService(Intent service) {
@@ -276,7 +282,7 @@ public class MainService extends Service {
         Bundle bundle = new Bundle();
         bundle.putBoolean(EXTRA_READ_SETTING, false);
 
-        MainService.startService(bundle);
+        MainModel.startService(bundle);
     }
 
     public static void stopService() {
