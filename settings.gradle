@@ -1,1 +1,1 @@
-include ':app', ':emptylayout'
+include ':app', ':emptylayout', ':common'
