@@ -27,10 +27,10 @@ public class EmptyLayout {
 	private int mEmptyMessageViewId;
 	private int mLoadingMessageViewId;
 	private LayoutInflater mInflater;
-	private int mLoadingAnimationViewId;
+	private int mLoadingAnimationViewId;	
 	private View.OnClickListener mLoadingButtonClickListener;
-	private View.OnClickListener mEmptyButtonClickListener;
-	private View.OnClickListener mErrorButtonClickListener;
+    private View.OnClickListener mEmptyButtonClickListener;
+    private View.OnClickListener mErrorButtonClickListener;
 
 	// ---------------------------
 	// static variables 
@@ -46,7 +46,7 @@ public class EmptyLayout {
 	/**
 	 * The error state
 	 */
-	public final static int TYPE_ERROR = 3;
+	public final static int TYPE_ERROR = 3;	
 
 	// ---------------------------
 	// default values
@@ -72,7 +72,7 @@ public class EmptyLayout {
 	public ViewGroup getLoadingView() {
 		return mLoadingView;
 	}
-
+	
 	/**
 	 * Sets loading layout
 	 * @param loadingView the layout to be shown when the list is loading
@@ -80,7 +80,7 @@ public class EmptyLayout {
 	public void setLoadingView(ViewGroup loadingView) {
 		this.mLoadingView = loadingView;
 	}
-
+	
 	/**
 	 * Sets loading layout resource
 	 * @param res the resource of the layout to be shown when the list is loading
@@ -88,7 +88,7 @@ public class EmptyLayout {
 	public void setLoadingViewRes(int res){
 		this.mLoadingView = (ViewGroup) mInflater.inflate(res, null);
 	}
-
+	
 	/**
 	 * Gets the empty layout
 	 * @return the empty layout
@@ -96,7 +96,7 @@ public class EmptyLayout {
 	public ViewGroup getEmptyView() {
 		return mEmptyView;
 	}
-
+	
 	/**
 	 * Sets empty layout
 	 * @param emptyView the layout to be shown when no items are available to load in the list
@@ -104,7 +104,7 @@ public class EmptyLayout {
 	public void setEmptyView(ViewGroup emptyView) {
 		this.mEmptyView = emptyView;
 	}
-
+	
 	/**
 	 * Sets empty layout resource
 	 * @param res the resource of the layout to be shown when no items are available to load in the list
@@ -112,7 +112,7 @@ public class EmptyLayout {
 	public void setEmptyViewRes(int res){
 		this.mEmptyView = (ViewGroup) mInflater.inflate(res, null);
 	}
-
+	
 	/**
 	 * Gets the error layout
 	 * @return the error layout
@@ -120,7 +120,7 @@ public class EmptyLayout {
 	public ViewGroup getErrorView() {
 		return mErrorView;
 	}
-
+	
 	/**
 	 * Sets error layout
 	 * @param errorView the layout to be shown when list could not be loaded due to some error
@@ -128,7 +128,7 @@ public class EmptyLayout {
 	public void setErrorView(ViewGroup errorView) {
 		this.mErrorView = errorView;
 	}
-
+	
 	/**
 	 * Sets error layout resource
 	 * @param res the resource of the layout to be shown when list could not be loaded due to some error
@@ -136,7 +136,7 @@ public class EmptyLayout {
 	public void setErrorViewRes(int res){
 		this.mErrorView = (ViewGroup) mInflater.inflate(res, null);
 	}
-
+	
 	/**
 	 * Gets the loading animation
 	 * @return the loading animation
@@ -144,7 +144,7 @@ public class EmptyLayout {
 	public Animation getLoadingAnimation() {
 		return mLoadingAnimation;
 	}
-
+	
 	/**
 	 * Sets the loading animation
 	 * @param animation the animation to play when the list is being loaded
@@ -152,7 +152,7 @@ public class EmptyLayout {
 	public void setLoadingAnimation(Animation animation) {
 		this.mLoadingAnimation = animation;
 	}
-
+	
 	/**
 	 * Sets the resource of loading animation
 	 * @param animationResource the animation resource to play when the list is being loaded
@@ -160,7 +160,7 @@ public class EmptyLayout {
 	public void setLoadingAnimationRes(int animationResource) {
 		mLoadingAnimation = AnimationUtils.loadAnimation(mContext, animationResource);
 	}
-
+	
 	/**
 	 * Gets the list view for which this library is being used
 	 * @return the list view
@@ -168,7 +168,7 @@ public class EmptyLayout {
 	public ListView getListView() {
 		return mListView;
 	}
-
+	
 	/**
 	 * Sets the list view for which this library is being used
 	 * @param listView
@@ -176,7 +176,7 @@ public class EmptyLayout {
 	public void setListView(ListView listView) {
 		this.mListView = listView;
 	}
-
+	
 	/**
 	 * Gets the last set state of the list view
 	 * @return loading or empty or error
@@ -184,7 +184,7 @@ public class EmptyLayout {
 	public int getEmptyType() {
 		return mEmptyType;
 	}
-
+	
 	/**
 	 * Sets the state of the empty view of the list view
 	 * @param emptyType loading or empty or error
@@ -193,7 +193,7 @@ public class EmptyLayout {
 		this.mEmptyType = emptyType;
 		changeEmptyType();
 	}
-
+	
 	/**
 	 * Gets the message which is shown when the list could not be loaded due to some error
 	 * @return the error message 
@@ -201,7 +201,7 @@ public class EmptyLayout {
 	public String getErrorMessage() {
 		return mErrorMessage;
 	}
-
+	
 	/**
 	 * Sets the message to be shown when the list could not be loaded due to some error
 	 * @param errorMessage the error message
@@ -211,7 +211,7 @@ public class EmptyLayout {
 		this.mErrorMessage = errorMessage;
 		this.mErrorMessageViewId = messageViewId;
 	}
-
+	
 	/**
 	 * Sets the message to be shown when the list could not be loaded due to some error
 	 * @param errorMessage the error message
@@ -219,7 +219,7 @@ public class EmptyLayout {
 	public void setErrorMessage(String errorMessage) {
 		this.mErrorMessage = errorMessage;
 	}
-
+	
 	/**
 	 * Gets the message which will be shown when the list will be empty for not having any item to display
 	 * @return the message which will be shown when the list will be empty for not having any item to display
@@ -227,7 +227,7 @@ public class EmptyLayout {
 	public String getEmptyMessage() {
 		return mEmptyMessage;
 	}
-
+	
 	/**
 	 * Sets the message to be shown when the list will be empty for not having any item to display
 	 * @param emptyMessage the message
@@ -237,7 +237,7 @@ public class EmptyLayout {
 		this.mEmptyMessage = emptyMessage;
 		this.mEmptyMessageViewId = messageViewId;
 	}
-
+	
 	/**
 	 * Sets the message to be shown when the list will be empty for not having any item to display
 	 * @param emptyMessage the message
@@ -245,7 +245,7 @@ public class EmptyLayout {
 	public void setEmptyMessage(String emptyMessage) {
 		this.mEmptyMessage = emptyMessage;
 	}
-
+	
 	/**
 	 * Gets the message which will be shown when the list is being loaded
 	 * @return
@@ -253,7 +253,7 @@ public class EmptyLayout {
 	public String getLoadingMessage() {
 		return mLoadingMessage;
 	}
-
+	
 	/**
 	 * Sets the message to be shown when the list is being loaded
 	 * @param loadingMessage the message
@@ -263,7 +263,7 @@ public class EmptyLayout {
 		this.mLoadingMessage = loadingMessage;
 		this.mLoadingMessageViewId = messageViewId;
 	}
-
+	
 	/**
 	 * Sets the message to be shown when the list is being loaded
 	 * @param loadingMessage the message
@@ -271,7 +271,7 @@ public class EmptyLayout {
 	public void setLoadingMessage(String loadingMessage) {
 		this.mLoadingMessage = loadingMessage;
 	}
-
+	
 	/**
 	 * Gets the view in the loading layout which will be animated when the list is being loaded
 	 * @return the view in the loading layout which will be animated when the list is being loaded
@@ -279,119 +279,119 @@ public class EmptyLayout {
 	public int getLoadingAnimationViewId() {
 		return mLoadingAnimationViewId;
 	}
-
+	
 	/**
 	 * Sets the view in the loading layout which will be animated when the list is being loaded
 	 * @param loadingAnimationViewId the id of the view
 	 */
 	public void setLoadingAnimationViewId(int loadingAnimationViewId) {
 		this.mLoadingAnimationViewId = loadingAnimationViewId;
-	}
+	}	
 
-	/**
-	 * Gets the OnClickListener which perform when LoadingView was click
-	 * @return
-	 */
-	public View.OnClickListener getLoadingButtonClickListener() {
-		return mLoadingButtonClickListener;
-	}
+    /**
+     * Gets the OnClickListener which perform when LoadingView was click
+     * @return
+     */
+    public View.OnClickListener getLoadingButtonClickListener() {
+        return mLoadingButtonClickListener;
+    }
 
-	/**
-	 * Sets the OnClickListener to LoadingView
-	 * @param loadingButtonClickListener OnClickListener Object
-	 */
-	public void setLoadingButtonClickListener(View.OnClickListener loadingButtonClickListener) {
-		this.mLoadingButtonClickListener = loadingButtonClickListener;
-	}
+    /**
+     * Sets the OnClickListener to LoadingView
+     * @param loadingButtonClickListener OnClickListener Object
+     */
+    public void setLoadingButtonClickListener(View.OnClickListener loadingButtonClickListener) {
+        this.mLoadingButtonClickListener = loadingButtonClickListener;
+    }
+    
+    /**
+     * Gets the OnClickListener which perform when EmptyView was click
+     * @return
+     */
+    public View.OnClickListener getEmptyButtonClickListener() {
+        return mEmptyButtonClickListener;
+    }
 
-	/**
-	 * Gets the OnClickListener which perform when EmptyView was click
-	 * @return
-	 */
-	public View.OnClickListener getEmptyButtonClickListener() {
-		return mEmptyButtonClickListener;
-	}
+    /**
+     * Sets the OnClickListener to EmptyView
+     * @param emptyButtonClickListener OnClickListener Object
+     */
+    public void setEmptyButtonClickListener(View.OnClickListener emptyButtonClickListener) {
+        this.mEmptyButtonClickListener = emptyButtonClickListener;
+    }
+    
+    /**
+     * Gets the OnClickListener which perform when ErrorView was click
+     * @return
+     */
+    public View.OnClickListener getErrorButtonClickListener() {
+        return mErrorButtonClickListener;
+    }
 
-	/**
-	 * Sets the OnClickListener to EmptyView
-	 * @param emptyButtonClickListener OnClickListener Object
-	 */
-	public void setEmptyButtonClickListener(View.OnClickListener emptyButtonClickListener) {
-		this.mEmptyButtonClickListener = emptyButtonClickListener;
-	}
+    /**
+     * Sets the OnClickListener to ErrorView
+     * @param errorButtonClickListener OnClickListener Object
+     */
+    public void setErrorButtonClickListener(View.OnClickListener errorButtonClickListener) {
+        this.mErrorButtonClickListener = errorButtonClickListener;
+    }
 
-	/**
-	 * Gets the OnClickListener which perform when ErrorView was click
-	 * @return
-	 */
-	public View.OnClickListener getErrorButtonClickListener() {
-		return mErrorButtonClickListener;
-	}
-
-	/**
-	 * Sets the OnClickListener to ErrorView
-	 * @param errorButtonClickListener OnClickListener Object
-	 */
-	public void setErrorButtonClickListener(View.OnClickListener errorButtonClickListener) {
-		this.mErrorButtonClickListener = errorButtonClickListener;
-	}
-
-	/**
-	 * Gets if a button is shown in the empty view
-	 * @return if a button is shown in the empty view
-	 */
-	public boolean isEmptyButtonShown() {
+    /**
+     * Gets if a button is shown in the empty view
+     * @return if a button is shown in the empty view
+     */
+    public boolean isEmptyButtonShown() {
 		return mShowEmptyButton;
 	}
 
-	/**
-	 * Sets if a button will be shown in the empty view
-	 * @param showEmptyButton will a button be shown in the empty view
-	 */
+    /**
+     * Sets if a button will be shown in the empty view
+     * @param showEmptyButton will a button be shown in the empty view
+     */
 	public void setShowEmptyButton(boolean showEmptyButton) {
 		this.mShowEmptyButton = showEmptyButton;
 	}
 
 	/**
-	 * Gets if a button is shown in the loading view
-	 * @return if a button is shown in the loading view
-	 */
+     * Gets if a button is shown in the loading view
+     * @return if a button is shown in the loading view
+     */
 	public boolean isLoadingButtonShown() {
 		return mShowLoadingButton;
 	}
 
 	/**
-	 * Sets if a button will be shown in the loading view
-	 * @param showLoadingButton will a button be shown in the loading view
-	 */
+     * Sets if a button will be shown in the loading view
+     * @param showLoadingButton will a button be shown in the loading view
+     */
 	public void setShowLoadingButton(boolean showLoadingButton) {
 		this.mShowLoadingButton = showLoadingButton;
 	}
 
 	/**
-	 * Gets if a button is shown in the error view
-	 * @return if a button is shown in the error view
-	 */
+     * Gets if a button is shown in the error view
+     * @return if a button is shown in the error view
+     */
 	public boolean isErrorButtonShown() {
 		return mShowErrorButton;
 	}
 
 	/**
-	 * Sets if a button will be shown in the error view
-	 * @param showErrorButton will a button be shown in the error view
-	 */
+     * Sets if a button will be shown in the error view
+     * @param showErrorButton will a button be shown in the error view
+     */
 	public void setShowErrorButton(boolean showErrorButton) {
 		this.mShowErrorButton = showErrorButton;
 	}
-
+    
 	/**
 	 * Gets the ID of the button in the loading view
 	 * @return the ID of the button in the loading view
 	 */
 	public int getmLoadingViewButtonId() {
 		return mLoadingViewButtonId;
-	}
-
+	}	
+	
 	/**
 	 * Sets the ID of the button in the loading view. This ID is required if you want the button the loading view to be click-able.
 	 * @param loadingViewButtonId the ID of the button in the loading view
@@ -423,7 +423,7 @@ public class EmptyLayout {
 	public int getEmptyViewButtonId() {
 		return mEmptyViewButtonId;
 	}
-
+	
 	/**
 	 * Sets the ID of the button in the empty view. This ID is required if you want the button the empty view to be click-able.
 	 * @param emptyViewButtonId the ID of the button in the empty view
@@ -432,17 +432,17 @@ public class EmptyLayout {
 		this.mEmptyViewButtonId = emptyViewButtonId;
 	}
 
+    
 
 
+    
 
-
-
-	// ---------------------------
+    // ---------------------------
 	// private methods
 	// ---------------------------	
 
 	private void changeEmptyType() {
-
+		
 		setDefaultValues();
 		refreshMessages();
 
@@ -451,52 +451,52 @@ public class EmptyLayout {
 			View loadingAnimationView = null;
 			if (mLoadingAnimationViewId > 0) loadingAnimationView = ((Activity) mContext).findViewById(mLoadingAnimationViewId);
 			switch (mEmptyType) {
-				case TYPE_EMPTY:
-					if (mEmptyView!=null) mEmptyView.setVisibility(View.VISIBLE);
-					if (mErrorView!=null) mErrorView.setVisibility(View.INVISIBLE);
-					if (mLoadingView!=null) {
-						mLoadingView.setVisibility(View.INVISIBLE);
-						if (loadingAnimationView!=null && loadingAnimationView.getAnimation()!=null) loadingAnimationView.getAnimation().cancel();
+			case TYPE_EMPTY:
+				if (mEmptyView!=null) mEmptyView.setVisibility(View.VISIBLE);
+				if (mErrorView!=null) mErrorView.setVisibility(View.INVISIBLE);
+				if (mLoadingView!=null) {
+					mLoadingView.setVisibility(View.INVISIBLE);
+					if (loadingAnimationView!=null && loadingAnimationView.getAnimation()!=null) loadingAnimationView.getAnimation().cancel();
+				}
+                break;
+			case TYPE_ERROR:
+				if (mEmptyView!=null) mEmptyView.setVisibility(View.INVISIBLE);
+				if (mErrorView!=null) mErrorView.setVisibility(View.VISIBLE);
+				if (mLoadingView!=null) {
+					mLoadingView.setVisibility(View.INVISIBLE);
+					if (loadingAnimationView!=null && loadingAnimationView.getAnimation()!=null) loadingAnimationView.getAnimation().cancel();
+				}
+                break;
+			case TYPE_LOADING:
+				if (mEmptyView!=null) mEmptyView.setVisibility(View.INVISIBLE);
+				if (mErrorView!=null) mErrorView.setVisibility(View.INVISIBLE);
+				if (mLoadingView!=null) {
+					mLoadingView.setVisibility(View.VISIBLE);
+					if (mLoadingAnimation != null && loadingAnimationView!=null) {
+						loadingAnimationView.startAnimation(mLoadingAnimation);
 					}
-					break;
-				case TYPE_ERROR:
-					if (mEmptyView!=null) mEmptyView.setVisibility(View.INVISIBLE);
-					if (mErrorView!=null) mErrorView.setVisibility(View.VISIBLE);
-					if (mLoadingView!=null) {
-						mLoadingView.setVisibility(View.INVISIBLE);
-						if (loadingAnimationView!=null && loadingAnimationView.getAnimation()!=null) loadingAnimationView.getAnimation().cancel();
+					else if (loadingAnimationView!=null) {
+						loadingAnimationView.startAnimation(getRotateAnimation());
 					}
-					break;
-				case TYPE_LOADING:
-					if (mEmptyView!=null) mEmptyView.setVisibility(View.INVISIBLE);
-					if (mErrorView!=null) mErrorView.setVisibility(View.INVISIBLE);
-					if (mLoadingView!=null) {
-						mLoadingView.setVisibility(View.VISIBLE);
-						if (mLoadingAnimation != null && loadingAnimationView!=null) {
-							loadingAnimationView.startAnimation(mLoadingAnimation);
-						}
-						else if (loadingAnimationView!=null) {
-							loadingAnimationView.startAnimation(getRotateAnimation());
-						}
-					}
-					break;
-				default:
-					break;
+				}
+                break;
+			default:
+				break;
 			}
-		}
+        }
 	}
 
-	private void layoutInListCenter(View v) {
-		int width = v.getWidth();
-		int height = v.getHeight();
+    private void layoutInListCenter(View v) {
+        int width = v.getWidth();
+        int height = v.getHeight();
 
-		int left = (int) (mListView.getX() + mListView.getWidth()/2 - width/2);
-		int top = (int) (mListView.getY() + mListView.getHeight()/2 - height/2);
-		((LayoutParams) v.getLayoutParams()).leftMargin = left;
-		((LayoutParams) v.getLayoutParams()).topMargin = top;
-		v.requestLayout();
-	}
-
+        int left = (int) (mListView.getX() + mListView.getWidth()/2 - width/2);
+        int top = (int) (mListView.getY() + mListView.getHeight()/2 - height/2);
+        ((LayoutParams) v.getLayoutParams()).leftMargin = left;
+        ((LayoutParams) v.getLayoutParams()).topMargin = top;
+        v.requestLayout();
+    }
+	
 	private void refreshMessages() {
 		if (mEmptyMessageViewId>0 && mEmptyMessage!=null) ((TextView)mEmptyView.findViewById(mEmptyMessageViewId)).setText(mEmptyMessage);
 		if (mLoadingMessageViewId>0 && mLoadingMessage!=null) ((TextView)mLoadingView.findViewById(mLoadingMessageViewId)).setText(mLoadingMessage);
@@ -515,7 +515,7 @@ public class EmptyLayout {
 
 		if (mEmptyView == null) {
 			mEmptyView = (ViewGroup) mInflater.inflate(R.layout.view_empty, mStateViewLayout, false);
-			mStateViewLayout.addView(mEmptyView);
+            mStateViewLayout.addView(mEmptyView);
 			if (!(mEmptyMessageViewId > 0)) mEmptyMessageViewId = R.id.textViewMessage;
 			if (mShowEmptyButton && mEmptyViewButtonId > 0 && mEmptyButtonClickListener != null) {
 				View emptyViewButton = mEmptyView.findViewById(mEmptyViewButtonId);
@@ -528,16 +528,16 @@ public class EmptyLayout {
 				emptyViewButton.setVisibility(View.INVISIBLE);
 			}
 
-			mEmptyView.post(new Runnable() {
-				@Override
-				public void run() {
-					layoutInListCenter(mEmptyView);
-				}
-			});
+            mEmptyView.post(new Runnable() {
+                @Override
+                public void run() {
+                    layoutInListCenter(mEmptyView);
+                }
+            });
 		}
 		if (mLoadingView == null) {
 			mLoadingView = (ViewGroup) mInflater.inflate(R.layout.view_loading, mStateViewLayout, false);
-			mStateViewLayout.addView(mLoadingView);
+            mStateViewLayout.addView(mLoadingView);
 			mLoadingAnimationViewId = R.id.imageViewLoading;
 			if (!(mLoadingMessageViewId > 0)) mLoadingMessageViewId = R.id.textViewMessage;
 			if (mShowLoadingButton && mLoadingViewButtonId > 0 && mLoadingButtonClickListener != null) {
@@ -551,16 +551,16 @@ public class EmptyLayout {
 				loadingViewButton.setVisibility(View.INVISIBLE);
 			}
 
-			mLoadingView.post(new Runnable() {
-				@Override
-				public void run() {
-					layoutInListCenter(mLoadingView);
-				}
-			});
+            mLoadingView.post(new Runnable() {
+                @Override
+                public void run() {
+                    layoutInListCenter(mLoadingView);
+                }
+            });
 		}
 		if (mErrorView == null) {
 			mErrorView = (ViewGroup) mInflater.inflate(R.layout.view_error, mStateViewLayout, false);
-			mStateViewLayout.addView(mErrorView);
+            mStateViewLayout.addView(mErrorView);
 			if (!(mErrorMessageViewId > 0)) mErrorMessageViewId = R.id.textViewMessage;
 			if (mShowErrorButton && mErrorViewButtonId > 0 && mErrorButtonClickListener != null) {
 				View errorViewButton = mErrorView.findViewById(mErrorViewButtonId);
@@ -573,28 +573,28 @@ public class EmptyLayout {
 				errorViewButton.setVisibility(View.INVISIBLE);
 			}
 
-			mErrorView.post(new Runnable() {
-				@Override
-				public void run() {
-					layoutInListCenter(mErrorView);
-				}
-			});
+            mErrorView.post(new Runnable() {
+                @Override
+                public void run() {
+                    layoutInListCenter(mErrorView);
+                }
+            });
 		}
 	}
-
+	
 	private static Animation getRotateAnimation() {
 		final RotateAnimation rotateAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f);
-		rotateAnimation.setDuration(1500);
+		rotateAnimation.setDuration(1500);		
 		rotateAnimation.setInterpolator(new LinearInterpolator());
 		rotateAnimation.setRepeatCount(Animation.INFINITE);
 		return rotateAnimation;
 	}
-
+	
 
 	// ---------------------------
 	// public methods
 	// ---------------------------
-
+	
 	/**
 	 * Constructor
 	 * @param context the context (preferred context is any activity)
@@ -603,7 +603,7 @@ public class EmptyLayout {
 		mContext = context;
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
-
+	
 	/**
 	 * Constructor
 	 * @param context the context (preferred context is any activity)
@@ -614,8 +614,8 @@ public class EmptyLayout {
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mListView = listView;
 	}
-
-
+	
+	
 	/**
 	 * Shows the empty layout if the list is empty
 	 */
@@ -639,6 +639,6 @@ public class EmptyLayout {
 		this.mEmptyType = TYPE_ERROR;
 		changeEmptyType();
 	}
-
-
+	
+	
 }
