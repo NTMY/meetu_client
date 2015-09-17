@@ -12,15 +12,15 @@ import android.widget.Toast;
 import org.meetu.constant.Constant;
 import org.meetu.dto.BaseDto;
 
-import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+import walfud.meetu.BaseActivity;
 import walfud.meetu.R;
 import walfud.meetu.presenter.FeedbackPresenter;
 
 /**
  * Created by walfud on 2015/8/19.
  */
-public class FeedbackActivity extends RoboActivity {
+public class FeedbackActivity extends BaseActivity {
 
     public static final String TAG = "FeedbackActivity";
 

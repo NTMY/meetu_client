@@ -1,14 +1,14 @@
 package walfud.meetu.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 
+import walfud.meetu.BaseActivity;
 import walfud.meetu.model.PrefsModel;
 
 /**
  * Created by walfud on 2015/8/18.
  */
-public class LauncherActivity extends Activity {
+public class LauncherActivity extends BaseActivity {
 
     public static final String TAG = "LauncherActivity";
 

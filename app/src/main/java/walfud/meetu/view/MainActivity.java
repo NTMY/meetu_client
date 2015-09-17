@@ -29,15 +29,15 @@ import org.meetu.model.LocationCurr;
 
 import java.util.List;
 
-import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+import walfud.meetu.BaseActivity;
 import walfud.meetu.Constants;
 import walfud.meetu.R;
 import walfud.meetu.model.ParcelableUser;
 import walfud.meetu.presenter.MainActivityPresenter;
 
 
-public class MainActivity extends RoboActivity
+public class MainActivity extends BaseActivity
         implements View.OnClickListener, Handler.Callback {
 
     public static final String TAG = "MainActivity";

@@ -11,8 +11,8 @@ import android.widget.Toast;
 import org.meetu.dto.UserAccessDto;
 import org.meetu.model.User;
 
-import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+import walfud.meetu.BaseActivity;
 import walfud.meetu.R;
 import walfud.meetu.presenter.LoginPresenter;
 
@@ -20,7 +20,8 @@ import walfud.meetu.presenter.LoginPresenter;
 /**
  * Created by walfud on 2015/8/2.
  */
-public class LoginActivity extends RoboActivity {
+public class LoginActivity extends BaseActivity
+        implements View.OnLongClickListener {
 
     public static final String TAG = "LoginActivity";
 
@@ -67,6 +68,8 @@ public class LoginActivity extends RoboActivity {
                         Toast.LENGTH_LONG).show();
             }
         });
+
+        mOk.setOnLongClickListener(this);
     }
 
     public void onClick(View v) {
@@ -75,6 +78,25 @@ public class LoginActivity extends RoboActivity {
         user.setPwd(mPassword.getText().toString());
 
         mPresenter.onClickLogin(user);
+    }
+
+    /**
+     * Login as Developer
+     * @return
+     */
+    @Override
+    public boolean onLongClick(View v) {
+        mPhoneNum.setText("13800138000");
+        mPassword.setText("MeetU");
+
+        mOk.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mOk.performClick();
+            }
+        }, 1000);
+
+        return true;
     }
 
     // View Function

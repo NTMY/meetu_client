@@ -1,19 +1,19 @@
 package walfud.meetu.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ViewFlipper;
 
+import walfud.meetu.BaseActivity;
 import walfud.meetu.R;
 import walfud.meetu.model.PrefsModel;
 
 /**
  * Created by walfud on 2015/8/18.
  */
-public class SplashActivity extends Activity {
+public class SplashActivity extends BaseActivity {
 
     public static final String TAG = "SplashActivity";
 

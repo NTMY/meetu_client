@@ -26,5 +26,7 @@ dependencies {
     compile 'com.baoyz.pg:core:2.1.0'
     compile project(':emptylayout')
     compile project(':common')
+
+    compile 'com.bugtags.library:bugtags-lib:latest.integration'
 }
 
