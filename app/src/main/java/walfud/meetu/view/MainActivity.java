@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.balysv.materialmenu.MaterialMenuView;
 import com.kanak.emptylayout.EmptyLayout;
+import com.walfud.common.StaticHandler;
 
 import org.meetu.model.LocationCurr;
 
@@ -32,13 +33,12 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import walfud.meetu.Constants;
 import walfud.meetu.R;
-import walfud.meetu.StaticHandler;
 import walfud.meetu.model.ParcelableUser;
 import walfud.meetu.presenter.MainActivityPresenter;
 
 
 public class MainActivity extends RoboActivity
-        implements View.OnClickListener, StaticHandler.OnHandleMessage {
+        implements View.OnClickListener, Handler.Callback {
 
     public static final String TAG = "MainActivity";
 
@@ -199,11 +199,13 @@ public class MainActivity extends RoboActivity
 
     private StaticHandler<MainActivity> mHandler;
     @Override
-    public void handleMessage(Message msg) {
+    public boolean handleMessage(Message msg) {
         switch (msg.what) {
             default:
                 break;
         }
+
+        return false;
     }
 
     @Override

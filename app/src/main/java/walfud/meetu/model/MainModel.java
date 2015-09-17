@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
+import com.walfud.common.ServiceBinder;
 
 import org.meetu.client.handler.MeetuHandler;
 import org.meetu.client.listener.MeetuListener;
@@ -23,7 +24,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import walfud.meetu.MeetUApplication;
-import walfud.meetu.ServiceBinder;
 import walfud.meetu.Utils;
 import walfud.meetu.view.MainActivity;
 

@@ -25,8 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="72dp"
             android:gravity="center"
-            android:hint="Phone Number"
-            android:text="13911592475" />
+            android:hint="Phone Number"/>
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -39,8 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:hint="Password"
-            android:text="walfud" />
+            android:hint="Password"/>
     </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

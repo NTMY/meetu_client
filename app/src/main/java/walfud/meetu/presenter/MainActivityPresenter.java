@@ -7,6 +7,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.walfud.common.ServiceBinder;
+
 import org.meetu.model.LocationCurr;
 import org.meetu.model.User;
 
@@ -15,7 +17,6 @@ import java.util.List;
 
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.R;
-import walfud.meetu.ServiceBinder;
 import walfud.meetu.Utils;
 import walfud.meetu.model.MainModel;
 import walfud.meetu.model.PrefsModel;
