@@ -51,7 +51,7 @@ public class FeedbackActivity extends BaseActivity {
     public void onSendResult(BaseDto result) {
         if (result.getErrCode() == null) {
             // Feedback Success
-            mSuccess.loadUrl(Constant.DOMAIN);
+            mSuccess.loadUrl(Constant.FEEDBACK_URL);
             mSuccess.setVisibility(View.VISIBLE);
             mContent.setVisibility(View.GONE);
             mSend.setVisibility(View.GONE);
