@@ -31,9 +31,7 @@ import java.util.List;
 
 import roboguice.inject.InjectView;
 import walfud.meetu.BaseActivity;
-import walfud.meetu.Constants;
 import walfud.meetu.R;
-import walfud.meetu.model.ParcelableUser;
 import walfud.meetu.presenter.MainActivityPresenter;
 
 
@@ -122,7 +120,6 @@ public class MainActivity extends BaseActivity
 
         mPresenter = new MainActivityPresenter(this);
         mPresenter.init();
-        mPresenter.setUser(((ParcelableUser) getIntent().getParcelableExtra(Constants.KEY_USER)));
         mRadarView.setOnClickListener(this);
         mNavigation.setOnClickListener(this);
         mAutoReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

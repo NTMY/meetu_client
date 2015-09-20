@@ -8,7 +8,7 @@ import android.widget.ViewFlipper;
 
 import walfud.meetu.BaseActivity;
 import walfud.meetu.R;
-import walfud.meetu.model.PrefsModel;
+import walfud.meetu.manager.PrefsManager;
 
 /**
  * Created by walfud on 2015/8/18.
@@ -35,7 +35,7 @@ public class SplashActivity extends BaseActivity {
         } else {
             LoginActivity.startActivity(this);
 
-            PrefsModel.getInstance().setShowSplash(false);
+            PrefsManager.getInstance().setShowSplash(false);
             finish();
         }
     }

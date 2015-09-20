@@ -9,7 +9,7 @@ import org.meetu.dto.BaseDto;
 import org.meetu.model.Feedback;
 
 import walfud.meetu.R;
-import walfud.meetu.model.PrefsModel;
+import walfud.meetu.manager.PrefsManager;
 import walfud.meetu.view.FeedbackActivity;
 
 /**
@@ -43,7 +43,7 @@ public class FeedbackPresenter implements View.OnClickListener {
     //
     private void onClickSend() {
         Feedback feedback = new Feedback();
-        feedback.setUserId(PrefsModel.getInstance().getUserId());
+        feedback.setUserId((int) PrefsManager.getInstance().getCurrentUserId());
         feedback.setContent(mView.getFeedbackContent());
 
         new AsyncTask<Feedback, Integer, BaseDto>() {

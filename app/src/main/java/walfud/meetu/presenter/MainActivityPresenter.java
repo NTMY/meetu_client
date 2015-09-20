@@ -18,8 +18,8 @@ import java.util.List;
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.R;
 import walfud.meetu.Utils;
+import walfud.meetu.manager.PrefsManager;
 import walfud.meetu.model.MainModel;
-import walfud.meetu.model.PrefsModel;
 import walfud.meetu.view.FeedbackActivity;
 import walfud.meetu.view.MainActivity;
 
@@ -63,12 +63,10 @@ public class MainActivityPresenter {
 
             // Init model
             mMainModel.setOnSearchListener(mOnSearchListener);
-            mMainModel.setDebug(mView);
-            mMainModel.setUser(mUser);
 
             //
-            mView.setAutoReportSwitch(PrefsModel.getInstance().isAutoReport());
-            mView.setAutoSearchSwitch(PrefsModel.getInstance().isAutoSearch());
+            mView.setAutoReportSwitch(PrefsManager.getInstance().isAutoReport());
+            mView.setAutoSearchSwitch(PrefsManager.getInstance().isAutoSearch());
         }
 
         @Override
@@ -102,7 +100,7 @@ public class MainActivityPresenter {
             mMainModel.stopAutoReportSelf();
         }
 
-        PrefsModel.getInstance().setAutoReport(isChecked);
+        PrefsManager.getInstance().setAutoReport(isChecked);
     }
     public void onClickAutoSearch(boolean isChecked) {
         if (!checkModelBind()) {
@@ -115,7 +113,7 @@ public class MainActivityPresenter {
             mMainModel.stopAutoSearchNearby();
         }
 
-        PrefsModel.getInstance().setAutoSearch(isChecked);
+        PrefsManager.getInstance().setAutoSearch(isChecked);
     }
     public void onClickFeedback() {
         FeedbackActivity.startActivity(mView);

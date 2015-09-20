@@ -1,9 +1,14 @@
 package walfud.meetu;
 
+import java.util.Date;
+
 /**
  * Created by walfud on 2015/8/7.
  */
 public class Constants {
 
-    public static final String KEY_USER = "key_user";
+    public static final long INVALID_USER_ID = -1L;
+
+    public static final Date INVALID_UPLOAD_TIME = new Date(0);
+
 }

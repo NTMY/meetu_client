@@ -16,7 +16,6 @@ import org.meetu.client.listener.MeetuListener;
 import org.meetu.client.listener.MeetuUploadListener;
 import org.meetu.dto.BaseDto;
 import org.meetu.model.LocationCurr;
-import org.meetu.model.User;
 import org.meetu.util.ListBean;
 
 import java.util.List;
@@ -25,6 +24,9 @@ import java.util.TimerTask;
 
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.Utils;
+import walfud.meetu.manager.LocationManager;
+import walfud.meetu.manager.PrefsManager;
+import walfud.meetu.manager.UserManager;
 import walfud.meetu.view.MainActivity;
 
 /**
@@ -36,7 +38,7 @@ public class MainModel extends Service {
     public static final String EXTRA_READ_SETTING = "EXTRA_READ_SETTING";
     private static final long UPDATE_INTERVAL = 10 * 60 * 1000; // 10 min
 
-    private LocationHelper mLocationHelper;
+    private LocationManager mLocationManager;
     private Timer mEngineTimer = new Timer();
 
     @Override
@@ -50,14 +52,14 @@ public class MainModel extends Service {
             return START_REDELIVER_INTENT;
         }
 
-        mLocationHelper = new LocationHelper();
-        mLocationHelper.init();
+        mLocationManager = LocationManager.getInstance();
+        mLocationManager.init();
 
         if (intent.getBooleanExtra(EXTRA_READ_SETTING, true)) {
-            if (PrefsModel.getInstance().isAutoReport()) {
+            if (PrefsManager.getInstance().isAutoReport()) {
                 startAutoReportSelf();
             }
-            if (PrefsModel.getInstance().isAutoSearch()) {
+            if (PrefsManager.getInstance().isAutoSearch()) {
                 startAutoSearchNearby();
             }
         }
@@ -72,7 +74,7 @@ public class MainModel extends Service {
         super.onDestroy();
 
         mEngineTimer.cancel();
-        mLocationHelper.destroy();
+        mLocationManager.destroy();
     }
 
     @Override
@@ -96,13 +98,8 @@ public class MainModel extends Service {
         mOnSearchListener = listener;
     }
 
-    private User mUser;
-    public void setUser(User user) {
-        mUser = user;
-    }
-
     public void reportSelf() {
-        mLocationHelper.getLocation(new LocationHelper.OnLocationListener() {
+        mLocationManager.getLocation(new LocationManager.OnLocationListener() {
             @Override
             public void onLocation(AMapLocation aMapLocation) {
                 // Report location only
@@ -122,7 +119,7 @@ public class MainModel extends Service {
                             AMapLocation aMapLocation = params[0];
 
                             LocationCurr locationCurr = new LocationCurr();
-                            locationCurr.setUserId(mUser.getId());
+                            locationCurr.setUserId(UserManager.getInstance().getCurrentUser().getUserId().intValue());
                             locationCurr.setLatitude(aMapLocation.getLatitude());
                             locationCurr.setLongitude(aMapLocation.getLongitude());
                             locationCurr.setAddress(aMapLocation.getAddress());
@@ -144,7 +141,7 @@ public class MainModel extends Service {
     }
 
     public void searchNearby() {
-        mLocationHelper.getLocation(new LocationHelper.OnLocationListener() {
+        mLocationManager.getLocation(new LocationManager.OnLocationListener() {
             @Override
             public void onLocation(AMapLocation aMapLocation) {
                 // Report location & get network result
@@ -164,7 +161,7 @@ public class MainModel extends Service {
                             AMapLocation aMapLocation = params[0];
 
                             LocationCurr locationCurr = new LocationCurr();
-                            locationCurr.setUserId(mUser.getId());
+                            locationCurr.setUserId(UserManager.getInstance().getCurrentUser().getUserId().intValue());
                             locationCurr.setLatitude(aMapLocation.getLatitude());
                             locationCurr.setLongitude(aMapLocation.getLongitude());
                             locationCurr.setAddress(aMapLocation.getAddress());
@@ -296,8 +293,4 @@ public class MainModel extends Service {
 
     // Debug
     private MainActivity mMainActivity;
-
-    public void setDebug(MainActivity mainActivity) {
-        mMainActivity = mainActivity;
-    }
 }

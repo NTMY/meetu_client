@@ -1,5 +1,6 @@
-package walfud.meetu.model;
+package walfud.meetu.manager;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.amap.api.location.AMapLocation;
@@ -7,14 +8,17 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
 
+import walfud.meetu.Constants;
 import walfud.meetu.MeetUApplication;
+import walfud.meetu.database.Location;
 
 /**
  * Created by song on 2015/7/25.
  */
-public class LocationHelper {
+public class LocationManager {
 
-    public static final String TAG = "LocationHelper";
+    public static final String TAG = "LocationManager";
+    private static LocationManager sInstance;
 
     public interface OnLocationListener {
         /**
@@ -25,14 +29,16 @@ public class LocationHelper {
         void onLocation(AMapLocation aMapLocation);
     }
 
+    private Context mContext;
     private LocationManagerProxy mLocationManagerProxy;
 
-    public LocationHelper() {
+    private LocationManager(Context context) {
+        mContext = context;
     }
 
     // Function
     public void init() {
-        mLocationManagerProxy = LocationManagerProxy.getInstance(MeetUApplication.getContext());
+        mLocationManagerProxy = LocationManagerProxy.getInstance(mContext);
     }
 
     public void destroy() {
@@ -43,6 +49,10 @@ public class LocationHelper {
         mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, -1, 0, new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
+                // Save to db
+                DbManager.getInstance().insert(aMapLocation2DbLocation(aMapLocation));
+
+                //
                 if (listener != null) {
                     listener.onLocation(aMapLocation);
                 }
@@ -64,5 +74,27 @@ public class LocationHelper {
             public void onProviderDisabled(String provider) {
             }
         });
+    }
+
+    // Internal
+    private Location aMapLocation2DbLocation(AMapLocation aMapLocation) {
+        return new Location(
+                null,
+                aMapLocation.getLongitude(),
+                aMapLocation.getLatitude(),
+                aMapLocation.getAddress(),
+                aMapLocation.getDistrict(),
+                Constants.INVALID_UPLOAD_TIME,
+                UserManager.getInstance().getCurrentUser().getUserId()
+        );
+    }
+
+    // Helper
+    public static LocationManager getInstance() {
+        if (sInstance == null) {
+            sInstance = new LocationManager(MeetUApplication.getContext());
+        }
+
+        return sInstance;
     }
 }

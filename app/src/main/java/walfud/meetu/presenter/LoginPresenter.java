@@ -3,17 +3,13 @@ package walfud.meetu.presenter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.baoyz.pg.PG;
-
 import org.meetu.client.handler.UserHandler;
 import org.meetu.client.listener.UserAccessListener;
 import org.meetu.constant.Constant;
 import org.meetu.dto.UserAccessDto;
 import org.meetu.model.User;
 
-import walfud.meetu.Constants;
-import walfud.meetu.model.ParcelableUser;
-import walfud.meetu.model.PrefsModel;
+import walfud.meetu.manager.UserManager;
 import walfud.meetu.view.LoginActivity;
 import walfud.meetu.view.MainActivity;
 
@@ -85,11 +81,10 @@ public class LoginPresenter {
                 } else if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())
                         || Constant.ACCESS_STATUS_LOGIN.equals(userAccessDto.getAccess_status())) {
                     Bundle bundle = new Bundle();
-                    bundle.putParcelable(Constants.KEY_USER, PG.convertParcelable(new ParcelableUser(userAccessDto.getUser())));
                     MainActivity.startActivity(mView, bundle);
                     mView.finish();
 
-                    PrefsModel.getInstance().setUserId(userAccessDto.getUser().getId());
+                    UserManager.getInstance().setCurrentUser(serverUser2ClientUser(userAccessDto.getUser()));
 
                     if (mOnLoginListener != null) {
                         if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())) {
@@ -115,5 +110,16 @@ public class LoginPresenter {
     private OnLoginListener mOnLoginListener;
     public void setOnLoginListener(OnLoginListener loginListener) {
         mOnLoginListener = loginListener;
+    }
+
+    // Internal
+    private walfud.meetu.database.User serverUser2ClientUser(User serverUser) {
+        return new walfud.meetu.database.User(
+                null,
+                (long) serverUser.getId(),
+                serverUser.getMobile(),
+                serverUser.getPwd(),
+                serverUser.getImei()
+        );
     }
 }

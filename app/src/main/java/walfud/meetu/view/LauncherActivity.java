@@ -3,7 +3,7 @@ package walfud.meetu.view;
 import android.os.Bundle;
 
 import walfud.meetu.BaseActivity;
-import walfud.meetu.model.PrefsModel;
+import walfud.meetu.manager.PrefsManager;
 
 /**
  * Created by walfud on 2015/8/18.
@@ -17,7 +17,7 @@ public class LauncherActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         if (false) {
-        } else if (PrefsModel.getInstance().getShowSplash()) {
+        } else if (PrefsManager.getInstance().getShowSplash()) {
             SplashActivity.startActivity(this);
         } else {
             LoginActivity.startActivity(this);

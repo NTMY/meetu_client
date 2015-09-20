@@ -1,4 +1,4 @@
-package walfud.meetu.model;
+package walfud.meetu.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,32 +9,32 @@ import walfud.meetu.MeetUApplication;
 /**
  * Created by walfud on 2015/8/18.
  */
-public class PrefsModel {
+public class PrefsManager {
 
-    public static final String TAG = "PrefsModel";
+    public static final String TAG = "PrefsManager";
 
-    private static PrefsModel sInstance;
-    public static PrefsModel getInstance() {
+    private static PrefsManager sInstance;
+    public static PrefsManager getInstance() {
         if (sInstance == null) {
-            sInstance = new PrefsModel(MeetUApplication.getContext());
+            sInstance = new PrefsManager(MeetUApplication.getContext());
         }
 
         return sInstance;
     }
 
     private SharedPreferences mSharePreference;
-    protected PrefsModel(Context context) {
+    private PrefsManager(Context context) {
         mSharePreference = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     //
-    private static final String PREFS_USER_TOKEN = "PREFS_USER_TOKEN";
-    private static final int VALUE_INVALID_USER_ID = -1;
-    public void setUserId(int userId) {
-        mSharePreference.edit().putInt(PREFS_USER_TOKEN, userId).apply();
+    private static final String PREFS_CURRENT_USER_ID = "PREFS_CURRENT_USER_ID";
+    private static final long VALUE_INVALID_USER_ID = -1;
+    public void setCurrentUserId(long userId) {
+        mSharePreference.edit().putLong(PREFS_CURRENT_USER_ID, userId).apply();
     }
-    public int getUserId() {
-        return mSharePreference.getInt(PREFS_USER_TOKEN, VALUE_INVALID_USER_ID);
+    public long getCurrentUserId() {
+        return mSharePreference.getLong(PREFS_CURRENT_USER_ID, VALUE_INVALID_USER_ID);
     }
 
     private static final String PREFS_AUTO_REPORT = "PREFS_AUTO_REPORT";

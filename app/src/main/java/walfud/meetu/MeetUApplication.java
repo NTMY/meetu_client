@@ -5,8 +5,6 @@ import android.content.Context;
 
 import com.bugtags.library.Bugtags;
 
-import walfud.meetu.model.DaoMaster;
-
 /**
  * Created by song on 2015/6/22.
  */
@@ -18,9 +16,6 @@ public class MeetUApplication extends Application {
         sApplicationContext = this;
 
         Bugtags.start("b27243a172339c9df358ab036868ec05", this, Bugtags.BTGInvocationEventBubble);
-
-        // Create Db
-        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(this, "meetu", null);
     }
 
     private static Context sApplicationContext;
