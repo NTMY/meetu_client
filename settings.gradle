@@ -1,1 +1,1 @@
-include ':app', ':emptylayout', ':common'
+include ':app', ':emptylayout', ':common', ':daomeetugenerator'

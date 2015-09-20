@@ -28,5 +28,6 @@ dependencies {
     compile project(':common')
 
     compile 'com.bugtags.library:bugtags-lib:latest.integration'
+    compile 'de.greenrobot:greendao:2.0.0'
 }
 
