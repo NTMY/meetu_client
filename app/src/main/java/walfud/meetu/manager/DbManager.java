@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
+import de.greenrobot.dao.query.QueryBuilder;
 import walfud.meetu.MeetUApplication;
 import walfud.meetu.database.DaoMaster;
 import walfud.meetu.database.DaoSession;
@@ -29,6 +30,9 @@ public class DbManager {
         DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(context, DB_NAME, null);
         mDaoMaster = new DaoMaster(devOpenHelper.getWritableDatabase());
         mDaoSession = mDaoMaster.newSession();
+
+        QueryBuilder.LOG_SQL = true;
+        QueryBuilder.LOG_VALUES = true;
     }
 
     // Function
@@ -48,13 +52,12 @@ public class DbManager {
      * @param user
      */
     public void insertOrUpdate(User user) {
-        List<User> userList = mDaoSession.getUserDao().queryBuilder().where(UserDao.Properties.UserId.eq(user.getUserId())).list();
-        if (userList.size() == 0) {
+        User dbUser = mDaoSession.getUserDao().queryBuilder().where(UserDao.Properties.UserId.eq(user.getUserId())).unique();
+        if (dbUser == null) {
             // Insert
             insert(user);
         } else {
             // Update
-            User dbUser = userList.get(0);
             user.setId(dbUser.getId());
             update(user);
         }
