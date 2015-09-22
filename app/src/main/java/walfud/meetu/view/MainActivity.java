@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -43,8 +44,6 @@ public class MainActivity extends BaseActivity
     private MainActivityPresenter mPresenter;
     private EmptyLayout mFriendList;
 
-    @InjectView(R.id.radar_view)
-    private Button mRadarView;
     @InjectView(R.id.nearby_friends_list)
     private ListView mNearbyFriendsListView;
 
@@ -70,6 +69,9 @@ public class MainActivity extends BaseActivity
     private Button mFeedback;
     @InjectView(R.id.exit)
     private Button mExit;
+
+    @InjectView(R.id.fab_search)
+    private FloatingActionButton mSearch;
 
     // Event bus
     @Override
@@ -120,7 +122,6 @@ public class MainActivity extends BaseActivity
 
         mPresenter = new MainActivityPresenter(this);
         mPresenter.init();
-        mRadarView.setOnClickListener(this);
         mNavigation.setOnClickListener(this);
         mAutoReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -166,10 +167,6 @@ public class MainActivity extends BaseActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.radar_view:
-                mPresenter.onClickRadarView();
-                break;
-
             case R.id.navigation:
                 mPresenter.onClickNavigation();
                 break;
@@ -180,6 +177,10 @@ public class MainActivity extends BaseActivity
 
             case R.id.exit:
                 mPresenter.onClickExit();
+                break;
+
+            case R.id.fab_search:
+                mPresenter.onClickSearch();
                 break;
 
             default:

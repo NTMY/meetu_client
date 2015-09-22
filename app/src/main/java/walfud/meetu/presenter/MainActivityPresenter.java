@@ -80,7 +80,7 @@ public class MainActivityPresenter {
     }
 
     // View Event
-    public void onClickRadarView() {
+    public void onClickSearch() {
         mView.showSearching();
         mMainModel.searchNearby();
     }
