@@ -41,7 +41,7 @@
         </activity>
         <activity android:name=".view.SplashActivity" />
         <activity android:name=".view.LoginActivity" />
-        <activity android:name=".view.MainActivity" />
+        <activity android:name=".view.MainActivity" android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".view.FeedbackActivity" />
 
         <service android:name=".model.MainModel" />

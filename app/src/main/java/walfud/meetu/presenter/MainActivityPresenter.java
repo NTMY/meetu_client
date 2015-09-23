@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.walfud.common.ServiceBinder;
 
 import org.meetu.model.LocationCurr;
-import org.meetu.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +34,11 @@ public class MainActivityPresenter {
     private ServiceConnection mEngineServiceConnection = new ServiceConnection() {
 
         private MainModel.OnDataRequestListener mOnSearchListener = new MainModel.OnDataRequestListener() {
+            @Override
+            public void onStartSearch() {
+                mView.showSearching();
+            }
+
             @Override
             public void onNoFriendNearby() {
                 mView.showSearchResult(new ArrayList<LocationCurr>());
@@ -63,10 +67,6 @@ public class MainActivityPresenter {
 
             // Init model
             mMainModel.setOnSearchListener(mOnSearchListener);
-
-            //
-            mView.setAutoReportSwitch(PrefsManager.getInstance().isAutoReport());
-            mView.setAutoSearchSwitch(PrefsManager.getInstance().isAutoSearch());
         }
 
         @Override
@@ -80,16 +80,11 @@ public class MainActivityPresenter {
     }
 
     // View Event
-    public void onClickSearch() {
-        mView.showSearching();
+    public void search() {
         mMainModel.searchNearby();
     }
 
-    public void onClickNavigation() {
-        mView.switchNavigation();
-    }
-
-    public void onClickAutoReport(boolean isChecked) {
+    public void setAutoReport(boolean isChecked) {
         if (!checkModelBind()) {
             return;
         }
@@ -102,7 +97,7 @@ public class MainActivityPresenter {
 
         PrefsManager.getInstance().setAutoReport(isChecked);
     }
-    public void onClickAutoSearch(boolean isChecked) {
+    public void setAutoSearch(boolean isChecked) {
         if (!checkModelBind()) {
             return;
         }
@@ -115,18 +110,14 @@ public class MainActivityPresenter {
 
         PrefsManager.getInstance().setAutoSearch(isChecked);
     }
-    public void onClickFeedback() {
+
+    public void feedback() {
         FeedbackActivity.startActivity(mView);
     }
-    public void onClickExit() {
+    public void exit() {
         release(true);
         Utils.clearNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID);
         mView.finish();
-    }
-
-    public void onNavigationClosed() {
-        // Save Settings
-        // TODO:
     }
 
     // Presenter Function
@@ -151,11 +142,6 @@ public class MainActivityPresenter {
                 MainModel.stopService();
             }
         }
-    }
-
-    private User mUser;
-    public void setUser(User user) {
-        mUser = user;
     }
 
     //

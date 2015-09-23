@@ -1,48 +1,40 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dl_nvg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".view.MainActivity">
 
-    <!--Drawer -->
-    <include
-        android:id="@+id/nvg"
-        layout="@layout/drawer_layout" />
-
+    <!--Content-->
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/cl_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--Title Bar-->
-        <RelativeLayout
-            android:id="@+id/title_bar_layout"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/tb"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/title_bar_height"
-            android:padding="6dp">
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-            <com.balysv.materialmenu.MaterialMenuView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/navigation"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="start"
-                app:mm_color="@color/navigation" />
-
-        </RelativeLayout>
-
-        <!--Content-->
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/title_bar_height"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
             <ListView
-                android:id="@+id/nearby_friends_list"
+                android:id="@+id/lv_nearby_friend_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_search"
@@ -54,4 +46,12 @@
             android:onClick="onClick" />
 
     </android.support.design.widget.CoordinatorLayout>
+
+    <!--Navigation-->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nvg"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true" />
 </android.support.v4.widget.DrawerLayout>

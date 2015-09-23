@@ -86,6 +86,8 @@ public class MainModel extends Service {
     public static final int ERROR_UNKNOWN = 0;
 
     public interface OnDataRequestListener {
+        void onStartSearch();
+
         void onNoFriendNearby();
 
         void onFoundFriends(List<LocationCurr> nearbyFriendList);
@@ -154,6 +156,15 @@ public class MainModel extends Service {
                             mLocationCurrList = listBean.getList();
                         }
                     };
+
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+
+                        if (mOnSearchListener != null) {
+                            mOnSearchListener.onStartSearch();
+                        }
+                    }
 
                     @Override
                     protected List<LocationCurr> doInBackground(AMapLocation... params) {

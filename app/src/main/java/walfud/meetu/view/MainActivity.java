@@ -3,26 +3,17 @@ package walfud.meetu.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.Switch;
-import android.widget.TextView;
 
-import com.balysv.materialmenu.MaterialMenuDrawable;
-import com.balysv.materialmenu.MaterialMenuView;
 import com.kanak.emptylayout.EmptyLayout;
-import com.walfud.common.StaticHandler;
 
 import org.meetu.model.LocationCurr;
 
@@ -34,101 +25,35 @@ import walfud.meetu.presenter.MainActivityPresenter;
 
 
 public class MainActivity extends BaseActivity
-        implements View.OnClickListener, Handler.Callback {
+        implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = "MainActivity";
 
     private MainActivityPresenter mPresenter;
     private EmptyLayout mFriendList;
 
+    // Content
+    private CoordinatorLayout mContentLayout;
+    private Toolbar mToolbar;
     private ListView mNearbyFriendsListView;
-
-    private DrawerLayout mDrawerLayout;
-    private MaterialMenuView mNavigation;
+    private FloatingActionButton mSearch;
 
     // Navigation
-    private LinearLayout mNavLayout;
-    private TextView mUserId;
-    private Switch mAutoReport;
-    private Switch mAutoSearch;
-    private Button mFeedback;
-    private Button mExit;
+    private NavigationView mNavigation;
 
     // Event bus
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mNearbyFriendsListView = $(R.id.nearby_friends_list);
-        mDrawerLayout = $(R.id.dl_nvg);
-        mNavLayout = $(R.id.nvg);
-        mNavigation = $(R.id.navigation);
-        mUserId = $(R.id.user_id);
-        mAutoReport = (Switch) $(R.id.auto_report).findViewById(R.id.toggle);
-        mAutoSearch = (Switch) $(R.id.auto_search).findViewById(R.id.toggle);
-        mFeedback = $(R.id.feedback);
-        mExit = $(R.id.exit);
-
-        mNavigation = (MaterialMenuView) findViewById(R.id.navigation);
-        mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-
-            private boolean isDrawerOpened;
-
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-//                super.onDrawerSlide(drawerView, slideOffset);
-
-                mNavigation.setTransformationOffset(
-                        MaterialMenuDrawable.AnimationState.BURGER_CHECK,
-                        isDrawerOpened ? 2 - slideOffset : slideOffset);
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                isDrawerOpened = true;
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                isDrawerOpened = false;
-
-                mPresenter.onNavigationClosed();
-            }
-        });
-        {
-            RelativeLayout autoReportLayout = (RelativeLayout) findViewById(R.id.auto_report);
-            TextView autoReportDescription = (TextView) autoReportLayout.findViewById(R.id.description);
-            autoReportDescription.setText("Auto Report My Location");
-
-            mAutoReport = (Switch) autoReportLayout.findViewById(R.id.toggle);
-        }
-        {
-            RelativeLayout autoSearchLayout = (RelativeLayout) findViewById(R.id.auto_search);
-            TextView autoSearchDescription = (TextView) autoSearchLayout.findViewById(R.id.description);
-            autoSearchDescription.setText("Auto Search Nearby Friend");
-
-            mAutoSearch = (Switch) autoSearchLayout.findViewById(R.id.toggle);
-        }
+        mContentLayout = $(R.id.cl_content);
+        mToolbar = $(R.id.tb);
+        mNearbyFriendsListView = $(R.id.lv_nearby_friend_list);
+        mSearch = $(R.id.fab_search);
+        mNavigation = $(R.id.nvg);
 
         mPresenter = new MainActivityPresenter(this);
         mPresenter.init();
-        mNavigation.setOnClickListener(this);
-        mAutoReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mPresenter.onClickAutoReport(isChecked);
-            }
-        });
-        mAutoSearch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mPresenter.onClickAutoSearch(isChecked);
-            }
-        });
-        mFeedback.setOnClickListener(this);
-        mExit.setOnClickListener(this);
-        mHandler = new StaticHandler<>(this);
-
         mFriendList = new EmptyLayout(this, mNearbyFriendsListView);
     }
 
@@ -137,6 +62,13 @@ public class MainActivity extends BaseActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mPresenter.release(false);      // Just unbind service but keep service running
     }
 
     @Override
@@ -157,49 +89,24 @@ public class MainActivity extends BaseActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.navigation:
-                mPresenter.onClickNavigation();
-                break;
-
-            case R.id.feedback:
-                mPresenter.onClickFeedback();
-                break;
-
-            case R.id.exit:
-                mPresenter.onClickExit();
-                break;
-
             case R.id.fab_search:
-                mPresenter.onClickSearch();
+                mPresenter.search();
                 break;
 
             default:
                 break;
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        mPresenter.release(false);      // Just unbind service but keep service running
-    }
-
-    private StaticHandler<MainActivity> mHandler;
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-            default:
-                break;
-        }
-
-        return false;
     }
 
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
         moveTaskToBack(true);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        return false;
     }
 
     // View Function
@@ -218,31 +125,8 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    public void switchNavigation() {
-        if (mDrawerLayout.isDrawerOpen(mNavLayout)) {
-            mDrawerLayout.closeDrawers();
-        } else {
-            mDrawerLayout.openDrawer(GravityCompat.START);
-        }
-    }
-
-    public int getUserId() {
-        return Integer.valueOf(mUserId.getText().toString());
-    }
-
-    public void setAutoReportSwitch(boolean check) {
-        mAutoReport.setChecked(check);
-    }
-    public void setAutoSearchSwitch(boolean check) {
-        mAutoSearch.setChecked(check);
-    }
-
     public void showSearching() {
         mFriendList.showLoading();
-    }
-
-    public Handler getMainActivityHandler() {
-        return mHandler;
     }
 
     //
