@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,8 +33,10 @@ public class MainActivity extends BaseActivity
 
     private MainActivityPresenter mPresenter;
     private EmptyLayout mFriendList;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     // Content
+    private DrawerLayout mDrawerLayout;
     private CoordinatorLayout mContentLayout;
     private Toolbar mToolbar;
     private ListView mNearbyFriendsListView;
@@ -46,15 +50,24 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mDrawerLayout = $(R.id.dl);
         mContentLayout = $(R.id.cl_content);
         mToolbar = $(R.id.tb);
         mNearbyFriendsListView = $(R.id.lv_nearby_friend_list);
         mSearch = $(R.id.fab_search);
         mNavigation = $(R.id.nvg);
 
+        //
         mPresenter = new MainActivityPresenter(this);
         mPresenter.init();
+
         mFriendList = new EmptyLayout(this, mNearbyFriendsListView);
+
+        setSupportActionBar(mToolbar);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
     }
 
     @Override
@@ -106,7 +119,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        return false;
+        return true;
     }
 
     // View Function
