@@ -18,6 +18,7 @@ import org.meetu.dto.BaseDto;
 import org.meetu.model.LocationCurr;
 import org.meetu.util.ListBean;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -148,15 +149,6 @@ public class MainModel extends Service {
             public void onLocation(AMapLocation aMapLocation) {
                 // Report location & get network result
                 new AsyncTask<AMapLocation, Void, List<LocationCurr>>() {
-
-                    private List<LocationCurr> mLocationCurrList;
-                    private MeetuListener mMeetUListener = new MeetuListener() {
-                        @Override
-                        public void meetu(ListBean listBean) {
-                            mLocationCurrList = listBean.getList();
-                        }
-                    };
-
                     @Override
                     protected void onPreExecute() {
                         super.onPreExecute();
@@ -168,6 +160,8 @@ public class MainModel extends Service {
 
                     @Override
                     protected List<LocationCurr> doInBackground(AMapLocation... params) {
+                        final List<LocationCurr> locationCurrList = new ArrayList<>();
+
                         try {
                             AMapLocation aMapLocation = params[0];
 
@@ -180,13 +174,20 @@ public class MainModel extends Service {
 
                             if (locationCurr.getLatitude() != 0
                                     && locationCurr.getLongitude() != 0) {
-                                new MeetuHandler().onMeetu(mMeetUListener, locationCurr);
+                                new MeetuHandler().onMeetu(new MeetuListener() {
+                                    @Override
+                                    public void meetu(ListBean listBean) {
+                                        if (listBean != null && listBean.getList() != null) {
+                                            locationCurrList.addAll(listBean.getList());
+                                        }
+                                    }
+                                }, locationCurr);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        return mLocationCurrList;
+                        return locationCurrList;
                     }
 
                     @Override
@@ -194,10 +195,10 @@ public class MainModel extends Service {
                         super.onPostExecute(locationCurrList);
 
                         if (mOnSearchListener != null) {
-                            if (locationCurrList == null || locationCurrList.size() == 0) {
-                                mOnSearchListener.onNoFriendNearby();
-                            } else {
+                            if (locationCurrList != null && !locationCurrList.isEmpty()) {
                                 mOnSearchListener.onFoundFriends(locationCurrList);
+                            } else {
+                                mOnSearchListener.onNoFriendNearby();
                             }
                         }
                     }
