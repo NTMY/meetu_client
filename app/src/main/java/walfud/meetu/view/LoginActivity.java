@@ -11,7 +11,6 @@ import android.widget.Toast;
 import org.meetu.dto.UserAccessDto;
 import org.meetu.model.User;
 
-import roboguice.inject.InjectView;
 import walfud.meetu.BaseActivity;
 import walfud.meetu.R;
 import walfud.meetu.presenter.LoginPresenter;
@@ -25,11 +24,8 @@ public class LoginActivity extends BaseActivity
 
     public static final String TAG = "LoginActivity";
 
-    @InjectView(R.id.ok)
     private ImageButton mOk;
-    @InjectView(R.id.phone_num)
     private EditText mPhoneNum;
-    @InjectView(R.id.password)
     private EditText mPassword;
 
     private LoginPresenter mPresenter;
@@ -38,6 +34,9 @@ public class LoginActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mOk = $(R.id.ok);
+        mPhoneNum = $(R.id.phone_num);
+        mPassword = $(R.id.password);
 
 //        if (BuildConfig.DEBUG) {
 //            finish();

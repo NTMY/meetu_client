@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -30,7 +28,6 @@ import org.meetu.model.LocationCurr;
 
 import java.util.List;
 
-import roboguice.inject.InjectView;
 import walfud.meetu.BaseActivity;
 import walfud.meetu.R;
 import walfud.meetu.presenter.MainActivityPresenter;
@@ -44,40 +41,33 @@ public class MainActivity extends BaseActivity
     private MainActivityPresenter mPresenter;
     private EmptyLayout mFriendList;
 
-    @InjectView(R.id.nearby_friends_list)
     private ListView mNearbyFriendsListView;
 
-    @InjectView(R.id.drawer_layout)
     private DrawerLayout mDrawerLayout;
-    @InjectView(R.id.navigation)
     private MaterialMenuView mNavigation;
 
     // Navigation
-    @InjectView(R.id.navigation_layout)
     private LinearLayout mNavLayout;
-    @InjectView(R.id.user_id)
     private TextView mUserId;
-    @InjectView(R.id.current_location)
-    private TextView mLocation;
-    @InjectView(R.id.user_name)
-    private EditText mUserName;
-    @InjectView(R.id.say_hi)
-    private EditText mSayHi;
     private Switch mAutoReport;
     private Switch mAutoSearch;
-    @InjectView(R.id.feedback)
     private Button mFeedback;
-    @InjectView(R.id.exit)
     private Button mExit;
-
-    @InjectView(R.id.fab_search)
-    private FloatingActionButton mSearch;
 
     // Event bus
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mNearbyFriendsListView = $(R.id.nearby_friends_list);
+        mDrawerLayout = $(R.id.dl_nvg);
+        mNavLayout = $(R.id.nvg);
+        mNavigation = $(R.id.navigation);
+        mUserId = $(R.id.user_id);
+        mAutoReport = (Switch) $(R.id.auto_report).findViewById(R.id.toggle);
+        mAutoSearch = (Switch) $(R.id.auto_search).findViewById(R.id.toggle);
+        mFeedback = $(R.id.feedback);
+        mExit = $(R.id.exit);
 
         mNavigation = (MaterialMenuView) findViewById(R.id.navigation);
         mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {

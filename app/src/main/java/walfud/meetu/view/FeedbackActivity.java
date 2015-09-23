@@ -12,7 +12,6 @@ import android.widget.Toast;
 import org.meetu.constant.Constant;
 import org.meetu.dto.BaseDto;
 
-import roboguice.inject.InjectView;
 import walfud.meetu.BaseActivity;
 import walfud.meetu.R;
 import walfud.meetu.presenter.FeedbackPresenter;
@@ -24,23 +23,23 @@ public class FeedbackActivity extends BaseActivity {
 
     public static final String TAG = "FeedbackActivity";
 
-    private FeedbackPresenter mPreseneter;
+    private FeedbackPresenter mPresenter;
 
-    @InjectView(R.id.content)
     private EditText mContent;
-    @InjectView(R.id.success)
     private WebView mSuccess;
-    @InjectView(R.id.send)
     private Button mSend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.feedback_activity);
+        mContent = $(R.id.content);
+        mSuccess = $(R.id.success);
+        mSend = $(R.id.send);
 
-        mPreseneter = new FeedbackPresenter(this);
+        mPresenter = new FeedbackPresenter(this);
 
-        mSend.setOnClickListener(mPreseneter);
+        mSend.setOnClickListener(mPresenter);
     }
 
     // View Function

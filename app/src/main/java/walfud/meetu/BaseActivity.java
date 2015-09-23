@@ -1,12 +1,13 @@
 package walfud.meetu;
 
+import android.support.annotation.IdRes;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.bugtags.library.Bugtags;
 
-import roboguice.activity.RoboActivity;
-
-public class BaseActivity extends RoboActivity {
+public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
@@ -27,5 +28,9 @@ public class BaseActivity extends RoboActivity {
 
         Bugtags.onDispatchTouchEvent(this, event);
         return super.dispatchTouchEvent(event);
+    }
+
+    protected <T extends View> T $(@IdRes int resId) {
+        return (T) findViewById(resId);
     }
 }
