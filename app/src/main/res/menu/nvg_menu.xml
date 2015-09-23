@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/meet_u"
+            android:title="Profile" />
+
+        <item
+            android:id="@+id/setting"
+            android:icon="@drawable/meet_u"
+            android:title="Setting" />
+    </group>
+
+</menu>
