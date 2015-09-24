@@ -8,11 +8,11 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import com.walfud.common.ServiceBinder;
+import com.walfud.meetu.MainService;
 import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.R;
 import com.walfud.meetu.Utils;
 import com.walfud.meetu.manager.PrefsManager;
-import com.walfud.meetu.model.MainModel;
 import com.walfud.meetu.view.FeedbackActivity;
 import com.walfud.meetu.view.MainActivity;
 
@@ -29,10 +29,10 @@ public class MainActivityPresenter {
     public static final String TAG = "MainActivityPresenter";
 
     private MainActivity mView;
-    private MainModel mMainModel;
+    private MainService mMainService;
     private ServiceConnection mEngineServiceConnection = new ServiceConnection() {
 
-        private MainModel.OnDataRequestListener mOnSearchListener = new MainModel.OnDataRequestListener() {
+        private MainService.OnDataRequestListener mOnSearchListener = new MainService.OnDataRequestListener() {
             @Override
             public void onStartSearch() {
                 mView.showSearching();
@@ -62,15 +62,15 @@ public class MainActivityPresenter {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mMainModel = ((ServiceBinder<MainModel>) service).getService();
+            mMainService = ((ServiceBinder<MainService>) service).getService();
 
             // Init model
-            mMainModel.setOnSearchListener(mOnSearchListener);
+            mMainService.setOnSearchListener(mOnSearchListener);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mMainModel = null;
+            mMainService = null;
         }
     };
 
@@ -80,7 +80,7 @@ public class MainActivityPresenter {
 
     // View Event
     public void search() {
-        mMainModel.searchNearby();
+        mMainService.searchNearby();
     }
 
     public void setAutoReport(boolean isChecked) {
@@ -89,9 +89,9 @@ public class MainActivityPresenter {
         }
 
         if (isChecked) {
-            mMainModel.startAutoReportSelf();
+            mMainService.startAutoReportSelf();
         } else {
-            mMainModel.stopAutoReportSelf();
+            mMainService.stopAutoReportSelf();
         }
 
         PrefsManager.getInstance().setAutoReport(isChecked);
@@ -102,9 +102,9 @@ public class MainActivityPresenter {
         }
 
         if (isChecked) {
-            mMainModel.startAutoSearchNearby();
+            mMainService.startAutoSearchNearby();
         } else {
-            mMainModel.stopAutoSearchNearby();
+            mMainService.stopAutoSearchNearby();
         }
 
         PrefsManager.getInstance().setAutoSearch(isChecked);
@@ -121,9 +121,9 @@ public class MainActivityPresenter {
 
     // Presenter Function
     public void init() {
-        if (mMainModel == null) {
-            MainModel.startServiceIgnoreSetting();
-            MeetUApplication.getContext().bindService(MainModel.SERVICE_INTENT, mEngineServiceConnection, 0);
+        if (mMainService == null) {
+            MainService.startServiceIgnoreSetting();
+            MeetUApplication.getContext().bindService(MainService.SERVICE_INTENT, mEngineServiceConnection, 0);
         }
     }
     /**
@@ -131,14 +131,14 @@ public class MainActivityPresenter {
      * @param stopService `false` if only unbind service, `true` will unbind and stop service.
      */
     public void release(boolean stopService) {
-        if (mMainModel != null) {
+        if (mMainService != null) {
             MeetUApplication.getContext().unbindService(mEngineServiceConnection);
-            mMainModel = null;
+            mMainService = null;
         }
 
         if (stopService) {
-            if (MainModel.isServiceRunning()) {
-                MainModel.stopService();
+            if (MainService.isServiceRunning()) {
+                MainService.stopService();
             }
         }
     }
@@ -148,7 +148,7 @@ public class MainActivityPresenter {
      * Check if the model service has been bound successfully.
      */
     private boolean checkModelBind() {
-        if (mMainModel == null) {
+        if (mMainService == null) {
             Toast.makeText(MeetUApplication.getContext(), "Model Service Unbinding", Toast.LENGTH_SHORT).show();
             return false;
         }

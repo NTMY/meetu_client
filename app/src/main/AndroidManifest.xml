@@ -45,7 +45,7 @@
         <activity android:name=".view.FeedbackActivity" />
         <activity android:name=".view.SettingActivity" />
 
-        <service android:name=".model.MainModel" />
+        <service android:name=".MainService" />
 
         <receiver android:name=".MainBroadcastReceiver">
             <intent-filter>
