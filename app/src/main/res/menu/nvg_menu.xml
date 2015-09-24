@@ -3,12 +3,12 @@
 
     <group>
         <item
-            android:id="@+id/profile"
+            android:id="@+id/menu_profile"
             android:icon="@drawable/ic_face_black_48dp"
             android:title="Profile" />
 
         <item
-            android:id="@+id/setting"
+            android:id="@+id/menu_setting"
             android:icon="@drawable/ic_settings_black_48dp"
             android:title="Setting" />
     </group>

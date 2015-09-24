@@ -66,6 +66,7 @@ public class MainActivity extends BaseActivity
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
+        mNavigation.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -116,6 +117,19 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.menu_profile:
+                break;
+
+            case R.id.menu_setting:
+                SettingActivity.startActivity(this, null);
+                break;
+
+            default:
+                break;
+
+        }
+
         return true;
     }
 

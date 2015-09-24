@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="auto_report"
+        android:title="Auto Report"
+        android:summaryOn="Now, I will report my location automatically （￣▽￣）."
+        android:summaryOff="I can do nothing for you （╯_╰）. You must report your location manually."
+        android:persistent="true" />
+
+</PreferenceScreen>

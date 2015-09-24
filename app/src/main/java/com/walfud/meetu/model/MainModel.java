@@ -1,7 +1,6 @@
 package com.walfud.meetu.model;
 
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -256,14 +255,8 @@ public class MainModel extends Service {
         }
     }
 
-    //
+    // Helper
     public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), MainModel.class);
-
-    @Override
-    public ComponentName startService(Intent service) {
-        return super.startService(service);
-    }
-
     public static void startService(Bundle extras) {
         if (extras != null) {
             SERVICE_INTENT.putExtras(extras);
