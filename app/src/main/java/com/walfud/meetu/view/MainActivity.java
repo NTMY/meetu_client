@@ -12,10 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.FrameLayout;
 
-import com.kanak.emptylayout.EmptyLayout;
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.R;
 import com.walfud.meetu.presenter.MainActivityPresenter;
@@ -31,15 +29,17 @@ public class MainActivity extends BaseActivity
     public static final String TAG = "MainActivity";
 
     private MainActivityPresenter mPresenter;
-    private EmptyLayout mFriendList;
     private ActionBarDrawerToggle mDrawerToggle;
+
+    // Fragment
+    private SearchFragment mSearchFragment;
 
     // Content
     private DrawerLayout mDrawerLayout;
-    private CoordinatorLayout mContentLayout;
     private Toolbar mToolbar;
-    private ListView mNearbyFriendsListView;
-    private FloatingActionButton mSearch;
+    private CoordinatorLayout mContentLayout;
+    private FrameLayout mFragmentLayout;
+    private FloatingActionButton mFab;
 
     // Navigation
     private NavigationView mNavigation;
@@ -50,20 +50,19 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mDrawerLayout = $(R.id.dl);
-        mContentLayout = $(R.id.cl_content);
         mToolbar = $(R.id.tb);
-        mNearbyFriendsListView = $(R.id.lv_nearby_friend_list);
-        mSearch = $(R.id.fab_search);
+        mContentLayout = $(R.id.cl_content);
+        mFragmentLayout = $(R.id.fl_fragment);
+        mSearchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_search);
+        mFab = $(R.id.fab_search);
         mNavigation = $(R.id.nvg);
 
         //
         mPresenter = new MainActivityPresenter(this);
         mPresenter.init();
 
-        mFriendList = new EmptyLayout(this, mNearbyFriendsListView);
-
+        //
         setSupportActionBar(mToolbar);
-
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
@@ -112,7 +111,6 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
         moveTaskToBack(true);
     }
 
@@ -123,22 +121,11 @@ public class MainActivity extends BaseActivity
 
     // View Function
     public void showSearchResult(List<LocationCurr> friendList) {
-
-        if (friendList.size() == 0) {
-            // No friend nearby
-            mFriendList.showEmpty();
-        } else {
-            String[] nearbyFriends = new String[friendList.size()];
-            for (int i = 0; i < nearbyFriends.length; i++) {
-                nearbyFriends[i] = String.valueOf(friendList.get(i).getUserId());
-            }
-
-            mNearbyFriendsListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, nearbyFriends));
-        }
+        mSearchFragment.showSearchResult(friendList);
     }
 
     public void showSearching() {
-        mFriendList.showLoading();
+        mSearchFragment.showSearching();
     }
 
     //

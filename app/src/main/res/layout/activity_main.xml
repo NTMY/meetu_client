@@ -13,6 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
+            android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/tb"
             android:layout_width="match_parent"
@@ -21,20 +24,23 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <RelativeLayout
+        </android.support.design.widget.AppBarLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/title_bar_height"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:showIn="@layout/app_bar_main">
 
-            <ListView
-                android:id="@+id/lv_nearby_friend_list"
+            <fragment
+                android:id="@+id/fragment_search"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:name="com.walfud.meetu.view.SearchFragment"
+                tools:layout="@layout/fragment_search" />
 
-        </RelativeLayout>
+        </FrameLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_search"
