@@ -14,12 +14,12 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:design:23.0.0'
-    compile 'com.balysv.materialmenu:material-menu:1.+'
+    compile 'de.greenrobot:greendao:2.0.0'
+    compile 'com.bugtags.library:bugtags-lib:latest.integration'
     provided 'com.baoyz.pg:compiler:2.1.0'
     compile 'com.baoyz.pg:core:2.1.0'
+
     compile project(':emptylayout')
     compile project(':common')
-    compile 'com.bugtags.library:bugtags-lib:latest.integration'
-    compile 'de.greenrobot:greendao:2.0.0'
 }
 
