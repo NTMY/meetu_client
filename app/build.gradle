@@ -4,7 +4,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion '23.0.0'
     defaultConfig {
-        applicationId "walfud.meetu"
+        applicationId "com.walfud.meetu"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 3
