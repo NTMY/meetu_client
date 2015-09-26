@@ -117,8 +117,11 @@ public class LoginPresenter {
         return new com.walfud.meetu.database.User(
                 null,
                 (long) serverUser.getId(),
-                serverUser.getMobile(),
                 serverUser.getPwd(),
+                serverUser.getNickname(),
+                serverUser.getMood(),
+                serverUser.getStatus(),
+                serverUser.getMobile(),
                 serverUser.getImei()
         );
     }

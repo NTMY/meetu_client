@@ -1,5 +1,7 @@
 package com.walfud.meetu;
 
+import java.io.File;
+
 import de.greenrobot.daogenerator.DaoGenerator;
 import de.greenrobot.daogenerator.Entity;
 import de.greenrobot.daogenerator.Property;
@@ -13,8 +15,11 @@ public class DaoMeetUGenerator {
         Entity user = schema.addEntity("User");
         user.addIdProperty().autoincrement();
         Property userId = user.addLongProperty("userId").getProperty();
-        user.addStringProperty("phoneNum");
         user.addStringProperty("password");
+        user.addStringProperty("nick");
+        user.addStringProperty("mood");
+        user.addStringProperty("portrait");
+        user.addStringProperty("phoneNum");
         user.addStringProperty("imei");
 
         // Location
@@ -31,6 +36,7 @@ public class DaoMeetUGenerator {
 //        user.addToMany(location, userId);
 //        location.addToOne(user, userId);
 
-        new DaoGenerator().generateAll(schema, "./app/src/main/java");
+        new File("./app/build/generated/greendao").mkdir();
+        new DaoGenerator().generateAll(schema, "./app/build/generated/greendao");
     }
 }

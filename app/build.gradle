@@ -10,6 +10,12 @@ android {
         versionCode 3
         versionName "1.2 alpha"
     }
+
+    sourceSets {
+        main {
+            java.srcDirs += ['build/generated/greendao']
+        }
+    }
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
