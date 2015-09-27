@@ -1,19 +1,21 @@
 package com.walfud.meetu.view;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.walfud.common.widget.RoundedImageView;
 import com.walfud.common.widget.SelectView;
-import com.walfud.meetu.BuildConfig;
 import com.walfud.meetu.R;
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.presenter.MainActivityPresenter;
@@ -51,13 +53,6 @@ public class FriendFragment extends Fragment {
         //
         mActivity = (LoginActivity) getActivity();
         mUserList = new ArrayList<>();
-
-        if (BuildConfig.DEBUG) {
-            User user = new User();
-            user.setPhoneNum("1234");
-            mUserList.add(user);
-        }
-
         mList.setLayoutManager(new LinearLayoutManager(mActivity));
         mList.setAdapter(new SelectView.Adapter<SelectView.ViewHolder>() {
             @Override
@@ -95,9 +90,26 @@ public class FriendFragment extends Fragment {
     }
 
     // Function
-    public void updateHeader(User user) {
+    public void updateHeader(final User user) {
+        final int duration = 200;
+        // Fly out
+        mPortrait.animate().translationX(-mPortrait.getWidth()).setStartDelay(0).setDuration(duration).setInterpolator(new AnticipateInterpolator());
+        mNick.animate().translationX(-mNick.getWidth()).setStartDelay(50).setDuration(duration).setInterpolator(new AnticipateInterpolator());
+        mMood.animate().translationX(-mMood.getWidth()).setStartDelay(100).setDuration(duration).setInterpolator(new AnticipateInterpolator());
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Change value
+                mPortrait.setImageResource(R.drawable.portrait);
+                mNick.setText(user.getNick());
+                mMood.setText(user.getMood());
+
+                // Fly in
+                mPortrait.animate().translationX(0).setStartDelay(0).setDuration(duration).setInterpolator(new DecelerateInterpolator());
+                mNick.animate().translationX(0).setStartDelay(50).setDuration(duration).setInterpolator(new DecelerateInterpolator());
+                mMood.animate().translationX(0).setStartDelay(100).setDuration(duration).setInterpolator(new DecelerateInterpolator());
+            }
+        }, 700);
     }
-
-    //
 }
