@@ -37,8 +37,8 @@
                 android:id="@+id/fragment_search"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:name="com.walfud.meetu.view.SearchFragment"
-                tools:layout="@layout/fragment_search" />
+                android:name="com.walfud.meetu.view.FriendFragment"
+                tools:layout="@layout/fragment_friend" />
 
         </FrameLayout>
 

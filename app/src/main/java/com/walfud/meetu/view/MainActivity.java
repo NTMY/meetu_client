@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity
     private ActionBarDrawerToggle mDrawerToggle;
 
     // Fragment
-    private SearchFragment mSearchFragment;
+    private FriendFragment mFriendFragment;
 
     // Content
     private DrawerLayout mDrawerLayout;
@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity
         mToolbar = $(R.id.tb);
         mContentLayout = $(R.id.cl_content);
         mFragmentLayout = $(R.id.fl_fragment);
-        mSearchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_search);
+        mFriendFragment = (FriendFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_search);
         mFab = $(R.id.fab_search);
         mNavigation = $(R.id.nvg);
 
@@ -135,11 +135,11 @@ public class MainActivity extends BaseActivity
 
     // View Function
     public void showSearchResult(List<LocationCurr> friendList) {
-        mSearchFragment.showSearchResult(friendList);
+        mFriendFragment.showSearchResult(friendList);
     }
 
     public void showSearching() {
-        mSearchFragment.showSearching();
+        mFriendFragment.showSearching();
     }
 
     //

@@ -14,11 +14,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.walfud.common.collection.CollectionUtil;
 import com.walfud.common.widget.RoundedImageView;
 import com.walfud.common.widget.SelectView;
 import com.walfud.meetu.R;
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.presenter.MainActivityPresenter;
+import com.walfud.meetu.util.Transformer;
+
+import org.meetu.model.LocationCurr;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +34,7 @@ public class FriendFragment extends Fragment {
 
     public static final String TAG = "FriendFragment";
 
-    private LoginActivity mActivity;
+    private MainActivity mActivity;
     private MainActivityPresenter mPresenter;
     // Header
     private ImageView mPortrait;
@@ -51,7 +55,7 @@ public class FriendFragment extends Fragment {
         mList = (SelectView) view.findViewById(R.id.rv_list);
 
         //
-        mActivity = (LoginActivity) getActivity();
+        mActivity = (MainActivity) getActivity();
         mUserList = new ArrayList<>();
         mList.setLayoutManager(new LinearLayoutManager(mActivity));
         mList.setAdapter(new SelectView.Adapter<SelectView.ViewHolder>() {
@@ -90,6 +94,23 @@ public class FriendFragment extends Fragment {
     }
 
     // Function
+    public void showSearchResult(List<LocationCurr> friendList) {
+        if (CollectionUtil.isEmpty(friendList)) {
+            // No friend nearby
+        } else {
+            //
+            for (LocationCurr locationCurr : friendList) {
+                mUserList.add(Transformer.locationCurr2User(locationCurr));
+            }
+
+            mList.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    public void showSearching() {
+
+    }
+
     public void updateHeader(final User user) {
         final int duration = 200;
         // Fly out
