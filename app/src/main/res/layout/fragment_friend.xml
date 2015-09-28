@@ -5,40 +5,10 @@
     android:layout_height="match_parent">
 
     <!--Header-->
-    <RelativeLayout
-        android:id="@+id/rl_detail"
+    <com.walfud.meetu.view.ProfileCardView
+        android:id="@+id/pcv"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:padding="16dp"
-        android:background="?attr/colorPrimary" >
-
-        <ImageView
-            android:id="@+id/portrait"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/ic_account_circle_white_48dp"
-            android:scaleType="centerInside" />
-
-        <TextView
-            android:id="@+id/nick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/portrait"
-            android:layout_marginTop="20dp"
-            android:text="Nick"
-            android:textSize="18sp"
-            android:textColor="@android:color/white" />
-        <TextView
-            android:id="@+id/mood"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/nick"
-            android:layout_marginTop="2dp"
-            android:text="Mood"
-            android:textColor="@android:color/white" />
-
-    </RelativeLayout>
+        android:layout_height="wrap_content" />
 
     <!--List-->
     <com.walfud.common.widget.SelectView

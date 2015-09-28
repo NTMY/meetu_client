@@ -14,12 +14,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.walfud.common.collection.CollectionUtil;
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.R;
 import com.walfud.meetu.presenter.MainActivityPresenter;
+import com.walfud.meetu.util.Transformer;
 
 import org.meetu.model.LocationCurr;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -134,12 +137,21 @@ public class MainActivity extends BaseActivity
     }
 
     // View Function
-    public void showSearchResult(List<LocationCurr> friendList) {
-        mFriendFragment.showSearchResult(friendList);
+    public void showSearchResult(List<LocationCurr> locationList) {
+        if (CollectionUtil.isEmpty(locationList)) {
+            // No friend nearby
+        } else {
+            //
+            List<FriendFragment.FriendData> friendList = new ArrayList<>();
+            for (LocationCurr locationCurr : locationList) {
+                friendList.add(Transformer.locationCurr2FriendData(this, locationCurr));
+            }
+
+            mFriendFragment.setFriendList(friendList);
+        }
     }
 
     public void showSearching() {
-        mFriendFragment.showSearching();
     }
 
     //
