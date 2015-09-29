@@ -33,13 +33,6 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:showIn="@layout/app_bar_main">
 
-            <fragment
-                android:id="@+id/fragment_search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:name="com.walfud.meetu.view.FriendFragment"
-                tools:layout="@layout/fragment_friend" />
-
         </FrameLayout>
 
         <android.support.design.widget.FloatingActionButton
@@ -54,12 +47,12 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <!--Navigation-->
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nvg"
-        android:layout_width="wrap_content"
+    <fragment
+        android:id="@+id/fragment_search"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nvg_header"
-        app:menu="@menu/nvg_menu" />
+        android:name="com.walfud.meetu.view.FriendFragment"
+        tools:layout="@layout/fragment_friend" />
+
 </android.support.v4.widget.DrawerLayout>

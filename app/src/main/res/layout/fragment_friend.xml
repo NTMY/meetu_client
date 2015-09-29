@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <!--Header-->
     <com.walfud.meetu.view.ProfileCardView
@@ -66,7 +67,7 @@
         </com.walfud.common.widget.JumpBar>
 
         <com.walfud.common.widget.SelectView
-            android:id="@+id/rv_list"
+            android:id="@+id/sv_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

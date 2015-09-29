@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -14,20 +13,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.walfud.common.collection.CollectionUtil;
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.R;
 import com.walfud.meetu.presenter.MainActivityPresenter;
-import com.walfud.meetu.util.Transformer;
 
 import org.meetu.model.LocationCurr;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends BaseActivity
-        implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+        implements View.OnClickListener {
 
     public static final String TAG = "MainActivity";
 
@@ -35,7 +31,6 @@ public class MainActivity extends BaseActivity
     private ActionBarDrawerToggle mDrawerToggle;
 
     // Fragment
-    private FriendFragment mFriendFragment;
 
     // Content
     private DrawerLayout mDrawerLayout;
@@ -45,7 +40,7 @@ public class MainActivity extends BaseActivity
     private FloatingActionButton mFab;
 
     // Navigation
-    private NavigationView mNavigation;
+    private FriendFragment mFriendFragment;
 
     // Event bus
     @Override
@@ -58,10 +53,9 @@ public class MainActivity extends BaseActivity
         mFragmentLayout = $(R.id.fl_fragment);
         mFriendFragment = (FriendFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_search);
         mFab = $(R.id.fab_search);
-        mNavigation = $(R.id.nvg);
 
         //
-        mPresenter = new MainActivityPresenter(this);
+        mPresenter = new MainActivityPresenter(this, mFriendFragment);
         mPresenter.init();
 
         //
@@ -69,7 +63,6 @@ public class MainActivity extends BaseActivity
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
-        mNavigation.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -95,6 +88,7 @@ public class MainActivity extends BaseActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            SettingActivity.startActivity(this, null);
             return true;
         }
 
@@ -118,37 +112,8 @@ public class MainActivity extends BaseActivity
         moveTaskToBack(true);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.menu_profile:
-                break;
-
-            case R.id.menu_setting:
-                SettingActivity.startActivity(this, null);
-                break;
-
-            default:
-                break;
-
-        }
-
-        return true;
-    }
-
     // View Function
     public void showSearchResult(List<LocationCurr> locationList) {
-        if (CollectionUtil.isEmpty(locationList)) {
-            // No friend nearby
-        } else {
-            //
-            List<FriendFragment.FriendData> friendList = new ArrayList<>();
-            for (LocationCurr locationCurr : locationList) {
-                friendList.add(Transformer.locationCurr2FriendData(this, locationCurr));
-            }
-
-            mFriendFragment.setFriendList(friendList);
-        }
     }
 
     public void showSearching() {

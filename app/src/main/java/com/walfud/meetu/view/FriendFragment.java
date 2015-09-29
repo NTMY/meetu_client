@@ -1,5 +1,6 @@
 package com.walfud.meetu.view;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,8 +15,14 @@ import com.walfud.common.widget.JumpBar;
 import com.walfud.common.widget.RoundedImageView;
 import com.walfud.common.widget.SelectView;
 import com.walfud.meetu.R;
+import com.walfud.meetu.database.User;
+import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.presenter.MainActivityPresenter;
 import com.walfud.meetu.util.Transformer;
+
+import org.meetu.client.handler.FriendHandler;
+import org.meetu.client.listener.FriendGetMyFriendListListener;
+import org.meetu.util.ListBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,16 +50,45 @@ public class FriendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
         mPcv = (ProfileCardView) view.findViewById(R.id.pcv);
         mJb = (JumpBar) view.findViewById(R.id.jb);
-        mSv = (SelectView) view.findViewById(R.id.rv_list);
+        mSv = (SelectView) view.findViewById(R.id.sv_list);
 
         //
         mActivity = (MainActivity) getActivity();
         mFriendDataList = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            FriendData friendData = new FriendData();
-            friendData.nick = "" + i;
-            mFriendDataList.add(friendData);
-        }
+        // Get friend list
+        new AsyncTask<User, Void, List<FriendData>>() {
+
+            private List<FriendFragment.FriendData> mFriendList;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+                // TODO: show loading...
+            }
+
+            @Override
+            protected List<FriendFragment.FriendData> doInBackground(com.walfud.meetu.database.User[] params) {
+                final com.walfud.meetu.database.User user = params[0];
+                new FriendHandler().onGetMyFriendList(new FriendGetMyFriendListListener() {
+                    @Override
+                    public void getMyFriendList(ListBean listBean) {
+                        List<org.meetu.model.User> userList = (List<org.meetu.model.User>) listBean.getList();
+                        mFriendList = Transformer.userList2FriendDataList(userList);
+
+                    }
+                }, Transformer.user2User(user));
+
+                return mFriendList;
+            }
+
+            @Override
+            protected void onPostExecute(List<FriendFragment.FriendData> friendList) {
+                super.onPostExecute(friendList);
+
+                setFriendList(friendList);
+            }
+        }.execute(UserManager.getInstance().getCurrentUser());
         mJb.setOnJumpListener(new JumpBar.OnJumpListener() {
             @Override
             public boolean onJump(View view, int index, int totalIndex) {
@@ -76,10 +112,12 @@ public class FriendFragment extends Fragment {
                 LinearLayout itemRoot = (LinearLayout) viewHolder.itemView;
                 RoundedImageView portrait = (RoundedImageView) itemRoot.findViewById(R.id.portrait);
                 TextView nick = (TextView) itemRoot.findViewById(R.id.nick);
+                TextView mood = (TextView) itemRoot.findViewById(R.id.mood);
 
                 //
                 portrait.setImageBitmap(friendData.portrait);
                 nick.setText(friendData.nick);
+                mood.setText(friendData.mood);
             }
 
             @Override
