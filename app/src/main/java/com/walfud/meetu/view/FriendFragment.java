@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.walfud.common.widget.JumpBar;
 import com.walfud.common.widget.RoundedImageView;
 import com.walfud.common.widget.SelectView;
 import com.walfud.meetu.R;
@@ -32,6 +33,7 @@ public class FriendFragment extends Fragment {
     private ProfileCardView mPcv;
     // List
     private SelectView mSv;
+    private JumpBar mJb;
     private List<FriendData> mFriendDataList;
 
     // Event
@@ -40,11 +42,25 @@ public class FriendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
         mPcv = (ProfileCardView) view.findViewById(R.id.pcv);
+        mJb = (JumpBar) view.findViewById(R.id.jb);
         mSv = (SelectView) view.findViewById(R.id.rv_list);
 
         //
         mActivity = (MainActivity) getActivity();
         mFriendDataList = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            FriendData friendData = new FriendData();
+            friendData.nick = "" + i;
+            mFriendDataList.add(friendData);
+        }
+        mJb.setOnJumpListener(new JumpBar.OnJumpListener() {
+            @Override
+            public boolean onJump(View view, int index, int totalIndex) {
+                mSv.smoothScrollToPosition(mFriendDataList.size() * index / totalIndex);
+
+                return false;
+            }
+        });
         mSv.setLayoutManager(new LinearLayoutManager(mActivity));
         mSv.setAdapter(new SelectView.Adapter<SelectView.ViewHolder>() {
             @Override

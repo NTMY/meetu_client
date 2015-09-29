@@ -36,7 +36,7 @@ public class DaoMeetUGenerator {
 //        user.addToMany(location, userId);
 //        location.addToOne(user, userId);
 
-        new File("./app/build/generated/greendao").mkdir();
+        new File("./app/build/generated/greendao").mkdirs();
         new DaoGenerator().generateAll(schema, "./app/build/generated/greendao");
     }
 }
