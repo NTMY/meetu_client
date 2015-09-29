@@ -24,6 +24,7 @@ dependencies {
     compile 'com.bugtags.library:bugtags-lib:latest.integration'
     provided 'com.baoyz.pg:compiler:2.1.0'
     compile 'com.baoyz.pg:core:2.1.0'
+    compile 'com.facebook.fresco:fresco:0.7.0'
 
     compile project(':emptylayout')
     compile project(':common')

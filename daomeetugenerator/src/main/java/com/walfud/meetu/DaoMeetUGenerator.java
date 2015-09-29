@@ -18,7 +18,7 @@ public class DaoMeetUGenerator {
         user.addStringProperty("password");
         user.addStringProperty("nick");
         user.addStringProperty("mood");
-        user.addStringProperty("portrait");
+        user.addStringProperty("portraitUri");
         user.addStringProperty("phoneNum");
         user.addStringProperty("imei");
 

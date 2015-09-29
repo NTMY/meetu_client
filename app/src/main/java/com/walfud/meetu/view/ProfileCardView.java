@@ -1,17 +1,17 @@
 package com.walfud.meetu.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.walfud.meetu.R;
 
 /**
@@ -23,7 +23,7 @@ public class ProfileCardView extends FrameLayout {
 
     protected Context mContext;
     protected RelativeLayout mRootLayout;
-    protected ImageView mPortrait;
+    protected SimpleDraweeView mPortrait;
     protected TextView mNick;
     protected TextView mMood;
 
@@ -38,7 +38,7 @@ public class ProfileCardView extends FrameLayout {
 
         mRootLayout = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.view_profile_card, this, false);
         addView(mRootLayout);
-        mPortrait = (ImageView) mRootLayout.findViewById(R.id.portrait);
+        mPortrait = (SimpleDraweeView) mRootLayout.findViewById(R.id.portrait);
         mNick = (TextView) mRootLayout.findViewById(R.id.nick);
         mMood = (TextView) mRootLayout.findViewById(R.id.mood);
     }
@@ -59,7 +59,9 @@ public class ProfileCardView extends FrameLayout {
             @Override
             public void run() {
                 // Change value
-                mPortrait.setImageBitmap(profileData.portrait);
+                if (profileData.portraitUri != null) {
+                    mPortrait.setImageURI(Uri.parse(profileData.portraitUri));
+                }
                 mNick.setText(profileData.nick);
                 mMood.setText(profileData.mood);
 
@@ -73,14 +75,14 @@ public class ProfileCardView extends FrameLayout {
 
     //
     public static class ProfileData {
-        public Bitmap portrait;
+        public String portraitUri;
         public String nick;
         public String mood;
 
         public ProfileData() {
         }
-        public ProfileData(Bitmap portrait, String nick, String mood) {
-            this.portrait = portrait;
+        public ProfileData(String portraitUri, String nick, String mood) {
+            this.portraitUri = portraitUri;
             this.nick = nick;
             this.mood = mood;
         }

@@ -1,5 +1,6 @@
 package com.walfud.meetu.view;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.walfud.common.widget.JumpBar;
-import com.walfud.common.widget.RoundedImageView;
 import com.walfud.common.widget.SelectView;
 import com.walfud.meetu.R;
 import com.walfud.meetu.database.User;
@@ -110,12 +111,14 @@ public class FriendFragment extends Fragment {
                 FriendData friendData = mFriendDataList.get(i);
 
                 LinearLayout itemRoot = (LinearLayout) viewHolder.itemView;
-                RoundedImageView portrait = (RoundedImageView) itemRoot.findViewById(R.id.portrait);
+                SimpleDraweeView portrait = (SimpleDraweeView) itemRoot.findViewById(R.id.portrait);
                 TextView nick = (TextView) itemRoot.findViewById(R.id.nick);
                 TextView mood = (TextView) itemRoot.findViewById(R.id.mood);
 
                 //
-                portrait.setImageBitmap(friendData.portrait);
+                if (friendData.portraitUri != null) {
+                    portrait.setImageURI(Uri.parse(friendData.portraitUri));
+                }
                 nick.setText(friendData.nick);
                 mood.setText(friendData.mood);
             }
