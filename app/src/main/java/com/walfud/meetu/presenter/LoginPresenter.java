@@ -80,10 +80,6 @@ public class LoginPresenter {
                 if (false) {
                 } else if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())
                         || Constant.ACCESS_STATUS_LOGIN.equals(userAccessDto.getAccess_status())) {
-                    Bundle bundle = new Bundle();
-                    MainActivity.startActivity(mView, bundle);
-                    mView.finish();
-
                     UserManager.getInstance().setCurrentUser(serverUser2ClientUser(userAccessDto.getUser()));
 
                     if (mOnLoginListener != null) {
@@ -95,6 +91,11 @@ public class LoginPresenter {
                             mOnLoginListener.onLogin(userAccessDto.getUser());
                         }
                     }
+
+                    // Start main activity
+                    Bundle bundle = new Bundle();
+                    MainActivity.startActivity(mView, bundle);
+                    mView.finish();
                 } else {
                     // Fail
                     if (mOnLoginListener != null) {

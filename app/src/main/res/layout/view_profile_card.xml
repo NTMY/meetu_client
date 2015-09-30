@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_detail"
     android:layout_width="match_parent"
     android:layout_height="180dp"
     android:background="?attr/colorPrimary"
     android:padding="16dp">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/portrait"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_marginTop="16dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_account_circle_white_48dp" />
+        app:roundedCornerRadius="6dp"
+        app:placeholderImage="@drawable/ic_account_box_white_48dp"
+        app:placeholderImageScaleType="centerInside"
+        app:failureImage="@drawable/ic_account_box_white_48dp"
+        app:failureImageScaleType="centerInside" />
 
     <TextView
         android:id="@+id/nick"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/portrait"
         android:layout_marginTop="20dp"
         android:text="Nick"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:maxLines="1" />
 
     <TextView
         android:id="@+id/mood"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/nick"
         android:layout_marginTop="2dp"
         android:text="Mood"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:maxLines="2" />
 
 </RelativeLayout>

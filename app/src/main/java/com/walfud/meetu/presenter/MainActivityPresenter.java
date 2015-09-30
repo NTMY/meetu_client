@@ -1,19 +1,14 @@
 package com.walfud.meetu.presenter;
 
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.widget.Toast;
 
-import com.walfud.common.ServiceBinder;
 import com.walfud.meetu.MainService;
 import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.R;
 import com.walfud.meetu.Utils;
-import com.walfud.meetu.manager.PrefsManager;
-import com.walfud.meetu.view.FeedbackActivity;
+import com.walfud.meetu.view.FriendFragment;
 import com.walfud.meetu.view.MainActivity;
 
 import org.meetu.model.LocationCurr;
@@ -28,24 +23,30 @@ public class MainActivityPresenter {
 
     public static final String TAG = "MainActivityPresenter";
 
-    private MainActivity mView;
+    private MainActivity mMainActivity;
+    private FriendFragment mFriendFragment;
     private MainService mMainService;
-    private ServiceConnection mEngineServiceConnection = new ServiceConnection() {
 
-        private MainService.OnDataRequestListener mOnSearchListener = new MainService.OnDataRequestListener() {
+    public MainActivityPresenter(MainActivity view, FriendFragment friendFragment) {
+        mMainActivity = view;
+        mFriendFragment = friendFragment;
+        mMainService = MainService.getInstance();
+
+        //
+        mMainService.setOnSearchListener(new MainService.OnDataRequestListener() {
             @Override
             public void onStartSearch() {
-                mView.showSearching();
+                mMainActivity.showSearching();
             }
 
             @Override
             public void onNoFriendNearby() {
-                mView.showSearchResult(new ArrayList<LocationCurr>());
+                mMainActivity.showSearchResult(new ArrayList<LocationCurr>());
             }
 
             @Override
             public void onFoundFriends(List<LocationCurr> nearbyFriendList) {
-                mView.showSearchResult(nearbyFriendList);
+                mMainActivity.showSearchResult(nearbyFriendList);
 
                 // Notify
                 Intent intent = new Intent(MeetUApplication.getContext(), MainActivity.class);
@@ -58,101 +59,11 @@ public class MainActivityPresenter {
             public void onError(int errorCode) {
                 Toast.makeText(MeetUApplication.getContext(), String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
             }
-        };
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mMainService = ((ServiceBinder<MainService>) service).getService();
-
-            // Init model
-            mMainService.setOnSearchListener(mOnSearchListener);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mMainService = null;
-        }
-    };
-
-    public MainActivityPresenter(MainActivity view) {
-        mView = view;
+        });
     }
 
     // View Event
     public void search() {
         mMainService.searchNearby();
-    }
-
-    public void setAutoReport(boolean isChecked) {
-        if (!checkModelBind()) {
-            return;
-        }
-
-        if (isChecked) {
-            mMainService.startAutoReportSelf();
-        } else {
-            mMainService.stopAutoReportSelf();
-        }
-
-        PrefsManager.getInstance().setAutoReport(isChecked);
-    }
-    public void setAutoSearch(boolean isChecked) {
-        if (!checkModelBind()) {
-            return;
-        }
-
-        if (isChecked) {
-            mMainService.startAutoSearchNearby();
-        } else {
-            mMainService.stopAutoSearchNearby();
-        }
-
-        PrefsManager.getInstance().setAutoSearch(isChecked);
-    }
-
-    public void feedback() {
-        FeedbackActivity.startActivity(mView);
-    }
-    public void exit() {
-        release(true);
-        Utils.clearNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID);
-        mView.finish();
-    }
-
-    // Presenter Function
-    public void init() {
-        if (mMainService == null) {
-            MainService.startServiceIgnoreSetting();
-            MeetUApplication.getContext().bindService(MainService.SERVICE_INTENT, mEngineServiceConnection, 0);
-        }
-    }
-    /**
-     *
-     * @param stopService `false` if only unbind service, `true` will unbind and stop service.
-     */
-    public void release(boolean stopService) {
-        if (mMainService != null) {
-            MeetUApplication.getContext().unbindService(mEngineServiceConnection);
-            mMainService = null;
-        }
-
-        if (stopService) {
-            if (MainService.isServiceRunning()) {
-                MainService.stopService();
-            }
-        }
-    }
-
-    //
-    /**
-     * Check if the model service has been bound successfully.
-     */
-    private boolean checkModelBind() {
-        if (mMainService == null) {
-            Toast.makeText(MeetUApplication.getContext(), "Model Service Unbinding", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        return true;
     }
 }

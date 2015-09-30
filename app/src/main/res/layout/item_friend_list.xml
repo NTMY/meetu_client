@@ -5,18 +5,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:orientation="vertical">
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
-    <com.walfud.common.widget.CircleImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/portrait"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        app:radius="14dp"/>
+        app:placeholderImage="@drawable/ic_account_circle_light_gray_48dp"
+        app:placeholderImageScaleType="centerInside"
+        app:failureImage="@drawable/ic_account_circle_light_gray_48dp"
+        app:failureImageScaleType="centerInside"
+        app:roundAsCircle="true" />
 
-    <TextView
-        android:id="@+id/nick"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:singleLine="true" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/nick"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:text="nick"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/mood"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:text="mood................."
+            android:singleLine="true" />
+
+    </LinearLayout>
 
 </LinearLayout>
