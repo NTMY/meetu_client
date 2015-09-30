@@ -9,7 +9,9 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
 
+import com.walfud.meetu.MainService;
 import com.walfud.meetu.R;
+import com.walfud.meetu.manager.PrefsManager;
 
 /**
  * Created by walfud on 9/24/15.
@@ -17,19 +19,25 @@ import com.walfud.meetu.R;
 public class SettingActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
 
     public static final String TAG = "SettingActivity";
-    private static final String PREFS_AUTO_REPORT = "auto_report";
 
     private SwitchPreference mAutoReport;
+    private SwitchPreference mAutoSearch;
 
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.prefs);
-        mAutoReport = (SwitchPreference) findPreference(PREFS_AUTO_REPORT);
+        mAutoReport = (SwitchPreference) findPreference(PrefsManager.PREFS_AUTO_REPORT);
+        mAutoSearch = (SwitchPreference) findPreference(PrefsManager.PREFS_AUTO_SEARCH);
+
+        // Init state
+        mAutoReport.setChecked(PrefsManager.getInstance().isAutoReport());
+        mAutoSearch.setChecked(PrefsManager.getInstance().isAutoSearch());
 
         //
         mAutoReport.setOnPreferenceChangeListener(this);
+        mAutoSearch.setOnPreferenceChangeListener(this);
     }
 
     @Override
@@ -37,10 +45,19 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
 
         String key = preference.getKey();
         if (false) {
-        } else if (PREFS_AUTO_REPORT.equals(key)) {
+
+        } else if (PrefsManager.PREFS_AUTO_REPORT.equals(key)) {
+
             boolean autoReport = (boolean) newValue;
+            MainService.getInstance().setAutoReportSelf(autoReport);
+
+        } else if (PrefsManager.PREFS_AUTO_SEARCH.equals(key)) {
+
+            boolean autoSearch = (boolean) newValue;
+            MainService.getInstance().setAutoSearchNearby(autoSearch);
 
         } else {
+
         }
 
         return true;

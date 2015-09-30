@@ -4,8 +4,14 @@
     <SwitchPreference
         android:key="auto_report"
         android:title="Auto Report"
-        android:summaryOn="Now, I will report my location automatically （￣▽￣）."
-        android:summaryOff="I can do nothing for you （╯_╰）. You must report your location manually."
-        android:persistent="true" />
+        android:summaryOn="Sorry, I don't allow you to turn it off."
+        android:summaryOff="OOOh... Shit"
+        android:enabled="false" />
+
+    <SwitchPreference
+        android:key="auto_search"
+        android:title="Auto Search"
+        android:summaryOn="Now, I will search your friend automatically （￣▽￣）."
+        android:summaryOff="I can do nothing for you （╯_╰）. You must search your friend manually." />
 
 </PreferenceScreen>

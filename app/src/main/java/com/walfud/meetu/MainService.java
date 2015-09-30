@@ -42,6 +42,8 @@ public class MainService extends Service {
 
     private LocationManager mLocationManager;
     private Timer mEngineTimer = new Timer();
+    private TimerTask mReportSelfTimerTask;
+    private TimerTask mSearchOthersTimerTask;
 
     @Override
     public void onCreate() {
@@ -73,10 +75,10 @@ public class MainService extends Service {
 
         if (intent.getBooleanExtra(EXTRA_READ_SETTING, false)) {
             if (PrefsManager.getInstance().isAutoReport()) {
-                startAutoReportSelf();
+                setAutoReportSelf(true);
             }
             if (PrefsManager.getInstance().isAutoSearch()) {
-                startAutoSearchNearby();
+                setAutoSearchNearby(true);
             }
         }
 
@@ -219,56 +221,57 @@ public class MainService extends Service {
         });
     }
 
-    private TimerTask mReportSelfTimerTask;
-
     public boolean isAutoReport() {
         return mReportSelfTimerTask != null;
     }
 
-    public void startAutoReportSelf() {
-        if (mReportSelfTimerTask == null) {
-            mReportSelfTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    reportSelf();
-                }
-            };
-            mEngineTimer.schedule(mReportSelfTimerTask, UPDATE_INTERVAL, UPDATE_INTERVAL);
+    public void setAutoReportSelf(boolean start) {
+        if (start) {
+            // Start auto report
+            if (mReportSelfTimerTask == null) {
+                mReportSelfTimerTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        reportSelf();
+                    }
+                };
+                mEngineTimer.schedule(mReportSelfTimerTask, UPDATE_INTERVAL, UPDATE_INTERVAL);
+            }
+        } else {
+            // Stop
+            if (mReportSelfTimerTask != null) {
+                mReportSelfTimerTask.cancel();
+                mReportSelfTimerTask = null;
+                mEngineTimer.purge();
+            }
         }
     }
-
-    public void stopAutoReportSelf() {
-        if (mReportSelfTimerTask != null) {
-            mReportSelfTimerTask.cancel();
-            mReportSelfTimerTask = null;
-            mEngineTimer.purge();
-        }
-    }
-
-    private TimerTask mSearchOthersTimerTask;
 
     public boolean isAutoSearch() {
         return mSearchOthersTimerTask != null;
     }
 
-    public void startAutoSearchNearby() {
-        if (mSearchOthersTimerTask == null) {
-            mSearchOthersTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    searchNearby();
-                }
-            };
-            mEngineTimer.schedule(mSearchOthersTimerTask, UPDATE_INTERVAL, UPDATE_INTERVAL);
+    public void setAutoSearchNearby(boolean start) {
+        if (start) {
+            // Start auto search
+            if (mSearchOthersTimerTask == null) {
+                mSearchOthersTimerTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        searchNearby();
+                    }
+                };
+                mEngineTimer.schedule(mSearchOthersTimerTask, UPDATE_INTERVAL, UPDATE_INTERVAL);
+            }
+        } else {
+            // Stop
+            if (mSearchOthersTimerTask != null) {
+                mSearchOthersTimerTask.cancel();
+                mSearchOthersTimerTask = null;
+                mEngineTimer.purge();
+            }
         }
-    }
 
-    public void stopAutoSearchNearby() {
-        if (mSearchOthersTimerTask != null) {
-            mSearchOthersTimerTask.cancel();
-            mSearchOthersTimerTask = null;
-            mEngineTimer.purge();
-        }
     }
 
     // Helper

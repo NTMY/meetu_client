@@ -28,34 +28,34 @@ public class PrefsManager {
     }
 
     //
-    private static final String PREFS_CURRENT_USER_ID = "PREFS_CURRENT_USER_ID";
-    private static final long VALUE_INVALID_USER_ID = -1;
+    public static final String PREFS_CURRENT_USER_ID = "user_id";
+    public static final long VALUE_INVALID_USER_ID = -1;
     public void setCurrentUserId(long userId) {
-        mSharePreference.edit().putLong(PREFS_CURRENT_USER_ID, userId).apply();
+        mSharePreference.edit().putLong(PREFS_CURRENT_USER_ID, userId).commit();
     }
     public long getCurrentUserId() {
         return mSharePreference.getLong(PREFS_CURRENT_USER_ID, VALUE_INVALID_USER_ID);
     }
 
-    private static final String PREFS_AUTO_REPORT = "PREFS_AUTO_REPORT";
+    public static final String PREFS_AUTO_REPORT = "auto_report";
     public boolean isAutoReport() {
         return mSharePreference.getBoolean(PREFS_AUTO_REPORT, true);
     }
     public void setAutoReport(boolean autoReport) {
-        mSharePreference.edit().putBoolean(PREFS_AUTO_REPORT, autoReport).apply();
+        mSharePreference.edit().putBoolean(PREFS_AUTO_REPORT, autoReport).commit();
     }
 
-    private static final String PREFS_AUTO_SEARCH = "PREFS_AUTO_SEARCH";
+    public static final String PREFS_AUTO_SEARCH = "auto_search";
     public boolean isAutoSearch() {
         return mSharePreference.getBoolean(PREFS_AUTO_SEARCH, true);
     }
     public void setAutoSearch(boolean autoSearch) {
-        mSharePreference.edit().putBoolean(PREFS_AUTO_SEARCH, autoSearch).apply();
+        mSharePreference.edit().putBoolean(PREFS_AUTO_SEARCH, autoSearch).commit();
     }
 
-    private static final String PREFS_SPLASH = "PREFS_SPLASH";
+    public static final String PREFS_SPLASH = "splash";
     public void setShowSplash(boolean showSplash) {
-        mSharePreference.edit().putBoolean(PREFS_SPLASH, showSplash).apply();
+        mSharePreference.edit().putBoolean(PREFS_SPLASH, showSplash).commit();
     }
     public boolean getShowSplash() {
         return mSharePreference.getBoolean(PREFS_SPLASH, true);
