@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.walfud.common.collection.CollectionUtil;
 import com.walfud.common.widget.JumpBar;
 import com.walfud.common.widget.SelectView;
 import com.walfud.meetu.R;
@@ -146,6 +147,15 @@ public class FriendFragment extends Fragment {
 
     // Function
     public void setFriendList(List<FriendData> friendList) {
+        if (CollectionUtil.isEmpty(friendList)) {
+            mSv.removeAllViews();
+            return;
+        }
+
+        // Set default profile card
+        mPcv.set(friendList.get(0));
+
+        // Set list
         mFriendDataList = friendList;
         mSv.getAdapter().notifyDataSetChanged();
     }
