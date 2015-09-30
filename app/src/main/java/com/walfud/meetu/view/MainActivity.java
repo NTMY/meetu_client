@@ -1,5 +1,7 @@
 package com.walfud.meetu.view;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 
 import com.walfud.meetu.BaseActivity;
@@ -29,6 +32,10 @@ public class MainActivity extends BaseActivity
 
     private MainActivityPresenter mPresenter;
     private ActionBarDrawerToggle mDrawerToggle;
+    /**
+     * Whether need searching animation
+     */
+    private boolean mIsSearchingAnimate;
 
     // Fragment
 
@@ -62,6 +69,26 @@ public class MainActivity extends BaseActivity
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
+        mIsSearchingAnimate = false;
+        mFab.animate().setListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mFab.setEnabled(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+
+                if (mIsSearchingAnimate) {
+                    mFab.animate().rotationYBy(180).setInterpolator(new OvershootInterpolator()).setStartDelay(500).setDuration(1000);
+                } else {
+                    mFab.setEnabled(true);
+                }
+            }
+        });
     }
 
     @Override
@@ -113,7 +140,9 @@ public class MainActivity extends BaseActivity
     public void showSearchResult(List<LocationCurr> locationList) {
     }
 
-    public void showSearching() {
+    public void showSearching(boolean start) {
+        mIsSearchingAnimate = start;
+        mFab.animate().rotationYBy(180).setInterpolator(new OvershootInterpolator()).setDuration(1000);
     }
 
     //

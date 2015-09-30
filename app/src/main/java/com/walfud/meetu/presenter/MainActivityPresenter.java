@@ -36,16 +36,18 @@ public class MainActivityPresenter {
         mMainService.setOnSearchListener(new MainService.OnDataRequestListener() {
             @Override
             public void onStartSearch() {
-                mMainActivity.showSearching();
+                mMainActivity.showSearching(true);
             }
 
             @Override
             public void onNoFriendNearby() {
+                mMainActivity.showSearching(false);
                 mMainActivity.showSearchResult(new ArrayList<LocationCurr>());
             }
 
             @Override
             public void onFoundFriends(List<LocationCurr> nearbyFriendList) {
+                mMainActivity.showSearching(false);
                 mMainActivity.showSearchResult(nearbyFriendList);
 
                 // Notify
@@ -57,6 +59,8 @@ public class MainActivityPresenter {
 
             @Override
             public void onError(int errorCode) {
+                mMainActivity.showSearching(false);
+                mMainActivity.showSearchResult(new ArrayList<LocationCurr>());
                 Toast.makeText(MeetUApplication.getContext(), String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
             }
         });
