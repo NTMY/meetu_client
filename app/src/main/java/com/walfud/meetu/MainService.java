@@ -2,13 +2,11 @@ package com.walfud.meetu;
 
 import android.app.Service;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
@@ -35,8 +33,12 @@ import java.util.TimerTask;
 public class MainService extends Service {
 
     public static final String TAG = "MainService";
+    /**
+     * Default is `false`
+     */
     public static final String EXTRA_READ_SETTING = "EXTRA_READ_SETTING";
     private static final long UPDATE_INTERVAL = 10 * 60 * 1000; // 10 min
+    private static MainService sInstance;
 
     private LocationManager mLocationManager;
     private Timer mEngineTimer = new Timer();
@@ -44,6 +46,23 @@ public class MainService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        MeetUApplication.getContext().bindService(SERVICE_INTENT, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                sInstance = ((ServiceBinder<MainService>) service).getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                sInstance = null;
+            }
+        }, 0);
+
+        mLocationManager = LocationManager.getInstance();
+        mLocationManager.init();
+
+        Toast.makeText(MeetUApplication.getContext(), "Nice to Meet U", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -52,10 +71,7 @@ public class MainService extends Service {
             return START_REDELIVER_INTENT;
         }
 
-        mLocationManager = LocationManager.getInstance();
-        mLocationManager.init();
-
-        if (intent.getBooleanExtra(EXTRA_READ_SETTING, true)) {
+        if (intent.getBooleanExtra(EXTRA_READ_SETTING, false)) {
             if (PrefsManager.getInstance().isAutoReport()) {
                 startAutoReportSelf();
             }
@@ -63,8 +79,6 @@ public class MainService extends Service {
                 startAutoSearchNearby();
             }
         }
-
-        Toast.makeText(MeetUApplication.getContext(), "Nice to Meet U", Toast.LENGTH_SHORT).show();
 
         return START_REDELIVER_INTENT;
     }
@@ -75,6 +89,7 @@ public class MainService extends Service {
 
         mEngineTimer.cancel();
         mLocationManager.destroy();
+        sInstance = null;
     }
 
     @Override
@@ -257,6 +272,14 @@ public class MainService extends Service {
     }
 
     // Helper
+    public static MainService getInstance() {
+        if (sInstance == null) {
+            throw new RuntimeException("Service 'MainService' NOT binding");
+        }
+
+        return sInstance;
+    }
+
     public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), MainService.class);
     public static void startService(Bundle extras) {
         if (extras != null) {
@@ -291,32 +314,5 @@ public class MainService extends Service {
 
     public static boolean isServiceRunning() {
         return Utils.isServiceRunning(MeetUApplication.getContext(), SERVICE_INTENT);
-    }
-
-    public static void setAutoReport(Context context, boolean autoReport) {
-        setService(context, autoReport, FLAG_AUTO_REPORT);
-    }
-
-    // Internal
-    private static final int FLAG_AUTO_REPORT = 1 << 0;
-    private static void setService(Context context, boolean value, final int flag) {
-        context.bindService(SERVICE_INTENT, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                MainService mainService = ((ServiceBinder<MainService>) service).getService();
-
-                switch (flag) {
-                    case FLAG_AUTO_REPORT: {
-                        mainService.startAutoReportSelf();
-                    }
-                        break;
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                Snackbar.make(null, "bind service failed", Snackbar.LENGTH_INDEFINITE).show();
-            }
-        }, 0);
     }
 }

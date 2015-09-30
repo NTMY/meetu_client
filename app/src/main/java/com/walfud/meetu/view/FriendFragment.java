@@ -59,7 +59,7 @@ public class FriendFragment extends Fragment {
         // Get friend list
         new AsyncTask<User, Void, List<FriendData>>() {
 
-            private List<FriendFragment.FriendData> mFriendList;
+            private List<FriendData> mFriendList = new ArrayList<FriendData>();
 
             @Override
             protected void onPreExecute() {
@@ -69,13 +69,18 @@ public class FriendFragment extends Fragment {
             }
 
             @Override
-            protected List<FriendFragment.FriendData> doInBackground(com.walfud.meetu.database.User[] params) {
-                final com.walfud.meetu.database.User user = params[0];
+            protected List<FriendData> doInBackground(User[] params) {
+                final User user = params[0];
                 new FriendHandler().onGetMyFriendList(new FriendGetMyFriendListListener() {
                     @Override
                     public void getMyFriendList(ListBean listBean) {
                         List<org.meetu.model.User> userList = (List<org.meetu.model.User>) listBean.getList();
-                        mFriendList = Transformer.userList2FriendDataList(userList);
+
+                        // Add self
+                        mFriendList.add(Transformer.user2FriendData(UserManager.getInstance().getCurrentUser()));
+
+                        // Add friend
+                        mFriendList.addAll(Transformer.userList2FriendDataList(userList));
 
                     }
                 }, Transformer.user2User(user));
@@ -84,7 +89,7 @@ public class FriendFragment extends Fragment {
             }
 
             @Override
-            protected void onPostExecute(List<FriendFragment.FriendData> friendList) {
+            protected void onPostExecute(List<FriendData> friendList) {
                 super.onPostExecute(friendList);
 
                 setFriendList(friendList);

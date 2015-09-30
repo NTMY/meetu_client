@@ -18,6 +18,8 @@ public class MeetUApplication extends Application {
 
         Bugtags.start("b27243a172339c9df358ab036868ec05", this, Bugtags.BTGInvocationEventBubble);
         Fresco.initialize(this);
+
+        MainService.startServiceWithSetting();
     }
 
     private static Context sApplicationContext;

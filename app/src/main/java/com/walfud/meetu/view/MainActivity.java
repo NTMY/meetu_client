@@ -56,7 +56,6 @@ public class MainActivity extends BaseActivity
 
         //
         mPresenter = new MainActivityPresenter(this, mFriendFragment);
-        mPresenter.init();
 
         //
         setSupportActionBar(mToolbar);
@@ -75,8 +74,6 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        mPresenter.release(false);      // Just unbind service but keep service running
     }
 
     @Override

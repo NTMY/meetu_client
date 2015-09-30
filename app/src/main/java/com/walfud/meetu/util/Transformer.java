@@ -71,6 +71,15 @@ public class Transformer {
         return user;
     }
 
+    public static FriendFragment.FriendData user2FriendData(User user) {
+        FriendFragment.FriendData friendData = new FriendFragment.FriendData();
+        friendData.portraitUri = user.getPortraitUri();
+        friendData.nick = user.getNick();
+        friendData.mood = user.getMood();
+
+        return friendData;
+    }
+
     // org.meetu.model.User
     public static User user2User(org.meetu.model.User user) {
         User dbUser = new User();
