@@ -8,18 +8,20 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
+import android.view.View;
 
-import com.walfud.meetu.MainService;
 import com.walfud.meetu.R;
 import com.walfud.meetu.manager.PrefsManager;
+import com.walfud.meetu.presenter.SettingPresenter;
 
 /**
  * Created by walfud on 9/24/15.
  */
-public class SettingActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
+public class SettingActivity extends PreferenceActivity {
 
     public static final String TAG = "SettingActivity";
 
+    private SettingPresenter mPresenter;
     private SwitchPreference mAutoReport;
     private SwitchPreference mAutoSearch;
 
@@ -35,32 +37,17 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
         mAutoReport.setChecked(PrefsManager.getInstance().isAutoReport());
         mAutoSearch.setChecked(PrefsManager.getInstance().isAutoSearch());
 
+        mPresenter = new SettingPresenter(this);
+
         //
-        mAutoReport.setOnPreferenceChangeListener(this);
-        mAutoSearch.setOnPreferenceChangeListener(this);
+        mAutoReport.setOnPreferenceChangeListener(mPresenter);
+        mAutoSearch.setOnPreferenceChangeListener(mPresenter);
     }
 
-    @Override
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
-
-        String key = preference.getKey();
-        if (false) {
-
-        } else if (PrefsManager.PREFS_AUTO_REPORT.equals(key)) {
-
-            boolean autoReport = (boolean) newValue;
-            MainService.getInstance().setAutoReportSelf(autoReport);
-
-        } else if (PrefsManager.PREFS_AUTO_SEARCH.equals(key)) {
-
-            boolean autoSearch = (boolean) newValue;
-            MainService.getInstance().setAutoSearchNearby(autoSearch);
-
-        } else {
-
-        }
-
-        return true;
+    // Function
+    public void showTip(boolean success, Preference preference) {
+        View view = getListView().getChildAt(preference.getOrder());
+        view.setBackgroundColor(success ? 0x2000ff00 : 0x20ff0000);
     }
 
     // Helper
