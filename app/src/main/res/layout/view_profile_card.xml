@@ -20,21 +20,23 @@
 
     <TextView
         android:id="@+id/nick"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/portrait"
         android:layout_marginTop="20dp"
         android:text="Nick"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:maxLines="1" />
 
     <TextView
         android:id="@+id/mood"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/nick"
         android:layout_marginTop="2dp"
         android:text="Mood"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:maxLines="2" />
 
 </RelativeLayout>
