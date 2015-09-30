@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
@@ -22,6 +23,9 @@ public class SettingActivity extends PreferenceActivity {
     public static final String TAG = "SettingActivity";
 
     private SettingPresenter mPresenter;
+    private PrefsManager mPrefsManager;
+    private EditTextPreference mNick;
+    private EditTextPreference mMood;
     private SwitchPreference mAutoReport;
     private SwitchPreference mAutoSearch;
 
@@ -30,22 +34,29 @@ public class SettingActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.prefs);
+        mNick = (EditTextPreference) findPreference(PrefsManager.PREFS_NICK);
+        mMood = (EditTextPreference) findPreference(PrefsManager.PREFS_MOOD);
         mAutoReport = (SwitchPreference) findPreference(PrefsManager.PREFS_AUTO_REPORT);
         mAutoSearch = (SwitchPreference) findPreference(PrefsManager.PREFS_AUTO_SEARCH);
 
         // Init state
-        mAutoReport.setChecked(PrefsManager.getInstance().isAutoReport());
-        mAutoSearch.setChecked(PrefsManager.getInstance().isAutoSearch());
-
-        mPresenter = new SettingPresenter(this);
+        mPrefsManager = PrefsManager.getInstance();
+        mNick.setSummary(mPrefsManager.getNick());
+        mMood.setSummary(mPrefsManager.getMood());
+        mAutoReport.setChecked(mPrefsManager.isAutoReport());
+        mAutoSearch.setChecked(mPrefsManager.isAutoSearch());
 
         //
+        mPresenter = new SettingPresenter(this);
+        mNick.setOnPreferenceChangeListener(mPresenter);
+        mMood.setOnPreferenceChangeListener(mPresenter);
         mAutoReport.setOnPreferenceChangeListener(mPresenter);
         mAutoSearch.setOnPreferenceChangeListener(mPresenter);
     }
 
     // Function
     public void showTip(boolean success, Preference preference) {
+        // Background color
         View view = getListView().getChildAt(preference.getOrder());
         view.setBackgroundColor(success ? 0x2000ff00 : 0x20ff0000);
     }

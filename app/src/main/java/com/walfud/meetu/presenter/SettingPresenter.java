@@ -29,15 +29,27 @@ public class SettingPresenter implements Preference.OnPreferenceChangeListener {
         String key = preference.getKey();
         if (false) {
 
-        } else if (PrefsManager.PREFS_AUTO_REPORT.equals(key)) {
+        } else if (PrefsManager.PREFS_NICK.equals(key)) {
+            // Nick
+            preference.setSummary((String) newValue);
 
+            suc = true;
+
+        } else if (PrefsManager.PREFS_MOOD.equals(key)) {
+            // Mood
+            preference.setSummary((String) newValue);
+
+            suc = true;
+
+        } else if (PrefsManager.PREFS_AUTO_REPORT.equals(key)) {
+            // Auto Report
             boolean autoReport = (boolean) newValue;
             mMainService.setAutoReportSelf(autoReport);
 
             suc = autoReport == mMainService.isAutoReport();
 
         } else if (PrefsManager.PREFS_AUTO_SEARCH.equals(key)) {
-
+            // Auto search
             boolean autoSearch = (boolean) newValue;
             mMainService.setAutoSearchNearby(autoSearch);
 

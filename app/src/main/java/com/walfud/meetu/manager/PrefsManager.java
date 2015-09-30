@@ -30,11 +30,27 @@ public class PrefsManager {
     //
     public static final String PREFS_CURRENT_USER_ID = "user_id";
     public static final long VALUE_INVALID_USER_ID = -1;
-    public void setCurrentUserId(long userId) {
+    public void setUserId(long userId) {
         mSharePreference.edit().putLong(PREFS_CURRENT_USER_ID, userId).commit();
     }
-    public long getCurrentUserId() {
+    public long getUserId() {
         return mSharePreference.getLong(PREFS_CURRENT_USER_ID, VALUE_INVALID_USER_ID);
+    }
+
+    public static final String PREFS_NICK = "nick";
+    public String getNick() {
+        return mSharePreference.getString(PREFS_NICK, "");
+    }
+    public void setNick(String nick) {
+        mSharePreference.edit().putString(PREFS_NICK, nick).commit();
+    }
+
+    public static final String PREFS_MOOD = "mood";
+    public String getMood() {
+        return mSharePreference.getString(PREFS_MOOD, "");
+    }
+    public void setMood(String mood) {
+        mSharePreference.edit().putString(PREFS_MOOD, mood).commit();
     }
 
     public static final String PREFS_AUTO_REPORT = "auto_report";

@@ -25,12 +25,12 @@ public class UserManager {
 
     // Function
     public User getCurrentUser() {
-        long userId = PrefsManager.getInstance().getCurrentUserId();
+        long userId = PrefsManager.getInstance().getUserId();
         return DbManager.getInstance().getUser(userId);
     }
 
     public void setCurrentUser(User user) {
-        mPrefsManager.setCurrentUserId(user.getUserId());
+        mPrefsManager.setUserId(user.getUserId());
         mDbManager.insertOrUpdate(user);
     }
 
