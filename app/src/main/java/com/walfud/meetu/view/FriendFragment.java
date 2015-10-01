@@ -3,9 +3,12 @@ package com.walfud.meetu.view;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.walfud.common.collection.CollectionUtil;
 import com.walfud.common.widget.JumpBar;
 import com.walfud.common.widget.SelectView;
+import com.walfud.meetu.BuildConfig;
 import com.walfud.meetu.R;
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.UserManager;
@@ -23,9 +27,14 @@ import com.walfud.meetu.presenter.MainActivityPresenter;
 import com.walfud.meetu.util.Transformer;
 
 import org.meetu.client.handler.FriendHandler;
+import org.meetu.client.handler.PortraitHandler;
 import org.meetu.client.listener.FriendGetMyFriendListListener;
+import org.meetu.client.listener.PortraitUploadListener;
+import org.meetu.dto.BaseDto;
+import org.meetu.model.PortraitUploadModel;
 import org.meetu.util.ListBean;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,6 +148,46 @@ public class FriendFragment extends Fragment {
             public void onSelect(View view, int position) {
                 FriendData friendData = mFriendDataList.get(position);
                 mPcv.set(Transformer.friendData2ProfileData(friendData));
+            }
+        });
+        mPcv.setOnEventListener(new ProfileCardView.OnEventListener() {
+            @Override
+            public void onClickPortrait() {
+                if (BuildConfig.DEBUG) {
+                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "USER_4.jpg");
+
+                    PortraitUploadModel portraitUploadModel = new PortraitUploadModel();
+                    portraitUploadModel.setUserId(String.valueOf(UserManager.getInstance().getCurrentUser().getUserId()));
+//                    portraitUploadModel.setFileLocalPath(file.getAbsolutePath());
+                    portraitUploadModel.setFileLocalPath("/sdcard/DCIM/USER_4.jpg");
+
+                    new AsyncTask<PortraitUploadModel, Void, BaseDto>() {
+                        private BaseDto mResult;
+
+                        @Override
+                        protected BaseDto doInBackground(PortraitUploadModel... params) {
+                            PortraitUploadModel portraitUploadModel = params[0];
+
+                            new PortraitHandler().onUpload(new PortraitUploadListener() {
+                                @Override
+                                public void upload(BaseDto baseDto) {
+                                    mResult = baseDto;
+                                }
+                            }, portraitUploadModel);
+
+                            return mResult;
+                        }
+
+                        @Override
+                        protected void onPostExecute(BaseDto baseDto) {
+                            super.onPostExecute(baseDto);
+
+                            if (TextUtils.isEmpty(baseDto.getErrCode())) {
+                                Snackbar.make(mPcv, "Portrait upload success", Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    }.execute(portraitUploadModel);
+                }
             }
         });
 

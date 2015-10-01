@@ -29,17 +29,17 @@ public class SettingPresenter implements Preference.OnPreferenceChangeListener {
         String key = preference.getKey();
         if (false) {
 
-        } else if (PrefsManager.PREFS_NICK.equals(key)) {
-            // Nick
-            preference.setSummary((String) newValue);
-
-            suc = true;
-
-        } else if (PrefsManager.PREFS_MOOD.equals(key)) {
-            // Mood
-            preference.setSummary((String) newValue);
-
-            suc = true;
+//        } else if (PrefsManager.PREFS_NICK.equals(key)) {
+//            // Nick
+//            preference.setSummary((String) newValue);
+//
+//            suc = true;
+//
+//        } else if (PrefsManager.PREFS_MOOD.equals(key)) {
+//            // Mood
+//            preference.setSummary((String) newValue);
+//
+//            suc = true;
 
         } else if (PrefsManager.PREFS_AUTO_REPORT.equals(key)) {
             // Auto Report

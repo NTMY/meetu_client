@@ -121,7 +121,7 @@ public class LoginPresenter {
                 serverUser.getPwd(),
                 serverUser.getNickname(),
                 serverUser.getMood(),
-                serverUser.getStatus(),
+                serverUser.getImgUrl(),
                 serverUser.getMobile(),
                 serverUser.getImei()
         );

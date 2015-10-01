@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.view.View;
 
 import com.walfud.meetu.R;
-import com.walfud.meetu.manager.PrefsManager;
+import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.view.FeedbackActivity;
 
 import org.meetu.client.handler.FeedbackHandler;
@@ -43,7 +43,7 @@ public class FeedbackPresenter implements View.OnClickListener {
     //
     private void onClickSend() {
         Feedback feedback = new Feedback();
-        feedback.setUserId((int) PrefsManager.getInstance().getUserId());
+        feedback.setUserId((int) (long) UserManager.getInstance().getUserId());
         feedback.setContent(mView.getFeedbackContent());
 
         new AsyncTask<Feedback, Integer, BaseDto>() {

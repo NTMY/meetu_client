@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
@@ -17,11 +18,12 @@ import com.walfud.meetu.R;
 /**
  * Created by walfud on 2015/9/28.
  */
-public class ProfileCardView extends FrameLayout {
+public class ProfileCardView extends FrameLayout implements View.OnClickListener {
 
     public static final String TAG = "ProfileCardView";
 
     protected Context mContext;
+    protected OnEventListener mEventListener;
     protected RelativeLayout mRootLayout;
     protected SimpleDraweeView mPortrait;
     protected TextView mNick;
@@ -41,6 +43,23 @@ public class ProfileCardView extends FrameLayout {
         mPortrait = (SimpleDraweeView) mRootLayout.findViewById(R.id.portrait);
         mNick = (TextView) mRootLayout.findViewById(R.id.nick);
         mMood = (TextView) mRootLayout.findViewById(R.id.mood);
+
+        //
+        mPortrait.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.portrait:
+                if (mEventListener != null) {
+                    mEventListener.onClickPortrait();
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
     // Function
@@ -73,6 +92,10 @@ public class ProfileCardView extends FrameLayout {
         }, 700);
     }
 
+    public void setOnEventListener(OnEventListener listener) {
+        mEventListener = listener;
+    }
+
     //
     public static class ProfileData {
         public String portraitUri;
@@ -86,5 +109,10 @@ public class ProfileCardView extends FrameLayout {
             this.nick = nick;
             this.mood = mood;
         }
+    }
+
+    //
+    public interface OnEventListener {
+        void onClickPortrait();
     }
 }
