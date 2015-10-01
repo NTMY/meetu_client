@@ -87,7 +87,7 @@ public class Transformer {
         dbUser.setPassword(user.getPwd());
         dbUser.setNick(user.getNickname());
         dbUser.setMood(user.getMood());
-//        dbUser.setPortrait(user.getImgUrl());
+        dbUser.setPortraitUri(user.getImgUrl());
         dbUser.setPortraitUri("");
         dbUser.setPhoneNum(user.getMobile());
         dbUser.setImei(user.getImei());
@@ -104,8 +104,7 @@ public class Transformer {
 
     public static FriendFragment.FriendData user2FriendData(org.meetu.model.User user) {
         FriendFragment.FriendData friendData = new FriendFragment.FriendData();
-//        friendData.portraitUri = user.getImgUrl();
-        friendData.portraitUri = "";
+        friendData.portraitUri = user.getImgUrl();
         friendData.nick = user.getNickname();
         friendData.mood = user.getMood();
 

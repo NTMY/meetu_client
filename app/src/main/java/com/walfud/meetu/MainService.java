@@ -92,6 +92,8 @@ public class MainService extends Service {
         mEngineTimer.cancel();
         mLocationManager.destroy();
         sInstance = null;
+
+        Toast.makeText(MeetUApplication.getContext(), "Goodbye~", Toast.LENGTH_SHORT).show();
     }
 
     @Override
