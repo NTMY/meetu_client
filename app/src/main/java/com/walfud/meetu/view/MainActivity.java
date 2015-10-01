@@ -114,6 +114,9 @@ public class MainActivity extends BaseActivity
         if (id == R.id.action_settings) {
             SettingActivity.startActivity(this, null);
             return true;
+        } else if (id == R.id.action_exit) {
+            mPresenter.exit();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

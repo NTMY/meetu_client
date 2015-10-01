@@ -66,8 +66,14 @@ public class MainActivityPresenter {
         });
     }
 
-    // View Event
+    // Function
     public void search() {
         mMainService.searchNearby();
+    }
+
+    public void exit() {
+        MainService.stopService();
+        Utils.clearNotification(mMainActivity, Utils.NOTIFICATION_ID);
+        mMainActivity.finish();
     }
 }
