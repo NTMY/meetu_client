@@ -47,6 +47,7 @@ public class FriendFragment extends Fragment {
 
     private MainActivity mActivity;
     private MainActivityPresenter mPresenter;
+    private UserManager mUserManager;
     // Header
     private ProfileCardView mPcv;
     // List
@@ -65,11 +66,12 @@ public class FriendFragment extends Fragment {
 
         //
         mActivity = (MainActivity) getActivity();
+        mUserManager = UserManager.getInstance();
         mFriendDataList = new ArrayList<>();
         // Get friend list
-        new AsyncTask<User, Void, List<FriendData>>() {
+        new AsyncTask<User, Void, List<User>>() {
 
-            private List<FriendData> mFriendList = new ArrayList<FriendData>();
+            private List<User> mFriendList = new ArrayList<>();
 
             @Override
             protected void onPreExecute() {
@@ -79,32 +81,36 @@ public class FriendFragment extends Fragment {
             }
 
             @Override
-            protected List<FriendData> doInBackground(User[] params) {
+            protected List<User> doInBackground(User[] params) {
                 final User user = params[0];
                 new FriendHandler().onGetMyFriendList(new FriendGetMyFriendListListener() {
                     @Override
                     public void getMyFriendList(ListBean listBean) {
-                        List<org.meetu.model.User> userList = (List<org.meetu.model.User>) listBean.getList();
-
-                        // Add self
-                        mFriendList.add(Transformer.user2FriendData(UserManager.getInstance().getCurrentUser()));
+                        List<org.meetu.model.User> serverUserList = (List<org.meetu.model.User>) listBean.getList();
 
                         // Add friend
-                        mFriendList.addAll(Transformer.userList2FriendDataList(userList));
+                        mFriendList = Transformer.serverUserList2UserList(serverUserList);
 
                     }
-                }, Transformer.user2User(user));
+                }, Transformer.user2ServerUser(user));
 
                 return mFriendList;
             }
 
             @Override
-            protected void onPostExecute(List<FriendData> friendList) {
+            protected void onPostExecute(List<User> friendList) {
                 super.onPostExecute(friendList);
 
-                setFriendList(friendList);
+                // Save friend list
+                mUserManager.setFriendList(mFriendList);
+
+                // Add self on top for UI
+                mFriendList.add(mUserManager.getCurrentUser());
+
+                // Transform to `FriendData`
+                setFriendList(Transformer.userList2FriendDataList(mFriendList));
             }
-        }.execute(UserManager.getInstance().getCurrentUser());
+        }.execute(mUserManager.getCurrentUser());
         mJb.setOnJumpListener(new JumpBar.OnJumpListener() {
             @Override
             public boolean onJump(View view, int index, int totalIndex) {
@@ -156,7 +162,7 @@ public class FriendFragment extends Fragment {
                     File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "USER_4.jpg");
 
                     PortraitUploadModel portraitUploadModel = new PortraitUploadModel();
-                    portraitUploadModel.setUserId(String.valueOf(UserManager.getInstance().getCurrentUser().getUserId()));
+                    portraitUploadModel.setUserId(String.valueOf(mUserManager.getCurrentUser().getUserId()));
 //                    portraitUploadModel.setFileLocalPath(file.getAbsolutePath());
                     portraitUploadModel.setFileLocalPath("/sdcard/DCIM/USER_4.jpg");
 

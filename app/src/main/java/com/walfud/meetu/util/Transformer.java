@@ -58,17 +58,25 @@ public class Transformer {
         return profileData;
     }
 
-    public static org.meetu.model.User user2User(User dbUser) {
-        org.meetu.model.User user = new org.meetu.model.User();
-        user.setId((int) (long) dbUser.getUserId());
-        user.setPwd(dbUser.getPassword());
-        user.setNickname(dbUser.getNick());
-        user.setMood(dbUser.getMood());
-        user.setStatus(dbUser.getPortraitUri());
-        user.setMobile(dbUser.getPhoneNum());
-        user.setImei(dbUser.getImei());
+    public static org.meetu.model.User user2ServerUser(User user) {
+        org.meetu.model.User serverUser = new org.meetu.model.User();
+        serverUser.setId((int) (long) user.getUserId());
+        serverUser.setPwd(user.getPassword());
+        serverUser.setNickname(user.getNick());
+        serverUser.setMood(user.getMood());
+        serverUser.setStatus(user.getPortraitUri());
+        serverUser.setMobile(user.getPhoneNum());
+        serverUser.setImei(user.getImei());
 
-        return user;
+        return serverUser;
+    }
+
+    public static List<org.meetu.model.User> userList2DbUserList(List<User> userList) {
+        List<org.meetu.model.User> serverUserList = new ArrayList<>();
+        for (User user : userList) {
+            serverUserList.add(user2ServerUser(user));
+        }
+        return serverUserList;
     }
 
     public static FriendFragment.FriendData user2FriendData(User user) {
@@ -80,40 +88,47 @@ public class Transformer {
         return friendData;
     }
 
-    // org.meetu.model.User
-    public static User user2User(org.meetu.model.User user) {
-        User dbUser = new User();
-        dbUser.setUserId((long) user.getId());
-        dbUser.setPassword(user.getPwd());
-        dbUser.setNick(user.getNickname());
-        dbUser.setMood(user.getMood());
-        dbUser.setPortraitUri(user.getImgUrl());
-        dbUser.setPortraitUri("");
-        dbUser.setPhoneNum(user.getMobile());
-        dbUser.setImei(user.getImei());
-
-        return dbUser;
-    }
-    public static List<User> userList2UserList(List<org.meetu.model.User> userList) {
-        List<User> dbUserList = new ArrayList<>();
-        for (org.meetu.model.User user : userList) {
-            dbUserList.add(user2User(user));
+    public static List<FriendFragment.FriendData> userList2FriendDataList(List<User> userList) {
+        List<FriendFragment.FriendData> friendDataList = new ArrayList<>();
+        for (User user : userList) {
+            friendDataList.add(user2FriendData(user));
         }
-        return dbUserList;
+        return friendDataList;
     }
 
-    public static FriendFragment.FriendData user2FriendData(org.meetu.model.User user) {
+    // org.meetu.model.User
+    public static User serverUser2User(org.meetu.model.User serverUser) {
+        User user = new User();
+        user.setUserId((long) serverUser.getId());
+        user.setPassword(serverUser.getPwd());
+        user.setNick(serverUser.getNickname());
+        user.setMood(serverUser.getMood());
+        user.setPortraitUri(serverUser.getImgUrlReal());
+        user.setPhoneNum(serverUser.getMobile());
+        user.setImei(serverUser.getImei());
+
+        return user;
+    }
+    public static List<User> serverUserList2UserList(List<org.meetu.model.User> serverUserList) {
+        List<User> userList = new ArrayList<>();
+        for (org.meetu.model.User user : serverUserList) {
+            userList.add(serverUser2User(user));
+        }
+        return userList;
+    }
+
+    public static FriendFragment.FriendData serverUser2FriendData(org.meetu.model.User user) {
         FriendFragment.FriendData friendData = new FriendFragment.FriendData();
-        friendData.portraitUri = user.getImgUrl();
+        friendData.portraitUri = user.getImgUrlReal();
         friendData.nick = user.getNickname();
         friendData.mood = user.getMood();
 
         return friendData;
     }
-    public static List<FriendFragment.FriendData> userList2FriendDataList(List<org.meetu.model.User> userList) {
+    public static List<FriendFragment.FriendData> serverUserList2FriendDataList(List<org.meetu.model.User> userList) {
         List<FriendFragment.FriendData> friendDataList = new ArrayList<>();
         for (org.meetu.model.User user : userList) {
-            friendDataList.add(user2FriendData(user));
+            friendDataList.add(serverUser2FriendData(user));
         }
         return friendDataList;
     }
