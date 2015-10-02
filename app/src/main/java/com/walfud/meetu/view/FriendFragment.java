@@ -1,8 +1,11 @@
 package com.walfud.meetu.view;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -18,6 +21,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.walfud.common.collection.CollectionUtil;
 import com.walfud.common.widget.JumpBar;
 import com.walfud.common.widget.SelectView;
+import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.R;
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.UserManager;
@@ -34,6 +38,8 @@ import org.meetu.dto.BaseDto;
 import org.meetu.model.PortraitUploadModel;
 import org.meetu.util.ListBean;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,7 +113,7 @@ public class FriendFragment extends Fragment {
                 mUserManager.setFriendList(friendList);
 
                 // Add self on top and construct data for UI
-                List<FriendData> friendDataList = new ArrayList<FriendData>();
+                List<FriendData> friendDataList = new ArrayList<>();
                 friendDataList.add(Transformer.user2FriendData(mUserManager.getCurrentUser()));
                 friendDataList.addAll(Transformer.userList2FriendDataList(friendList));
 
@@ -160,10 +166,41 @@ public class FriendFragment extends Fragment {
         });
         mPcv.setOnEventListener(new ProfileCardView.OnEventListener() {
             @Override
-            public void onPortraitChanged(Uri newPortraitUri) {
+            public void onPortraitChanged(Uri portraitUri) {
+                // Get portrait content and file name
+                byte[] portraitContent = new byte[0];
+                String fileName = "";
+                try {
+                    // Content
+                    InputStream inputStream = MeetUApplication.getContext().getContentResolver().openInputStream(portraitUri);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    byte[] buf = new byte[1024 * 1024];
+                    int readLen;
+                    while ((readLen = inputStream.read(buf)) != -1) {
+                        byteArrayOutputStream.write(buf, 0, readLen);
+                    }
+                    byteArrayOutputStream.close();
+                    inputStream.close();
+                    portraitContent = byteArrayOutputStream.toByteArray();
+
+                    // File name
+                    Cursor cursor = MeetUApplication.getContext().getContentResolver().query(portraitUri, null, null, null, null);
+                    if (cursor.moveToFirst()) {
+                        int columnDisplayName = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+                        if (columnDisplayName != -1) {
+                            fileName = cursor.getString(columnDisplayName);
+                        }
+                    }
+                    cursor.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                // Transform to upload data
                 PortraitUploadModel portraitUploadModel = new PortraitUploadModel();
                 portraitUploadModel.setUserId(String.valueOf(mUserManager.getCurrentUser().getUserId()));
-                portraitUploadModel.setFileLocalPath(newPortraitUri.getPath());
+                portraitUploadModel.setFileLocalPath(portraitUri.getPath());
+                // TODO: setFileName, setByte
 
                 new AsyncTask<PortraitUploadModel, Void, BaseDto>() {
                     private BaseDto mResult;
@@ -205,8 +242,18 @@ public class FriendFragment extends Fragment {
                 updateUserInfo(mUserManager.getCurrentUser(), "Mood");
             }
         });
+        mPcv.setStartActivityForResultHost(this);
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (mPcv.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
     }
 
     // Function

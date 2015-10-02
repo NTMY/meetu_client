@@ -11,4 +11,5 @@ public class Constants {
 
     public static final Date INVALID_UPLOAD_TIME = new Date(0);
 
+    public static final int REQUEST_PICK_PORTRAIT = 1;
 }

@@ -1,6 +1,8 @@
 package com.walfud.meetu.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -14,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.walfud.meetu.Constants;
 import com.walfud.meetu.R;
 
 /**
@@ -26,6 +29,11 @@ public class ProfileCardView extends FrameLayout
 
     protected Context mContext;
     protected OnEventListener mEventListener;
+    /**
+     * `startActivityForResult` via `Activity` or `Fragment`
+     */
+    protected Object mForResultHost;
+
     protected RelativeLayout mRootLayout;
     protected SimpleDraweeView mPortrait;
     protected EditText mNick;
@@ -59,10 +67,17 @@ public class ProfileCardView extends FrameLayout
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.portrait:
-                if (mEventListener != null) {
-                    mEventListener.onPortraitChanged(null);
+            case R.id.portrait: {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                if (false) {
+                } else if (mForResultHost instanceof Activity) {
+                    ((Activity) (mForResultHost)).startActivityForResult(intent, Constants.REQUEST_PICK_PORTRAIT);
+                } else if (mForResultHost instanceof android.support.v4.app.Fragment) {
+                    ((android.support.v4.app.Fragment) (mForResultHost)).startActivityForResult(intent, Constants.REQUEST_PICK_PORTRAIT);
+                } else {
                 }
+            }
                 break;
 
             case R.id.nick:
@@ -136,6 +151,46 @@ public class ProfileCardView extends FrameLayout
 
     public void setOnEventListener(OnEventListener listener) {
         mEventListener = listener;
+    }
+
+    /**
+     * Set the caller for `startActivityForResult` via `Activity` or `Fragment`
+     * @param host should be either `Activity` or `Fragment`
+     */
+    public void setStartActivityForResultHost(Object host) {
+        if (!(host instanceof Activity
+                || host instanceof android.support.v4.app.Fragment)) {
+            throw new IllegalArgumentException("`setStartActivityForResultHost`. Argument should be either `Activity` or `Fragment`");
+        }
+
+        mForResultHost = host;
+    }
+
+    /**
+     * You should call this function in `onActivityResult` of activity/fragment
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     * @return true if this function has consumed the result, in which case, you should not go
+     * further in you host activity/fragment, otherwise is false
+     */
+    public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Constants.REQUEST_PICK_PORTRAIT:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri portraitUri = data.getData();
+
+                    if (mEventListener != null) {
+                        mEventListener.onPortraitChanged(portraitUri);
+                    }
+                }
+                return true;
+
+            default:
+                break;
+        }
+
+        return false;
     }
 
     //
