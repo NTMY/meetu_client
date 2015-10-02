@@ -3,6 +3,7 @@ package com.walfud.meetu.view;
 import android.os.Bundle;
 
 import com.walfud.meetu.BaseActivity;
+import com.walfud.meetu.MainService;
 import com.walfud.meetu.manager.PrefsManager;
 
 /**
@@ -22,6 +23,8 @@ public class LauncherActivity extends BaseActivity {
         } else {
             LoginActivity.startActivity(this);
         }
+
+        MainService.startServiceIgnoreSetting();
 
         finish();
     }

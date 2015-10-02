@@ -38,11 +38,6 @@ public class LoginActivity extends BaseActivity
         mPhoneNum = $(R.id.phone_num);
         mPassword = $(R.id.password);
 
-//        if (BuildConfig.DEBUG) {
-//            finish();
-//            MainActivity.startActivity(this, null);
-//        }
-
         mPresenter = new LoginPresenter(this);
         mPresenter.setOnLoginListener(new LoginPresenter.OnLoginListener() {
             @Override
@@ -63,7 +58,7 @@ public class LoginActivity extends BaseActivity
             public void onFail(UserAccessDto userAccessDto) {
                 Toast.makeText(LoginActivity.this,
                         userAccessDto == null ? "Network fail"
-                                        : String.format("Register/Login fail: %s(%s)", userAccessDto.getErrMsg(), userAccessDto.getErrCode()),
+                                : String.format("Register/Login fail: %s(%s)", userAccessDto.getErrMsg(), userAccessDto.getErrCode()),
                         Toast.LENGTH_LONG).show();
             }
         });
