@@ -286,7 +286,7 @@ public class MainService extends Service {
     }
 
     public static final Intent SERVICE_INTENT = new Intent(MeetUApplication.getContext(), MainService.class);
-    public static void startService(Bundle extras) {
+    private static void startService(Bundle extras) {
         if (extras != null) {
             SERVICE_INTENT.putExtras(extras);
         }
