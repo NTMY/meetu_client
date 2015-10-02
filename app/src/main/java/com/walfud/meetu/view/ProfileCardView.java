@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.walfud.meetu.R;
@@ -19,7 +19,8 @@ import com.walfud.meetu.R;
 /**
  * Created by walfud on 2015/9/28.
  */
-public class ProfileCardView extends FrameLayout implements View.OnClickListener {
+public class ProfileCardView extends FrameLayout
+        implements View.OnClickListener, View.OnFocusChangeListener {
 
     public static final String TAG = "ProfileCardView";
 
@@ -27,8 +28,8 @@ public class ProfileCardView extends FrameLayout implements View.OnClickListener
     protected OnEventListener mEventListener;
     protected RelativeLayout mRootLayout;
     protected SimpleDraweeView mPortrait;
-    protected TextView mNick;
-    protected TextView mMood;
+    protected EditText mNick;
+    protected EditText mMood;
 
     public ProfileCardView(Context context) {
         this(context, null);
@@ -42,11 +43,17 @@ public class ProfileCardView extends FrameLayout implements View.OnClickListener
         mRootLayout = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.view_profile_card, this, false);
         addView(mRootLayout);
         mPortrait = (SimpleDraweeView) mRootLayout.findViewById(R.id.portrait);
-        mNick = (TextView) mRootLayout.findViewById(R.id.nick);
-        mMood = (TextView) mRootLayout.findViewById(R.id.mood);
+        mNick = (EditText) mRootLayout.findViewById(R.id.nick);
+        mMood = (EditText) mRootLayout.findViewById(R.id.mood);
 
         //
+        mRootLayout.setOnClickListener(this);
         mPortrait.setOnClickListener(this);
+        mNick.setOnClickListener(this);
+        mMood.setOnClickListener(this);
+
+        mNick.setOnFocusChangeListener(this);
+        mMood.setOnFocusChangeListener(this);
     }
 
     @Override
@@ -54,7 +61,42 @@ public class ProfileCardView extends FrameLayout implements View.OnClickListener
         switch (v.getId()) {
             case R.id.portrait:
                 if (mEventListener != null) {
-                    mEventListener.onClickPortrait();
+                    mEventListener.onPortraitChanged(null);
+                }
+                break;
+
+            case R.id.nick:
+                setFocus(mNick, true);
+                break;
+
+            case R.id.mood:
+                setFocus(mMood, true);
+                break;
+
+            default:
+                setFocus(mNick, false);
+                setFocus(mMood, false);
+                break;
+        }
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        // Don't care if obtain focus
+        if (hasFocus) {
+            return;
+        }
+
+        switch (v.getId()) {
+            case R.id.nick:
+                if (mEventListener != null) {
+                    mEventListener.onNickChanged(mNick.getText().toString());
+                }
+                break;
+
+            case R.id.mood:
+                if (mEventListener != null) {
+                    mEventListener.onMoodChanged(mMood.getText().toString());
                 }
                 break;
 
@@ -113,6 +155,19 @@ public class ProfileCardView extends FrameLayout implements View.OnClickListener
 
     //
     public interface OnEventListener {
-        void onClickPortrait();
+        void onPortraitChanged(Uri newPortraitUri);
+        void onNickChanged(String newNick);
+        void onMoodChanged(String newMood);
+    }
+
+    // Internal
+    private void setFocus(View view, boolean focus) {
+        view.setFocusable(focus);
+        view.setFocusableInTouchMode(focus);
+        if (focus) {
+            view.requestFocus();
+        } else {
+            view.clearFocus();
+        }
     }
 }

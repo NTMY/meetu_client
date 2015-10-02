@@ -18,7 +18,7 @@
         app:failureImage="@drawable/ic_account_box_white_48dp"
         app:failureImageScaleType="centerInside" />
 
-    <TextView
+    <EditText
         android:id="@+id/nick"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
@@ -27,16 +27,23 @@
         android:text="Nick"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:background="@null" />
 
-    <TextView
+    <EditText
         android:id="@+id/mood"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/nick"
         android:layout_marginTop="2dp"
         android:text="Mood"
+        android:textSize="14sp"
         android:textColor="@android:color/white"
-        android:maxLines="2" />
+        android:maxLines="2"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:background="@null" />
 
 </RelativeLayout>

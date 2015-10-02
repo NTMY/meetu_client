@@ -3,7 +3,6 @@ package com.walfud.meetu.view;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.walfud.common.collection.CollectionUtil;
 import com.walfud.common.widget.JumpBar;
 import com.walfud.common.widget.SelectView;
-import com.walfud.meetu.BuildConfig;
 import com.walfud.meetu.R;
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.UserManager;
@@ -28,13 +26,14 @@ import com.walfud.meetu.util.Transformer;
 
 import org.meetu.client.handler.FriendHandler;
 import org.meetu.client.handler.PortraitHandler;
+import org.meetu.client.handler.UserHandler;
 import org.meetu.client.listener.FriendGetMyFriendListListener;
 import org.meetu.client.listener.PortraitUploadListener;
+import org.meetu.client.listener.UserUpdateListener;
 import org.meetu.dto.BaseDto;
 import org.meetu.model.PortraitUploadModel;
 import org.meetu.util.ListBean;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,9 +68,9 @@ public class FriendFragment extends Fragment {
         mUserManager = UserManager.getInstance();
         mFriendDataList = new ArrayList<>();
         // Get friend list
-        new AsyncTask<User, Void, List<User>>() {
+        new AsyncTask<User, Void, List<org.meetu.model.User>>() {
 
-            private List<User> mFriendList = new ArrayList<>();
+            private List<org.meetu.model.User> mServerUserList = new ArrayList<>();
 
             @Override
             protected void onPreExecute() {
@@ -81,7 +80,7 @@ public class FriendFragment extends Fragment {
             }
 
             @Override
-            protected List<User> doInBackground(User[] params) {
+            protected List<org.meetu.model.User> doInBackground(User[] params) {
                 final User user = params[0];
                 new FriendHandler().onGetMyFriendList(new FriendGetMyFriendListListener() {
                     @Override
@@ -89,26 +88,30 @@ public class FriendFragment extends Fragment {
                         List<org.meetu.model.User> serverUserList = (List<org.meetu.model.User>) listBean.getList();
 
                         // Add friend
-                        mFriendList = Transformer.serverUserList2UserList(serverUserList);
+                        mServerUserList = serverUserList;
 
                     }
                 }, Transformer.user2ServerUser(user));
 
-                return mFriendList;
+                return mServerUserList;
             }
 
             @Override
-            protected void onPostExecute(List<User> friendList) {
-                super.onPostExecute(friendList);
+            protected void onPostExecute(List<org.meetu.model.User> serverUserList) {
+                super.onPostExecute(serverUserList);
+
+                // Transform
+                List<User> friendList = Transformer.serverUserList2UserList(serverUserList);
 
                 // Save friend list
-                mUserManager.setFriendList(mFriendList);
+                mUserManager.setFriendList(friendList);
 
-                // Add self on top for UI
-                mFriendList.add(mUserManager.getCurrentUser());
+                // Add self on top and construct data for UI
+                List<FriendData> friendDataList = new ArrayList<FriendData>();
+                friendDataList.add(Transformer.user2FriendData(mUserManager.getCurrentUser()));
+                friendDataList.addAll(Transformer.userList2FriendDataList(friendList));
 
-                // Transform to `FriendData`
-                setFriendList(Transformer.userList2FriendDataList(mFriendList));
+                setFriendList(friendDataList);
             }
         }.execute(mUserManager.getCurrentUser());
         mJb.setOnJumpListener(new JumpBar.OnJumpListener() {
@@ -157,42 +160,49 @@ public class FriendFragment extends Fragment {
         });
         mPcv.setOnEventListener(new ProfileCardView.OnEventListener() {
             @Override
-            public void onClickPortrait() {
-                if (BuildConfig.DEBUG) {
-                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "USER_4.jpg");
+            public void onPortraitChanged(Uri newPortraitUri) {
+                PortraitUploadModel portraitUploadModel = new PortraitUploadModel();
+                portraitUploadModel.setUserId(String.valueOf(mUserManager.getCurrentUser().getUserId()));
+                portraitUploadModel.setFileLocalPath(newPortraitUri.getPath());
 
-                    PortraitUploadModel portraitUploadModel = new PortraitUploadModel();
-                    portraitUploadModel.setUserId(String.valueOf(mUserManager.getCurrentUser().getUserId()));
-//                    portraitUploadModel.setFileLocalPath(file.getAbsolutePath());
-                    portraitUploadModel.setFileLocalPath("/sdcard/DCIM/USER_4.jpg");
+                new AsyncTask<PortraitUploadModel, Void, BaseDto>() {
+                    private BaseDto mResult;
 
-                    new AsyncTask<PortraitUploadModel, Void, BaseDto>() {
-                        private BaseDto mResult;
+                    @Override
+                    protected BaseDto doInBackground(PortraitUploadModel... params) {
+                        PortraitUploadModel portraitUploadModel = params[0];
 
-                        @Override
-                        protected BaseDto doInBackground(PortraitUploadModel... params) {
-                            PortraitUploadModel portraitUploadModel = params[0];
-
-                            new PortraitHandler().onUpload(new PortraitUploadListener() {
-                                @Override
-                                public void upload(BaseDto baseDto) {
-                                    mResult = baseDto;
-                                }
-                            }, portraitUploadModel);
-
-                            return mResult;
-                        }
-
-                        @Override
-                        protected void onPostExecute(BaseDto baseDto) {
-                            super.onPostExecute(baseDto);
-
-                            if (TextUtils.isEmpty(baseDto.getErrCode())) {
-                                Snackbar.make(mPcv, "Portrait upload success", Snackbar.LENGTH_SHORT).show();
+                        new PortraitHandler().onUpload(new PortraitUploadListener() {
+                            @Override
+                            public void upload(BaseDto baseDto) {
+                                mResult = baseDto;
                             }
-                        }
-                    }.execute(portraitUploadModel);
-                }
+                        }, portraitUploadModel);
+
+                        return mResult;
+                    }
+
+                    @Override
+                    protected void onPostExecute(BaseDto baseDto) {
+                        super.onPostExecute(baseDto);
+
+                        FriendFragment.this.showUpdateResult(baseDto, "Portrait");
+                    }
+                }.execute(portraitUploadModel);
+            }
+
+            @Override
+            public void onNickChanged(String newNick) {
+                mUserManager.getCurrentUser().setNick(newNick);
+
+                updateUserInfo(mUserManager.getCurrentUser(), "Nick");
+            }
+
+            @Override
+            public void onMoodChanged(String newMood) {
+                mUserManager.getCurrentUser().setMood(newMood);
+
+                updateUserInfo(mUserManager.getCurrentUser(), "Mood");
             }
         });
 
@@ -217,5 +227,49 @@ public class FriendFragment extends Fragment {
     //
     public static class FriendData extends ProfileCardView.ProfileData {
 
+    }
+
+    // Internal
+
+    /**
+     *
+     * @param user
+     * @param field the field which is modified
+     */
+    private void updateUserInfo(User user, final String field) {
+        new AsyncTask<org.meetu.model.User, Void, BaseDto>() {
+            private BaseDto mResult;
+
+            @Override
+            protected BaseDto doInBackground(org.meetu.model.User... params) {
+                org.meetu.model.User serverUser = params[0];
+
+                new UserHandler().onUpdate(new UserUpdateListener() {
+                    @Override
+                    public void update(BaseDto baseDto) {
+                        mResult = baseDto;
+                    }
+                }, serverUser);
+
+                return mResult;
+            }
+
+            @Override
+            protected void onPostExecute(BaseDto baseDto) {
+                super.onPostExecute(baseDto);
+
+                FriendFragment.this.showUpdateResult(baseDto, field);
+            }
+        }.execute(Transformer.user2ServerUser(user));
+    }
+
+    private void showUpdateResult(BaseDto baseDto, String field) {
+        String tip;
+        if (TextUtils.isEmpty(baseDto.getErrCode())) {
+            tip = String.format("%s upload success", field);
+        } else {
+            tip = String.format("%s upload fail", field);
+        }
+        Snackbar.make(mPcv, tip, Snackbar.LENGTH_SHORT).show();
     }
 }
