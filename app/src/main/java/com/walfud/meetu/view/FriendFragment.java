@@ -131,9 +131,8 @@ public class FriendFragment extends Fragment {
                 TextView mood = (TextView) itemRoot.findViewById(R.id.mood);
 
                 //
-                if (friendData.portraitUri != null) {
-                    portrait.setImageURI(Uri.parse(friendData.portraitUri));
-                }
+                Uri portraitUri = !TextUtils.isEmpty(friendData.portraitUri) ? Uri.parse(friendData.portraitUri) : null;
+                portrait.setImageURI(portraitUri);
                 nick.setText(friendData.nick);
                 mood.setText(friendData.mood);
             }

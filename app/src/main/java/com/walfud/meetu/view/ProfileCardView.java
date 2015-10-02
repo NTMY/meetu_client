@@ -3,6 +3,7 @@ package com.walfud.meetu.view;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,9 +79,8 @@ public class ProfileCardView extends FrameLayout implements View.OnClickListener
             @Override
             public void run() {
                 // Change value
-                if (profileData.portraitUri != null) {
-                    mPortrait.setImageURI(Uri.parse(profileData.portraitUri));
-                }
+                Uri portraitUri = !TextUtils.isEmpty(profileData.portraitUri) ? Uri.parse(profileData.portraitUri) : null;
+                mPortrait.setImageURI(portraitUri);
                 mNick.setText(profileData.nick);
                 mMood.setText(profileData.mood);
 
