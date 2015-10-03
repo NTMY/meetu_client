@@ -76,10 +76,10 @@ public class MainService extends Service {
 
         if (intent.getBooleanExtra(EXTRA_READ_SETTING, false)) {
             if (PrefsManager.getInstance().isAutoReport()) {
-                setAutoReportSelf(true);
+                setAutoReport(true);
             }
             if (PrefsManager.getInstance().isAutoSearch()) {
-                setAutoSearchNearby(true);
+                setAutoSearch(true);
             }
         }
 
@@ -228,7 +228,7 @@ public class MainService extends Service {
         return mReportSelfTimerTask != null;
     }
 
-    public void setAutoReportSelf(boolean start) {
+    public void setAutoReport(boolean start) {
         if (start) {
             // Start auto report
             if (mReportSelfTimerTask == null) {
@@ -254,7 +254,7 @@ public class MainService extends Service {
         return mSearchOthersTimerTask != null;
     }
 
-    public void setAutoSearchNearby(boolean start) {
+    public void setAutoSearch(boolean start) {
         if (start) {
             // Start auto search
             if (mSearchOthersTimerTask == null) {
@@ -274,7 +274,6 @@ public class MainService extends Service {
                 mEngineTimer.purge();
             }
         }
-
     }
 
     // Helper

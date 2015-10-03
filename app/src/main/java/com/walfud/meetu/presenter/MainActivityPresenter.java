@@ -8,6 +8,7 @@ import com.walfud.meetu.MainService;
 import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.R;
 import com.walfud.meetu.Utils;
+import com.walfud.meetu.manager.PrefsManager;
 import com.walfud.meetu.view.FriendFragment;
 import com.walfud.meetu.view.MainActivity;
 
@@ -26,11 +27,13 @@ public class MainActivityPresenter {
     private MainActivity mMainActivity;
     private FriendFragment mFriendFragment;
     private MainService mMainService;
+    private PrefsManager mPrefsManager;
 
     public MainActivityPresenter(MainActivity view, FriendFragment friendFragment) {
         mMainActivity = view;
         mFriendFragment = friendFragment;
         mMainService = MainService.getInstance();
+        mPrefsManager = PrefsManager.getInstance();
 
         //
         mMainService.setOnSearchListener(new MainService.OnDataRequestListener() {
@@ -64,6 +67,8 @@ public class MainActivityPresenter {
                 Toast.makeText(MeetUApplication.getContext(), String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
             }
         });
+        mMainService.setAutoReport(mPrefsManager.isAutoReport());
+        mMainService.setAutoSearch(mPrefsManager.isAutoSearch());
     }
 
     // Function
