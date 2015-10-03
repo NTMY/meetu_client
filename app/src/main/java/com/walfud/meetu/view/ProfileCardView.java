@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -226,10 +227,13 @@ public class ProfileCardView extends FrameLayout
     private void setFocus(View view, boolean focus) {
         view.setFocusable(focus);
         view.setFocusableInTouchMode(focus);
+        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (focus) {
             view.requestFocus();
+            inputMethodManager.showSoftInput(view, 0);
         } else {
             view.clearFocus();
+            inputMethodManager.hideSoftInputFromInputMethod(view.getWindowToken(), 0);
         }
     }
 }

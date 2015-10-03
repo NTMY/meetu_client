@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/portrait"
         android:layout_marginTop="20dp"
+        android:imeOptions="actionDone"
         android:text="Nick"
         android:textColor="@android:color/white"
         android:textSize="18sp"
@@ -34,12 +35,13 @@
 
     <EditText
         android:id="@+id/mood"
-        android:layout_width="160dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/nick"
         android:layout_marginTop="2dp"
+        android:imeOptions="actionDone"
         android:text="Mood"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textColor="@android:color/white"
         android:maxLines="2"
         android:focusable="false"
