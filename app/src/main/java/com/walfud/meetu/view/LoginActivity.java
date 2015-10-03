@@ -3,9 +3,11 @@ package com.walfud.meetu.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.walfud.meetu.BaseActivity;
@@ -20,7 +22,7 @@ import org.meetu.model.User;
  * Created by walfud on 2015/8/2.
  */
 public class LoginActivity extends BaseActivity
-        implements View.OnLongClickListener {
+        implements View.OnClickListener, View.OnLongClickListener, TextView.OnEditorActionListener {
 
     public static final String TAG = "LoginActivity";
 
@@ -64,8 +66,28 @@ public class LoginActivity extends BaseActivity
         });
 
         mOk.setOnLongClickListener(this);
+        mPhoneNum.setOnEditorActionListener(this);
+        mPassword.setOnEditorActionListener(this);
     }
 
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        switch (v.getId()) {
+            case R.id.phone_num:
+                mPassword.requestFocus();
+                return true;
+
+            case R.id.password:
+                mOk.performClick();
+                return true;
+
+            default:
+                break;
+        }
+        return false;
+    }
+
+    @Override
     public void onClick(View v) {
         final User user = new User();
         user.setMobile(mPhoneNum.getText().toString());
