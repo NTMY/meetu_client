@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditTextPreference
-        android:key="nick"
-        android:title="Nick"
-        android:singleLine="true" />
-
-    <EditTextPreference
-        android:key="mood"
-        android:title="Mood" />
-
     <SwitchPreference
         android:enabled="false"
         android:key="auto_report"
