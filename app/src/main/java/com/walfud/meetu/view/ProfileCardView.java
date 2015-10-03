@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -136,7 +135,7 @@ public class ProfileCardView extends FrameLayout
             @Override
             public void run() {
                 // Change value
-                Uri portraitUri = !TextUtils.isEmpty(profileData.portraitUri) ? Uri.parse(profileData.portraitUri) : null;
+                Uri portraitUri = profileData.portraitUri;
                 mPortrait.setImageURI(portraitUri);
                 mNick.setText(profileData.nick);
                 mMood.setText(profileData.mood);
@@ -195,13 +194,13 @@ public class ProfileCardView extends FrameLayout
 
     //
     public static class ProfileData {
-        public String portraitUri;
+        public Uri portraitUri;
         public String nick;
         public String mood;
 
         public ProfileData() {
         }
-        public ProfileData(String portraitUri, String nick, String mood) {
+        public ProfileData(Uri portraitUri, String nick, String mood) {
             this.portraitUri = portraitUri;
             this.nick = nick;
             this.mood = mood;

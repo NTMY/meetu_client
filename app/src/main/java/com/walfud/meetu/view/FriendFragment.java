@@ -146,7 +146,7 @@ public class FriendFragment extends Fragment {
                 TextView mood = (TextView) itemRoot.findViewById(R.id.mood);
 
                 //
-                Uri portraitUri = !TextUtils.isEmpty(friendData.portraitUri) ? Uri.parse(friendData.portraitUri) : null;
+                Uri portraitUri = friendData.portraitUri;
                 portrait.setImageURI(portraitUri);
                 nick.setText(friendData.nick);
                 mood.setText(friendData.mood);
@@ -167,10 +167,20 @@ public class FriendFragment extends Fragment {
         mPcv.setOnEventListener(new ProfileCardView.OnEventListener() {
             @Override
             public void onPortraitChanged(Uri portraitUri) {
-                // Get portrait content and file name
-                byte[] portraitContent = new byte[0];
+                // Get portrait file name & content
                 String fileName = "";
+                byte[] portraitContent = new byte[0];
                 try {
+                    // File name
+                    Cursor cursor = MeetUApplication.getContext().getContentResolver().query(portraitUri, null, null, null, null);
+                    if (cursor.moveToFirst()) {
+                        int columnDisplayName = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+                        if (columnDisplayName != -1) {
+                            fileName = cursor.getString(columnDisplayName);
+                        }
+                    }
+                    cursor.close();
+
                     // Content
                     InputStream inputStream = MeetUApplication.getContext().getContentResolver().openInputStream(portraitUri);
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -182,16 +192,6 @@ public class FriendFragment extends Fragment {
                     byteArrayOutputStream.close();
                     inputStream.close();
                     portraitContent = byteArrayOutputStream.toByteArray();
-
-                    // File name
-                    Cursor cursor = MeetUApplication.getContext().getContentResolver().query(portraitUri, null, null, null, null);
-                    if (cursor.moveToFirst()) {
-                        int columnDisplayName = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
-                        if (columnDisplayName != -1) {
-                            fileName = cursor.getString(columnDisplayName);
-                        }
-                    }
-                    cursor.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -199,31 +199,39 @@ public class FriendFragment extends Fragment {
                 // Transform to upload data
                 PortraitUploadModel portraitUploadModel = new PortraitUploadModel();
                 portraitUploadModel.setUserId(String.valueOf(mUserManager.getCurrentUser().getUserId()));
-                portraitUploadModel.setFileLocalPath(portraitUri.getPath());
-                // TODO: setFileName, setByte
+                portraitUploadModel.setFileName(fileName);
+                portraitUploadModel.setFileBytes(portraitContent);
 
-                new AsyncTask<PortraitUploadModel, Void, BaseDto>() {
-                    private BaseDto mResult;
+                new AsyncTask<PortraitUploadModel, Void, org.meetu.model.User>() {
+                    private org.meetu.model.User mServerUser;
 
                     @Override
-                    protected BaseDto doInBackground(PortraitUploadModel... params) {
+                    protected org.meetu.model.User doInBackground(PortraitUploadModel... params) {
                         PortraitUploadModel portraitUploadModel = params[0];
 
                         new PortraitHandler().onUpload(new PortraitUploadListener() {
                             @Override
-                            public void upload(BaseDto baseDto) {
-                                mResult = baseDto;
+                            public void upload(org.meetu.model.User user) {
+                                mServerUser = user;
                             }
                         }, portraitUploadModel);
 
-                        return mResult;
+                        return mServerUser;
                     }
 
                     @Override
-                    protected void onPostExecute(BaseDto baseDto) {
-                        super.onPostExecute(baseDto);
+                    protected void onPostExecute(org.meetu.model.User serverUser) {
+                        super.onPostExecute(serverUser);
 
-                        FriendFragment.this.showUpdateResult(baseDto, "Portrait");
+                        boolean suc = false;
+                        if (TextUtils.isEmpty(serverUser.getErrCode())) {
+                            // Update user info
+                            mUserManager.getCurrentUser().setPortraitUrl(serverUser.getImgUrlReal());
+
+                            suc = true;
+                        }
+
+                        FriendFragment.this.showUpdateResult(suc, "Portrait");
                     }
                 }.execute(portraitUploadModel);
             }
@@ -305,14 +313,23 @@ public class FriendFragment extends Fragment {
             protected void onPostExecute(BaseDto baseDto) {
                 super.onPostExecute(baseDto);
 
-                FriendFragment.this.showUpdateResult(baseDto, field);
+                boolean suc =false;
+                if (TextUtils.isEmpty(baseDto.getErrCode())) {
+                    suc = true;
+                }
+
+                FriendFragment.this.showUpdateResult(suc, field);
             }
         }.execute(Transformer.user2ServerUser(user));
     }
 
-    private void showUpdateResult(BaseDto baseDto, String field) {
+    private void showUpdateResult(boolean suc, String field) {
+        // Update ProfileCard
+        mPcv.set(Transformer.user2ProfileData(mActivity, mUserManager.getCurrentUser()));
+
+        // Show tip
         String tip;
-        if (TextUtils.isEmpty(baseDto.getErrCode())) {
+        if (suc) {
             tip = String.format("%s upload success", field);
         } else {
             tip = String.format("%s upload fail", field);

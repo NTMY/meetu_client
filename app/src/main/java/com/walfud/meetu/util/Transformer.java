@@ -1,6 +1,8 @@
 package com.walfud.meetu.util;
 
 import android.content.Context;
+import android.net.Uri;
+import android.text.TextUtils;
 
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.view.FriendFragment;
@@ -51,7 +53,7 @@ public class Transformer {
     // com.walfud.meetu.database.User
     public static ProfileCardView.ProfileData user2ProfileData(Context context, User user) {
         ProfileCardView.ProfileData profileData = new ProfileCardView.ProfileData();
-        profileData.portraitUri = user.getPortraitUri();
+        profileData.portraitUri = !TextUtils.isEmpty(user.getPortraitUrl()) ? Uri.parse(user.getPortraitUrl()) : Uri.EMPTY;
         profileData.nick = String.valueOf(user.getUserId());
         profileData.mood = user.getMood();
 
@@ -64,7 +66,7 @@ public class Transformer {
         serverUser.setPwd(user.getPassword());
         serverUser.setNickname(user.getNick());
         serverUser.setMood(user.getMood());
-        serverUser.setStatus(user.getPortraitUri());
+        serverUser.setStatus(user.getPortraitUrl());
         serverUser.setMobile(user.getPhoneNum());
         serverUser.setImei(user.getImei());
 
@@ -81,7 +83,7 @@ public class Transformer {
 
     public static FriendFragment.FriendData user2FriendData(User user) {
         FriendFragment.FriendData friendData = new FriendFragment.FriendData();
-        friendData.portraitUri = user.getPortraitUri();
+        friendData.portraitUri = !TextUtils.isEmpty(user.getPortraitUrl()) ? Uri.parse(user.getPortraitUrl()) : Uri.EMPTY;
         friendData.nick = user.getNick();
         friendData.mood = user.getMood();
 
@@ -103,7 +105,7 @@ public class Transformer {
         user.setPassword(serverUser.getPwd());
         user.setNick(serverUser.getNickname());
         user.setMood(serverUser.getMood());
-        user.setPortraitUri(serverUser.getImgUrlReal());
+        user.setPortraitUrl(serverUser.getImgUrlReal());
         user.setPhoneNum(serverUser.getMobile());
         user.setImei(serverUser.getImei());
 
@@ -119,7 +121,7 @@ public class Transformer {
 
     public static FriendFragment.FriendData serverUser2FriendData(org.meetu.model.User user) {
         FriendFragment.FriendData friendData = new FriendFragment.FriendData();
-        friendData.portraitUri = user.getImgUrlReal();
+        friendData.portraitUri = !TextUtils.isEmpty(user.getImgUrlReal()) ? Uri.parse(user.getImgUrlReal()) : Uri.EMPTY;
         friendData.nick = user.getNickname();
         friendData.mood = user.getMood();
 
