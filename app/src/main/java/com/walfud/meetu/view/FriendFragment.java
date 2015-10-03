@@ -2,6 +2,8 @@ package com.walfud.meetu.view;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -179,12 +181,17 @@ public class FriendFragment extends Fragment {
                 String fileName = "";
                 byte[] portraitContent = new byte[0];
                 try {
-                    // File name
+                    // File name & size
+                    long sizeInByte = 0;
                     Cursor cursor = MeetUApplication.getContext().getContentResolver().query(portraitUri, null, null, null, null);
                     if (cursor.moveToFirst()) {
                         int columnDisplayName = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+                        int columnSizeInByte = cursor.getColumnIndex(MediaStore.MediaColumns.SIZE);
                         if (columnDisplayName != -1) {
                             fileName = cursor.getString(columnDisplayName);
+                        }
+                        if (columnSizeInByte != -1) {
+                            sizeInByte = Long.valueOf(cursor.getString(columnSizeInByte));
                         }
                     }
                     cursor.close();
@@ -192,14 +199,29 @@ public class FriendFragment extends Fragment {
                     // Content
                     InputStream inputStream = MeetUApplication.getContext().getContentResolver().openInputStream(portraitUri);
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    byte[] buf = new byte[1024 * 1024];
-                    int readLen;
-                    while ((readLen = inputStream.read(buf)) != -1) {
-                        byteArrayOutputStream.write(buf, 0, readLen);
+                    final long MAX_SIZE = 500 * 1024;
+                    if (sizeInByte < MAX_SIZE) {
+                        // File be small enough
+                        byte[] buf = new byte[1024 * 1024];
+                        int readLen;
+                        while ((readLen = inputStream.read(buf)) != -1) {
+                            byteArrayOutputStream.write(buf, 0, readLen);
+                        }
+                    } else {
+                        // If file too large, compress it
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        for (int i = 50; i > 0; i -= 20) {
+                            byteArrayOutputStream.reset();
+                            bitmap.compress(Bitmap.CompressFormat.WEBP, i, byteArrayOutputStream);
+
+                            if (byteArrayOutputStream.size() < MAX_SIZE) {
+                                break;
+                            }
+                        }
                     }
+                    portraitContent = byteArrayOutputStream.toByteArray();
                     byteArrayOutputStream.close();
                     inputStream.close();
-                    portraitContent = byteArrayOutputStream.toByteArray();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
