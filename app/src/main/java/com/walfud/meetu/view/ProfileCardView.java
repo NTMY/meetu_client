@@ -65,6 +65,10 @@ public class ProfileCardView extends FrameLayout
 
     @Override
     public void onClick(View v) {
+        if (mEventListener == null) {
+            return;
+        }
+
         switch (v.getId()) {
             case R.id.portrait: {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -77,7 +81,7 @@ public class ProfileCardView extends FrameLayout
                 } else {
                 }
             }
-                break;
+            break;
 
             case R.id.nick:
                 setFocus(mNick, true);
@@ -103,15 +107,11 @@ public class ProfileCardView extends FrameLayout
 
         switch (v.getId()) {
             case R.id.nick:
-                if (mEventListener != null) {
-                    mEventListener.onNickChanged(mNick.getText().toString());
-                }
+                mEventListener.onNickChanged(mNick.getText().toString());
                 break;
 
             case R.id.mood:
-                if (mEventListener != null) {
-                    mEventListener.onMoodChanged(mMood.getText().toString());
-                }
+                mEventListener.onMoodChanged(mMood.getText().toString());
                 break;
 
             default:
@@ -159,6 +159,7 @@ public class ProfileCardView extends FrameLayout
 
     /**
      * Set the caller for `startActivityForResult` via `Activity` or `Fragment`
+     *
      * @param host should be either `Activity` or `Fragment`
      */
     public void setStartActivityForResultHost(Object host) {
@@ -172,6 +173,7 @@ public class ProfileCardView extends FrameLayout
 
     /**
      * You should call this function in `onActivityResult` of activity/fragment
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -184,9 +186,7 @@ public class ProfileCardView extends FrameLayout
                 if (resultCode == Activity.RESULT_OK) {
                     Uri portraitUri = data.getData();
 
-                    if (mEventListener != null) {
-                        mEventListener.onPortraitChanged(portraitUri);
-                    }
+                    mEventListener.onPortraitChanged(portraitUri);
                 }
                 return true;
 
@@ -205,6 +205,7 @@ public class ProfileCardView extends FrameLayout
 
         public ProfileData() {
         }
+
         public ProfileData(Uri portraitUri, String nick, String mood) {
             this.portraitUri = portraitUri;
             this.nick = nick;
@@ -215,7 +216,9 @@ public class ProfileCardView extends FrameLayout
     //
     public interface OnEventListener {
         void onPortraitChanged(Uri newPortraitUri);
+
         void onNickChanged(String newNick);
+
         void onMoodChanged(String newMood);
     }
 

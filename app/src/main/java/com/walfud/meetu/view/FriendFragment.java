@@ -55,6 +55,7 @@ public class FriendFragment extends Fragment {
     private UserManager mUserManager;
     // Header
     private ProfileCardView mPcv;
+    private ProfileCardView.OnEventListener mProfileCardEventListener;
     // List
     private SelectView mSv;
     private JumpBar mJb;
@@ -162,9 +163,16 @@ public class FriendFragment extends Fragment {
             public void onSelect(View view, int position) {
                 FriendData friendData = mFriendDataList.get(position);
                 mPcv.set(Transformer.friendData2ProfileData(friendData));
+
+                if (position == 0) {
+                    // Current user, editable
+                    mPcv.setOnEventListener(mProfileCardEventListener);
+                } else {
+                    mPcv.setOnEventListener(null);
+                }
             }
         });
-        mPcv.setOnEventListener(new ProfileCardView.OnEventListener() {
+        mProfileCardEventListener = new ProfileCardView.OnEventListener() {
             @Override
             public void onPortraitChanged(Uri portraitUri) {
                 // Get portrait file name & content
@@ -249,7 +257,7 @@ public class FriendFragment extends Fragment {
 
                 updateUserInfo(mUserManager.getCurrentUser(), "Mood");
             }
-        });
+        };
         mPcv.setStartActivityForResultHost(this);
 
         return view;
@@ -273,6 +281,7 @@ public class FriendFragment extends Fragment {
 
         // Set default profile card
         mPcv.set(friendList.get(0));
+        mPcv.setOnEventListener(mProfileCardEventListener);
 
         // Set list
         mFriendDataList = friendList;
