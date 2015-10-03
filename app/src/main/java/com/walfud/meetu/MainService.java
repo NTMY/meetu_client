@@ -37,7 +37,8 @@ public class MainService extends Service {
      * Default is `false`
      */
     public static final String EXTRA_READ_SETTING = "EXTRA_READ_SETTING";
-    private static final long UPDATE_INTERVAL = 10 * 60 * 1000; // 10 min
+    private static final long REPORT_INTERVAL = 60 * 1000;      //  1 min
+    private static final long SEARCH_INTERVAL = 10 * 60 * 1000; // 10 min
     private static MainService sInstance;
 
     private LocationManager mLocationManager;
@@ -237,7 +238,7 @@ public class MainService extends Service {
                         reportSelf();
                     }
                 };
-                mEngineTimer.schedule(mReportSelfTimerTask, UPDATE_INTERVAL, UPDATE_INTERVAL);
+                mEngineTimer.schedule(mReportSelfTimerTask, REPORT_INTERVAL, REPORT_INTERVAL);
             }
         } else {
             // Stop
@@ -263,7 +264,7 @@ public class MainService extends Service {
                         searchNearby();
                     }
                 };
-                mEngineTimer.schedule(mSearchOthersTimerTask, UPDATE_INTERVAL, UPDATE_INTERVAL);
+                mEngineTimer.schedule(mSearchOthersTimerTask, SEARCH_INTERVAL, SEARCH_INTERVAL);
             }
         } else {
             // Stop
