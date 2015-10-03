@@ -33,6 +33,7 @@ public class ProfileCardView extends FrameLayout
      * `startActivityForResult` via `Activity` or `Fragment`
      */
     protected Object mForResultHost;
+    protected ProfileData mProfileData;
 
     protected RelativeLayout mRootLayout;
     protected SimpleDraweeView mPortrait;
@@ -47,6 +48,7 @@ public class ProfileCardView extends FrameLayout
         super(context, attrs);
 
         mContext = context;
+        mProfileData = new ProfileData();
 
         mRootLayout = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.view_profile_card, this, false);
         addView(mRootLayout);
@@ -107,12 +109,18 @@ public class ProfileCardView extends FrameLayout
         }
 
         switch (v.getId()) {
-            case R.id.nick:
-                mEventListener.onNickChanged(mNick.getText().toString());
+            case R.id.nick: {
+                String nick = mNick.getText().toString();
+                mProfileData.nick = nick;
+                mEventListener.onNickChanged(nick);
+            }
                 break;
 
-            case R.id.mood:
-                mEventListener.onMoodChanged(mMood.getText().toString());
+            case R.id.mood: {
+                String mood = mMood.getText().toString();
+                mProfileData.mood = mood;
+                mEventListener.onMoodChanged(mood);
+            }
                 break;
 
             default:
@@ -121,7 +129,22 @@ public class ProfileCardView extends FrameLayout
     }
 
     // Function
-    public void set(final ProfileData profileData) {
+    public ProfileData get() {
+        return mProfileData;
+    }
+
+    public void set(ProfileData profileData) {
+        mProfileData = profileData;
+
+        mPortrait.setImageURI(profileData.portraitUri);
+        mNick.setText(profileData.nick);
+        mMood.setText(profileData.mood);
+    }
+
+    /**
+     * `set` & `refresh`
+     */
+    public void update(final ProfileData profileData) {
         final int duration = 200;
         // Fly out
         mPortrait.animate().translationX(-mPortrait.getWidth()).setStartDelay(0).setDuration(duration).setInterpolator(new AnticipateInterpolator());
@@ -132,10 +155,7 @@ public class ProfileCardView extends FrameLayout
             @Override
             public void run() {
                 // Change value
-                Uri portraitUri = profileData.portraitUri;
-                mPortrait.setImageURI(portraitUri);
-                mNick.setText(profileData.nick);
-                mMood.setText(profileData.mood);
+                set(profileData);
 
                 // Fly in
                 mPortrait.animate().translationX(0).setStartDelay(0).setDuration(duration).setInterpolator(new DecelerateInterpolator());
@@ -143,15 +163,6 @@ public class ProfileCardView extends FrameLayout
                 mMood.animate().translationX(0).setStartDelay(100).setDuration(duration).setInterpolator(new DecelerateInterpolator());
             }
         }, 700);
-    }
-
-    /**
-     * Refresh UI without animation
-     */
-    public void refresh(ProfileData profileData) {
-        mPortrait.setImageURI(profileData.portraitUri);
-        mNick.setText(profileData.nick);
-        mMood.setText(profileData.mood);
     }
 
     public void setOnEventListener(OnEventListener listener) {
@@ -187,6 +198,7 @@ public class ProfileCardView extends FrameLayout
                 if (resultCode == Activity.RESULT_OK) {
                     Uri portraitUri = data.getData();
 
+                    mProfileData.portraitUri = portraitUri;
                     mEventListener.onPortraitChanged(portraitUri);
                 }
                 return true;

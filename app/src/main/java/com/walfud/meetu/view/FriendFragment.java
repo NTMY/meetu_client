@@ -165,7 +165,7 @@ public class FriendFragment extends Fragment {
             @Override
             public void onSelect(View view, int position) {
                 FriendData friendData = mFriendDataList.get(position);
-                mPcv.set(Transformer.friendData2ProfileData(friendData));
+                mPcv.update(Transformer.friendData2ProfileData(friendData));
 
                 if (position == 0) {
                     // Current user, editable
@@ -388,7 +388,7 @@ public class FriendFragment extends Fragment {
 
     private void showUpdateResult(boolean suc, String field) {
         // Update ProfileCard
-        mPcv.refresh(Transformer.user2ProfileData(mActivity, mUserManager.getCurrentUser()));
+        mPcv.set(Transformer.user2ProfileData(mActivity, mUserManager.getCurrentUser()));
 
         // Update list
         mFriendDataList.set(0, Transformer.user2FriendData(mUserManager.getCurrentUser()));
