@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -111,15 +112,19 @@ public class ProfileCardView extends FrameLayout
         switch (v.getId()) {
             case R.id.nick: {
                 String nick = mNick.getText().toString();
-                mProfileData.nick = nick;
-                mEventListener.onNickChanged(nick);
+                if (!TextUtils.equals(mProfileData.nick, nick)) {
+                    mProfileData.nick = nick;
+                    mEventListener.onNickChanged(nick);
+                }
             }
                 break;
 
             case R.id.mood: {
                 String mood = mMood.getText().toString();
-                mProfileData.mood = mood;
-                mEventListener.onMoodChanged(mood);
+                if (!TextUtils.equals(mProfileData.mood, mood)) {
+                    mProfileData.mood = mood;
+                    mEventListener.onMoodChanged(mood);
+                }
             }
                 break;
 
