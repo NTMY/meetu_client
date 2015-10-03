@@ -120,10 +120,6 @@ public class ProfileCardView extends FrameLayout
     }
 
     // Function
-    public ProfileData get() {
-        return new ProfileData();
-    }
-
     public void set(final ProfileData profileData) {
         final int duration = 200;
         // Fly out
@@ -146,6 +142,15 @@ public class ProfileCardView extends FrameLayout
                 mMood.animate().translationX(0).setStartDelay(100).setDuration(duration).setInterpolator(new DecelerateInterpolator());
             }
         }, 700);
+    }
+
+    /**
+     * Refresh UI without animation
+     */
+    public void refresh(ProfileData profileData) {
+        mPortrait.setImageURI(profileData.portraitUri);
+        mNick.setText(profileData.nick);
+        mMood.setText(profileData.mood);
     }
 
     public void setOnEventListener(OnEventListener listener) {

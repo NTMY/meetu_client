@@ -325,7 +325,11 @@ public class FriendFragment extends Fragment {
 
     private void showUpdateResult(boolean suc, String field) {
         // Update ProfileCard
-        mPcv.set(Transformer.user2ProfileData(mActivity, mUserManager.getCurrentUser()));
+        mPcv.refresh(Transformer.user2ProfileData(mActivity, mUserManager.getCurrentUser()));
+
+        // Update list
+        mFriendDataList.set(0, Transformer.user2FriendData(mUserManager.getCurrentUser()));
+        mSv.getAdapter().notifyDataSetChanged();
 
         // Show tip
         String tip;

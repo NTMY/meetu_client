@@ -8,8 +8,6 @@ import com.walfud.meetu.database.User;
 import com.walfud.meetu.view.FriendFragment;
 import com.walfud.meetu.view.ProfileCardView;
 
-import org.meetu.model.LocationCurr;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,43 +16,11 @@ import java.util.List;
  */
 public class Transformer {
 
-    // LocationCurr
-    public static User locationCurr2User(LocationCurr locationCurr) {
-        User user = new User();
-        user.setUserId((long) locationCurr.getUserId());
-//        user.setPassword();
-//        user.setNick();
-//        user.setMood();
-//        user.setPortrait();
-//        user.setPhoneNum();
-//        user.setImei();
-
-        return user;
-    }
-
-    public static ProfileCardView.ProfileData locationCurr2ProfileData(LocationCurr locationCurr) {
-        ProfileCardView.ProfileData profileData = new ProfileCardView.ProfileData();
-//        profileData.portrait
-        profileData.nick = String.valueOf(locationCurr.getUserId());
-//        profileData.mood
-
-        return profileData;
-    }
-
-    public static FriendFragment.FriendData locationCurr2FriendData(Context context, LocationCurr locationCurr) {
-        FriendFragment.FriendData friendData = new FriendFragment.FriendData();
-//        friendData.portraitUri =
-        friendData.nick = String.valueOf(locationCurr.getUserId());
-//        friendData.mood
-
-        return friendData;
-    }
-
     // com.walfud.meetu.database.User
     public static ProfileCardView.ProfileData user2ProfileData(Context context, User user) {
         ProfileCardView.ProfileData profileData = new ProfileCardView.ProfileData();
         profileData.portraitUri = !TextUtils.isEmpty(user.getPortraitUrl()) ? Uri.parse(user.getPortraitUrl()) : Uri.EMPTY;
-        profileData.nick = String.valueOf(user.getUserId());
+        profileData.nick = String.valueOf(user.getNick());
         profileData.mood = user.getMood();
 
         return profileData;
