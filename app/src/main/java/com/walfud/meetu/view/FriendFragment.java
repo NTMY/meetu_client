@@ -253,7 +253,7 @@ public class FriendFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        // If
+                        // If something wrong, stop upload procedure
                         if (TextUtils.isEmpty(portraitFileName) || portraitContent == null) {
                             mFailImgTooLarge = true;
                             return null;
