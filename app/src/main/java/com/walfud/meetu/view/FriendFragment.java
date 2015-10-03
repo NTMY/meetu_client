@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.walfud.common.DensityTransformer;
 import com.walfud.common.collection.CollectionUtil;
 import com.walfud.common.widget.JumpBar;
 import com.walfud.common.widget.SelectView;
@@ -177,67 +178,92 @@ public class FriendFragment extends Fragment {
         mProfileCardEventListener = new ProfileCardView.OnEventListener() {
             @Override
             public void onPortraitChanged(Uri portraitUri) {
-                // Get portrait file name & content
-                String fileName = "";
-                byte[] portraitContent = new byte[0];
-                try {
-                    // File name & size
-                    long sizeInByte = 0;
-                    Cursor cursor = MeetUApplication.getContext().getContentResolver().query(portraitUri, null, null, null, null);
-                    if (cursor.moveToFirst()) {
-                        int columnDisplayName = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
-                        int columnSizeInByte = cursor.getColumnIndex(MediaStore.MediaColumns.SIZE);
-                        if (columnDisplayName != -1) {
-                            fileName = cursor.getString(columnDisplayName);
-                        }
-                        if (columnSizeInByte != -1) {
-                            sizeInByte = Long.valueOf(cursor.getString(columnSizeInByte));
-                        }
-                    }
-                    cursor.close();
+                new AsyncTask<Uri, Void, org.meetu.model.User>() {
 
-                    // Content
-                    InputStream inputStream = MeetUApplication.getContext().getContentResolver().openInputStream(portraitUri);
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    final long MAX_SIZE = 500 * 1024;
-                    if (sizeInByte < MAX_SIZE) {
-                        // File be small enough
-                        byte[] buf = new byte[1024 * 1024];
-                        int readLen;
-                        while ((readLen = inputStream.read(buf)) != -1) {
-                            byteArrayOutputStream.write(buf, 0, readLen);
-                        }
-                    } else {
-                        // If file too large, compress it
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        for (int i = 50; i > 0; i -= 20) {
-                            byteArrayOutputStream.reset();
-                            bitmap.compress(Bitmap.CompressFormat.WEBP, i, byteArrayOutputStream);
-
-                            if (byteArrayOutputStream.size() < MAX_SIZE) {
-                                break;
-                            }
-                        }
-                    }
-                    portraitContent = byteArrayOutputStream.toByteArray();
-                    byteArrayOutputStream.close();
-                    inputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                // Transform to upload data
-                PortraitUploadModel portraitUploadModel = new PortraitUploadModel();
-                portraitUploadModel.setUserId(String.valueOf(mUserManager.getCurrentUser().getUserId()));
-                portraitUploadModel.setFileName(fileName);
-                portraitUploadModel.setFileBytes(portraitContent);
-
-                new AsyncTask<PortraitUploadModel, Void, org.meetu.model.User>() {
+                    private boolean mFailImgTooLarge = false;
                     private org.meetu.model.User mServerUser;
 
                     @Override
-                    protected org.meetu.model.User doInBackground(PortraitUploadModel... params) {
-                        PortraitUploadModel portraitUploadModel = params[0];
+                    protected org.meetu.model.User doInBackground(Uri... params) {
+                        Uri portraitUri = params[0];
+
+                        // Get portrait file name & content
+                        String portraitFileName = null;
+                        byte[] portraitContent = null;
+                        try {
+                            // File name & size
+                            long sizeInByte = 0;
+                            Cursor cursor = MeetUApplication.getContext().getContentResolver().query(portraitUri, null, null, null, null);
+                            if (cursor.moveToFirst()) {
+                                int columnDisplayName = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+                                int columnSizeInByte = cursor.getColumnIndex(MediaStore.MediaColumns.SIZE);
+                                if (columnDisplayName != -1) {
+                                    portraitFileName = cursor.getString(columnDisplayName);
+                                }
+                                if (columnSizeInByte != -1) {
+                                    sizeInByte = Long.valueOf(cursor.getString(columnSizeInByte));
+                                }
+                            }
+                            cursor.close();
+
+                            // Content
+                            byte[] tmpPortrait;
+                            {
+                                InputStream inputStream = MeetUApplication.getContext().getContentResolver().openInputStream(portraitUri);
+                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                                {
+                                    byte[] buf = new byte[100 * 1024];
+                                    int readLen;
+                                    while ((readLen = inputStream.read(buf)) != -1) {
+                                        byteArrayOutputStream.write(buf, 0, readLen);
+                                    }
+                                }
+                                tmpPortrait = byteArrayOutputStream.toByteArray();
+                                byteArrayOutputStream.close();
+                                inputStream.close();
+                            }
+
+                            final long MAX_SIZE = 100 * 1024;
+                            if (tmpPortrait.length < MAX_SIZE) {
+                                // File be small enough
+                                portraitContent = tmpPortrait;
+                            } else {
+                                // If file too large, compress it
+                                BitmapFactory.Options boundOptions = new BitmapFactory.Options();
+                                boundOptions.inJustDecodeBounds = true;
+                                BitmapFactory.decodeByteArray(tmpPortrait, 0, tmpPortrait.length, boundOptions);
+                                double scale = Math.max(boundOptions.outWidth, boundOptions.outHeight) / DensityTransformer.dp2px(MeetUApplication.getContext(), 56);
+                                boundOptions.inJustDecodeBounds = false;
+                                boundOptions.inSampleSize = (int) scale;
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(tmpPortrait, 0, tmpPortrait.length, boundOptions);
+                                ByteArrayOutputStream portraitOutputStream = new ByteArrayOutputStream();
+                                for (int i = 100; i > 0; i -= 20) {
+                                    portraitOutputStream.reset();
+                                    bitmap.compress(Bitmap.CompressFormat.WEBP, i, portraitOutputStream);
+
+                                    if (portraitOutputStream.size() < MAX_SIZE) {
+                                        portraitFileName = portraitFileName.replaceFirst("\\..*$", ".webp");
+                                        portraitContent = portraitOutputStream.toByteArray();
+                                        break;
+                                    }
+                                }
+                                portraitOutputStream.close();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        // If
+                        if (TextUtils.isEmpty(portraitFileName) || portraitContent == null) {
+                            mFailImgTooLarge = true;
+                            return null;
+                        }
+
+                        // Transform to upload data
+                        PortraitUploadModel portraitUploadModel = new PortraitUploadModel();
+                        portraitUploadModel.setUserId(String.valueOf(mUserManager.getCurrentUser().getUserId()));
+                        portraitUploadModel.setFileName(portraitFileName);
+                        portraitUploadModel.setFileBytes(portraitContent);
 
                         new PortraitHandler().onUpload(new PortraitUploadListener() {
                             @Override
@@ -254,16 +280,22 @@ public class FriendFragment extends Fragment {
                         super.onPostExecute(serverUser);
 
                         boolean suc = false;
-                        if (TextUtils.isEmpty(serverUser.getErrCode())) {
-                            // Update user info
-                            mUserManager.getCurrentUser().setPortraitUrl(serverUser.getImgUrlReal());
 
-                            suc = true;
+                        if (mFailImgTooLarge) {
+                            // Client error
+                        } else {
+                            // Server error
+                            if (TextUtils.isEmpty(serverUser.getErrCode())) {
+                                // Update user info
+                                mUserManager.getCurrentUser().setPortraitUrl(serverUser.getImgUrlReal());
+
+                                suc = true;
+                            }
                         }
 
                         FriendFragment.this.showUpdateResult(suc, "Portrait");
                     }
-                }.execute(portraitUploadModel);
+                }.execute(portraitUri);
             }
 
             @Override
