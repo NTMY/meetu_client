@@ -3,6 +3,8 @@ package com.walfud.meetu.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -22,7 +24,7 @@ import org.meetu.model.User;
  * Created by walfud on 2015/8/2.
  */
 public class LoginActivity extends BaseActivity
-        implements View.OnClickListener, View.OnLongClickListener, TextView.OnEditorActionListener {
+        implements View.OnClickListener, TextView.OnEditorActionListener {
 
     public static final String TAG = "LoginActivity";
 
@@ -65,7 +67,6 @@ public class LoginActivity extends BaseActivity
             }
         });
 
-        mOk.setOnLongClickListener(this);
         mPhoneNum.setOnEditorActionListener(this);
         mPassword.setOnEditorActionListener(this);
     }
@@ -89,30 +90,39 @@ public class LoginActivity extends BaseActivity
 
     @Override
     public void onClick(View v) {
+        String phoneNum = mPhoneNum.getText().toString();
+        String password = mPassword.getText().toString();
+
         final User user = new User();
-        user.setMobile(mPhoneNum.getText().toString());
-        user.setPwd(mPassword.getText().toString());
 
-        mPresenter.onClickLogin(user);
-    }
-
-    /**
-     * Login as Developer
-     * @return
-     */
-    @Override
-    public boolean onLongClick(View v) {
-        mPhoneNum.setText("13800138000");
-        mPassword.setText("MeetU");
-
-        mOk.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mOk.performClick();
+        if (TextUtils.isEmpty(phoneNum) && TextUtils.isEmpty(password)) {
+            // For dev
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            String deviceId = telephonyManager.getDeviceId();
+            if (false) {
+                // Nothing
+            } else if (TextUtils.equals(deviceId, "867569026088001")) {
+                // walfud
+                mPhoneNum.setText("13911592475");
+                mPassword.setText("walfud");
+            } else if (TextUtils.equals(deviceId, "")) {
+                // murphy
+                mPhoneNum.setText("15011448840");
+                mPassword.setText("1");
+            } else if (TextUtils.equals(deviceId, "000000000000000")) {
+                // emulator
+                mPhoneNum.setText("13800138000");
+                mPassword.setText("MeetU");
+            } else {
+                // Nothing
             }
-        }, 1000);
+        } else {
+            // For normal user
+            user.setMobile(phoneNum);
+            user.setPwd(password);
 
-        return true;
+            mPresenter.onClickLogin(user);
+        }
     }
 
     // View Function
