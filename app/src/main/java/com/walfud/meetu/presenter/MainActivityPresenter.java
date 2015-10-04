@@ -67,8 +67,7 @@ public class MainActivityPresenter {
                 Toast.makeText(MeetUApplication.getContext(), String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
             }
         });
-        mMainService.setAutoReport(mPrefsManager.isAutoReport());
-        mMainService.setAutoSearch(mPrefsManager.isAutoSearch());
+        mMainService.configWithSetting();
     }
 
     // Function

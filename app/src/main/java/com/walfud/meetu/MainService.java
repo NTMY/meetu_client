@@ -75,12 +75,7 @@ public class MainService extends Service {
         }
 
         if (intent.getBooleanExtra(EXTRA_READ_SETTING, false)) {
-            if (PrefsManager.getInstance().isAutoReport()) {
-                setAutoReport(true);
-            }
-            if (PrefsManager.getInstance().isAutoSearch()) {
-                setAutoSearch(true);
-            }
+            configWithSetting();
         }
 
         return START_REDELIVER_INTENT;
@@ -274,6 +269,14 @@ public class MainService extends Service {
                 mEngineTimer.purge();
             }
         }
+    }
+
+    /**
+     * Configure service with setting value
+     */
+    public void configWithSetting() {
+        setAutoReport(PrefsManager.getInstance().isAutoReport());
+        setAutoSearch(PrefsManager.getInstance().isAutoSearch());
     }
 
     // Helper
