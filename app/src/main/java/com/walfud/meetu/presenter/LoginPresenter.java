@@ -1,7 +1,9 @@
 package com.walfud.meetu.presenter;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 
 import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.view.LoginActivity;
@@ -36,6 +38,9 @@ public class LoginPresenter {
 
     // View Event
     public void onClickLogin(final User user) {
+        TelephonyManager telephonyManager = (TelephonyManager) mView.getSystemService(Context.TELEPHONY_SERVICE);
+        user.setImei(telephonyManager.getDeviceId());
+
         new AsyncTask<Void, Void, UserAccessDto>() {
 
             private UserAccessDto mUserAccessDto;
