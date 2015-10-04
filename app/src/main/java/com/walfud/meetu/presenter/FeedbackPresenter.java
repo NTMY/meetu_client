@@ -43,7 +43,7 @@ public class FeedbackPresenter implements View.OnClickListener {
     //
     private void onClickSend() {
         Feedback feedback = new Feedback();
-        feedback.setUserId((int) (long) UserManager.getInstance().getCurrentUser().getUserId());
+        feedback.setUserId(UserManager.getInstance().getCurrentUser().getUserId().intValue());
         feedback.setContent(mView.getFeedbackContent());
 
         new AsyncTask<Feedback, Integer, BaseDto>() {

@@ -11,9 +11,11 @@ import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.walfud.common.ServiceBinder;
+import com.walfud.meetu.manager.DbManager;
 import com.walfud.meetu.manager.LocationManager;
 import com.walfud.meetu.manager.PrefsManager;
 import com.walfud.meetu.manager.UserManager;
+import com.walfud.meetu.util.Transformer;
 
 import org.meetu.client.handler.MeetuHandler;
 import org.meetu.client.listener.MeetuListener;
@@ -45,6 +47,7 @@ public class MainService extends Service {
     private Timer mEngineTimer = new Timer();
     private TimerTask mReportSelfTimerTask;
     private TimerTask mSearchOthersTimerTask;
+    private DbManager mDbManager;
 
     @Override
     public void onCreate() {
@@ -64,6 +67,7 @@ public class MainService extends Service {
 
         mLocationManager = LocationManager.getInstance();
         mLocationManager.init();
+        mDbManager = DbManager.getInstance();
 
         Toast.makeText(MeetUApplication.getContext(), "Nice to Meet U", Toast.LENGTH_SHORT).show();
     }
@@ -113,7 +117,7 @@ public class MainService extends Service {
         mOnSearchListener = listener;
     }
 
-    public void reportSelf() {
+    public void report() {
         mLocationManager.getLocation(new LocationManager.OnLocationListener() {
             @Override
             public void onLocation(AMapLocation aMapLocation) {
@@ -133,16 +137,13 @@ public class MainService extends Service {
                         try {
                             AMapLocation aMapLocation = params[0];
 
-                            LocationCurr locationCurr = new LocationCurr();
-                            locationCurr.setUserId(UserManager.getInstance().getCurrentUser().getUserId().intValue());
-                            locationCurr.setLatitude(aMapLocation.getLatitude());
-                            locationCurr.setLongitude(aMapLocation.getLongitude());
-                            locationCurr.setAddress(aMapLocation.getAddress());
-                            locationCurr.setBusiness(aMapLocation.getDistrict());
+                            // Record to Db
+                            mDbManager.insert(Transformer.aMapLocation2Location(aMapLocation));
 
-                            if (locationCurr.getLatitude() != 0
-                                    && locationCurr.getLongitude() != 0) {
-                                new MeetuHandler().onUpload(mUploadListener, locationCurr);
+                            // Upload
+                            if (aMapLocation.getLatitude() != 0
+                                    && aMapLocation.getLongitude() != 0) {
+                                new MeetuHandler().onUpload(mUploadListener, Transformer.aMapLocation2LocationCurr(aMapLocation));
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -155,7 +156,7 @@ public class MainService extends Service {
         });
     }
 
-    public void searchNearby() {
+    public void search() {
         mLocationManager.getLocation(new LocationManager.OnLocationListener() {
             @Override
             public void onLocation(AMapLocation aMapLocation) {
@@ -230,7 +231,7 @@ public class MainService extends Service {
                 mReportSelfTimerTask = new TimerTask() {
                     @Override
                     public void run() {
-                        reportSelf();
+                        report();
                     }
                 };
                 mEngineTimer.schedule(mReportSelfTimerTask, REPORT_INTERVAL, REPORT_INTERVAL);
@@ -256,7 +257,7 @@ public class MainService extends Service {
                 mSearchOthersTimerTask = new TimerTask() {
                     @Override
                     public void run() {
-                        searchNearby();
+                        search();
                     }
                 };
                 mEngineTimer.schedule(mSearchOthersTimerTask, SEARCH_INTERVAL, SEARCH_INTERVAL);

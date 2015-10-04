@@ -4,11 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.amap.api.location.AMapLocation;
+import com.walfud.meetu.database.Location;
 import com.walfud.meetu.database.User;
+import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.view.FriendFragment;
 import com.walfud.meetu.view.ProfileCardView;
 
+import org.meetu.model.LocationCurr;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,7 +34,7 @@ public class Transformer {
 
     public static org.meetu.model.User user2ServerUser(User user) {
         org.meetu.model.User serverUser = new org.meetu.model.User();
-        serverUser.setId((int) (long) user.getUserId());
+        serverUser.setId(user.getUserId().intValue());
         serverUser.setPwd(user.getPassword());
         serverUser.setNickname(user.getNick());
         serverUser.setMood(user.getMood());
@@ -109,5 +115,29 @@ public class Transformer {
         profileData.mood = friendData.mood;
 
         return profileData;
+    }
+
+    // AMapLocation
+    public static Location aMapLocation2Location(AMapLocation aMapLocation) {
+        Location location = new Location();
+        location.setLongitude(aMapLocation.getLongitude());
+        location.setLatitude(aMapLocation.getLatitude());
+        location.setAddress(aMapLocation.getAddress());
+        location.setBusiness(aMapLocation.getDistrict());
+        location.setUploadTime(new Date());
+        location.setUserId(UserManager.getInstance().getCurrentUser().getUserId());
+
+        return location;
+    }
+
+    public static LocationCurr aMapLocation2LocationCurr(AMapLocation aMapLocation) {
+        LocationCurr locationCurr = new LocationCurr();
+        locationCurr.setUserId(UserManager.getInstance().getCurrentUser().getUserId().intValue());
+        locationCurr.setLatitude(aMapLocation.getLatitude());
+        locationCurr.setLongitude(aMapLocation.getLongitude());
+        locationCurr.setAddress(aMapLocation.getAddress());
+        locationCurr.setBusiness(aMapLocation.getDistrict());
+
+        return locationCurr;
     }
 }

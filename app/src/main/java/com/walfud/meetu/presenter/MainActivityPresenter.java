@@ -72,7 +72,7 @@ public class MainActivityPresenter {
 
     // Function
     public void search() {
-        mMainService.searchNearby();
+        mMainService.search();
     }
 
     public void exit() {
