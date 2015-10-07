@@ -104,6 +104,7 @@ public class MainService extends Service {
     // Function
     public interface OnDataRequestListener {
         void onStartSearch();
+        void onStopSearch();
 
         void onNoFriendNearby();
 
@@ -157,20 +158,15 @@ public class MainService extends Service {
     }
 
     public void search() {
+        if (mOnSearchListener != null) {
+            mOnSearchListener.onStartSearch();
+        }
+
         mLocationManager.getLocation(new LocationManager.OnLocationListener() {
             @Override
             public void onLocation(AMapLocation aMapLocation) {
                 // Report location & get network result
                 new AsyncTask<AMapLocation, Void, List<LocationCurr>>() {
-                    @Override
-                    protected void onPreExecute() {
-                        super.onPreExecute();
-
-                        if (mOnSearchListener != null) {
-                            mOnSearchListener.onStartSearch();
-                        }
-                    }
-
                     @Override
                     protected List<LocationCurr> doInBackground(AMapLocation... params) {
                         final List<LocationCurr> locationCurrList = new ArrayList<>();
@@ -208,6 +204,8 @@ public class MainService extends Service {
                         super.onPostExecute(locationCurrList);
 
                         if (mOnSearchListener != null) {
+                            mOnSearchListener.onStopSearch();
+
                             if (locationCurrList != null && !locationCurrList.isEmpty()) {
                                 mOnSearchListener.onFoundFriends(locationCurrList);
                             } else {
