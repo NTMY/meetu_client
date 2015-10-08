@@ -1,7 +1,5 @@
 package com.walfud.meetu;
 
-import java.io.File;
-
 import de.greenrobot.daogenerator.DaoGenerator;
 import de.greenrobot.daogenerator.Entity;
 import de.greenrobot.daogenerator.Property;
@@ -36,7 +34,6 @@ public class DaoMeetUGenerator {
 //        user.addToMany(location, userId);
 //        location.addToOne(user, userId);
 
-        new File("./app/build/generated/greendao").mkdirs();
-        new DaoGenerator().generateAll(schema, "./app/build/generated/greendao");
+        new DaoGenerator().generateAll(schema, "./app/src/main/java");
     }
 }

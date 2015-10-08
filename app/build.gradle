@@ -10,12 +10,6 @@ android {
         versionCode 7
         versionName "v1.5.0-alpha"
     }
-
-    sourceSets {
-        main {
-            java.srcDirs += ['build/generated/greendao']
-        }
-    }
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
