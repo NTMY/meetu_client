@@ -3,6 +3,9 @@ package com.walfud.meetu.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -65,6 +68,11 @@ public class ProfileCardView extends FrameLayout
 
         mNick.setOnFocusChangeListener(this);
         mMood.setOnFocusChangeListener(this);
+
+        mNick.setTag(R.id.tag_text_fg_color, mNick.getTextColors());
+        mNick.setTag(R.id.tag_text_bg_color, mNick.getBackground());
+        mMood.setTag(R.id.tag_text_fg_color, mMood.getTextColors());
+        mMood.setTag(R.id.tag_text_bg_color, mMood.getBackground());
     }
 
     @Override
@@ -89,9 +97,11 @@ public class ProfileCardView extends FrameLayout
 
             case R.id.nick:
                 setFocus(mNick, true);
+                setFocus(mMood, false);
                 break;
 
             case R.id.mood:
+                setFocus(mNick, false);
                 setFocus(mMood, true);
                 break;
 
@@ -241,16 +251,21 @@ public class ProfileCardView extends FrameLayout
     }
 
     // Internal
-    private void setFocus(View view, boolean focus) {
-        view.setFocusable(focus);
-        view.setFocusableInTouchMode(focus);
+    private void setFocus(EditText et, boolean focus) {
+        et.setFocusable(focus);
+        et.setFocusableInTouchMode(focus);
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (focus) {
-            view.requestFocus();
-            inputMethodManager.showSoftInput(view, 0);
+            et.requestFocus();
+            inputMethodManager.showSoftInput(et, 0);
+
+            et.setTextColor(Color.BLACK);
+            et.setBackgroundColor(Color.WHITE);
         } else {
-            view.clearFocus();
-            inputMethodManager.hideSoftInputFromInputMethod(view.getWindowToken(), 0);
+            et.clearFocus();
+            inputMethodManager.hideSoftInputFromInputMethod(et.getWindowToken(), 0);
+            et.setTextColor((ColorStateList) et.getTag(R.id.tag_text_fg_color));
+            et.setBackground((Drawable) et.getTag(R.id.tag_text_bg_color));
         }
     }
 }
