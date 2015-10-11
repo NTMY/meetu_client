@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.R;
+import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.presenter.LoginPresenter;
 
 import org.meetu.dto.UserAccessDto;
@@ -67,6 +68,11 @@ public class LoginActivity extends BaseActivity
 
         mPhoneNum.setOnEditorActionListener(this);
         mPassword.setOnEditorActionListener(this);
+
+        // Auto fill last login info
+        com.walfud.meetu.database.User loginInfo = UserManager.getInstance().restoreLoginInfo();
+        mPhoneNum.setText(loginInfo.getPhoneNum());
+        mPassword.setText(loginInfo.getPassword());
     }
 
     @Override

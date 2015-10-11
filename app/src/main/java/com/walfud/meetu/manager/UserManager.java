@@ -2,6 +2,7 @@ package com.walfud.meetu.manager;
 
 import android.content.Context;
 
+import com.walfud.meetu.Constants;
 import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.database.User;
 
@@ -18,10 +19,12 @@ public class UserManager {
 
     private User mUser;
     private List<User> mFriendList;
+    private PrefsManager mPrefsManager;
 
     private UserManager(Context context) {
         mUser = new User();
         mFriendList = new ArrayList<>();
+        mPrefsManager = PrefsManager.getInstance();
     }
 
     // Function
@@ -39,6 +42,24 @@ public class UserManager {
 
     public void setFriendList(List<User> friendList) {
         mFriendList = friendList;
+    }
+
+    public void saveLoginInfo() {
+        mPrefsManager.setPhoneNum(mUser.getPhoneNum());
+        mPrefsManager.setPassword(mUser.getPassword());
+    }
+
+    public User restoreLoginInfo() {
+        return new User(
+                Constants.INVALID_ID,
+                Constants.INVALID_USER_ID,
+                mUser.getPassword(),
+                "",
+                "",
+                "",
+                mUser.getPhoneNum(),
+                ""
+        );
     }
 
     // Helper

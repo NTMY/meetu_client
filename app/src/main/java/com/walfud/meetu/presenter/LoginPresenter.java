@@ -23,9 +23,11 @@ public class LoginPresenter {
     public static final String TAG = "LoginPresenter";
 
     private LoginActivity mView;
+    private UserManager mUserManager;
 
     public LoginPresenter(LoginActivity view) {
         mView = view;
+        mUserManager = UserManager.getInstance();
     }
 
     public interface OnLoginListener {
@@ -41,6 +43,7 @@ public class LoginPresenter {
         TelephonyManager telephonyManager = (TelephonyManager) mView.getSystemService(Context.TELEPHONY_SERVICE);
         user.setImei(telephonyManager.getDeviceId());
 
+        // Login procedure
         new AsyncTask<Void, Void, UserAccessDto>() {
 
             private UserAccessDto mUserAccessDto;
@@ -85,7 +88,12 @@ public class LoginPresenter {
                 if (false) {
                 } else if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())
                         || Constant.ACCESS_STATUS_LOGIN.equals(userAccessDto.getAccess_status())) {
-                    UserManager.getInstance().setCurrentUser(serverUser2ClientUser(userAccessDto.getUser()));
+                    // Success
+                    mUserManager.setCurrentUser(serverUser2ClientUser(userAccessDto.getUser()));
+                    mUserManager.getCurrentUser().setPassword(user.getPwd());
+
+                    // Save login info
+                    mUserManager.saveLoginInfo();
 
                     if (mOnLoginListener != null) {
                         if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())) {

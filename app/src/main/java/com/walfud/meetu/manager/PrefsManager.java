@@ -27,6 +27,22 @@ public class PrefsManager {
         mSharePreference = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    public static final String PREFS_PHONE_NUM = "phone_num";
+    public String getPhoneNum() {
+        return mSharePreference.getString(PREFS_PHONE_NUM, "");
+    }
+    public void setPhoneNum(String phoneNum) {
+        mSharePreference.edit().putString(PREFS_PHONE_NUM, phoneNum).commit();
+    }
+
+    public static final String PREFS_PASSWORD = "password";
+    public String getPassword() {
+        return mSharePreference.getString(PREFS_PASSWORD, "");
+    }
+    public void setPassword(String password) {
+        mSharePreference.edit().putString(PREFS_PASSWORD, password).commit();
+    }
+
     public static final String PREFS_AUTO_REPORT = "auto_report";
     public boolean isAutoReport() {
         return mSharePreference.getBoolean(PREFS_AUTO_REPORT, true);
