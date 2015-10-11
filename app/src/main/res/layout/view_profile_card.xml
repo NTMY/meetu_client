@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_detail"
     android:layout_width="match_parent"
-    android:layout_height="180dp"
+    android:layout_height="196dp"
     android:background="?attr/colorPrimary"
     android:padding="16dp">
 
@@ -24,13 +24,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/portrait"
         android:layout_marginTop="20dp"
-        android:imeOptions="actionDone"
         android:text="Nick"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:maxLines="1"
+        android:inputType="textPersonName"
+        android:imeOptions="actionDone"
         android:focusable="false"
         android:focusableInTouchMode="false"
+        android:ellipsize="end"
         android:background="@null" />
 
     <EditText
@@ -38,14 +40,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/nick"
-        android:layout_marginTop="2dp"
-        android:imeOptions="actionDone"
+        android:layout_marginTop="4dp"
         android:text="Mood"
         android:textSize="12sp"
         android:textColor="@android:color/white"
         android:maxLines="2"
+        android:inputType="textMultiLine"
+        android:imeOptions="actionDone"
         android:focusable="false"
         android:focusableInTouchMode="false"
+        android:ellipsize="end"
         android:background="@null" />
 
 </RelativeLayout>

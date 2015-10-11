@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnticipateInterpolator;
@@ -18,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.walfud.meetu.Constants;
@@ -27,7 +29,7 @@ import com.walfud.meetu.R;
  * Created by walfud on 2015/9/28.
  */
 public class ProfileCardView extends FrameLayout
-        implements View.OnClickListener, View.OnFocusChangeListener {
+        implements View.OnClickListener, View.OnFocusChangeListener, TextView.OnEditorActionListener {
 
     public static final String TAG = "ProfileCardView";
 
@@ -67,7 +69,9 @@ public class ProfileCardView extends FrameLayout
         mMood.setOnClickListener(this);
 
         mNick.setOnFocusChangeListener(this);
+        mNick.setOnEditorActionListener(this);
         mMood.setOnFocusChangeListener(this);
+        mMood.setOnEditorActionListener(this);
 
         mNick.setTag(R.id.tag_text_fg_color, mNick.getTextColors());
         mNick.setTag(R.id.tag_text_bg_color, mNick.getBackground());
@@ -141,6 +145,24 @@ public class ProfileCardView extends FrameLayout
             default:
                 break;
         }
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        switch (v.getId()) {
+            case R.id.nick:
+                setFocus(mNick, false);
+                return true;
+
+            case R.id.mood:
+                setFocus(mMood, false);
+                return true;
+
+            default:
+                break;
+        }
+
+        return false;
     }
 
     // Function

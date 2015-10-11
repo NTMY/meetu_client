@@ -3,7 +3,6 @@ package com.walfud.meetu;
 import android.app.Application;
 import android.content.Context;
 
-import com.bugtags.library.Bugtags;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 /**
@@ -16,7 +15,7 @@ public class MeetUApplication extends Application {
         super.onCreate();
         sApplicationContext = this;
 
-        Bugtags.start("b27243a172339c9df358ab036868ec05", this, Bugtags.BTGInvocationEventBubble);
+//        Bugtags.start("b27243a172339c9df358ab036868ec05", this, Bugtags.BTGInvocationEventBubble);
         Fresco.initialize(this);
     }
 

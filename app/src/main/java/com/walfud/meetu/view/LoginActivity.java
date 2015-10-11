@@ -3,8 +3,6 @@ package com.walfud.meetu.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -93,36 +91,10 @@ public class LoginActivity extends BaseActivity
         String phoneNum = mPhoneNum.getText().toString();
         String password = mPassword.getText().toString();
 
-        final User user = new User();
-
-        if (TextUtils.isEmpty(phoneNum) && TextUtils.isEmpty(password)) {
-            // For dev
-            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            String deviceId = telephonyManager.getDeviceId();
-            if (false) {
-                // Nothing
-            } else if (TextUtils.equals(deviceId, "867569026088001")) {
-                // walfud
-                mPhoneNum.setText("13911592475");
-                mPassword.setText("walfud");
-            } else if (TextUtils.equals(deviceId, "")) {
-                // murphy
-                mPhoneNum.setText("15011448840");
-                mPassword.setText("1");
-            } else if (TextUtils.equals(deviceId, "000000000000000")) {
-                // emulator
-                mPhoneNum.setText("13800138000");
-                mPassword.setText("MeetU");
-            } else {
-                // Nothing
-            }
-        } else {
-            // For normal user
-            user.setMobile(phoneNum);
-            user.setPwd(password);
-
-            mPresenter.onClickLogin(user);
-        }
+        User user = new User();
+        user.setMobile(phoneNum);
+        user.setPwd(password);
+        mPresenter.onClickLogin(user);
     }
 
     // View Function

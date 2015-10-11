@@ -25,9 +25,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="72dp"
             android:gravity="center"
+            android:maxLines="1"
+            android:inputType="number"
             android:imeOptions="actionNext"
-            android:hint="Phone Number"
-            android:singleLine="true" />
+            android:hint="Phone Number" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -40,9 +41,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
+            android:maxLines="1"
+            android:inputType="textVisiblePassword"
             android:imeOptions="actionDone"
-            android:hint="Password"
-            android:singleLine="true" />
+            android:hint="Password" />
     </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>
