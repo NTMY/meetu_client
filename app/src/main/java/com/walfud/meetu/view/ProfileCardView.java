@@ -285,7 +285,7 @@ public class ProfileCardView extends FrameLayout
             et.setBackgroundColor(Color.WHITE);
         } else {
             et.clearFocus();
-            inputMethodManager.hideSoftInputFromInputMethod(et.getWindowToken(), 0);
+            inputMethodManager.hideSoftInputFromWindow(et.getWindowToken(), 0);
             et.setTextColor((ColorStateList) et.getTag(R.id.tag_text_fg_color));
             et.setBackground((Drawable) et.getTag(R.id.tag_text_bg_color));
         }
