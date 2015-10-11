@@ -44,15 +44,16 @@ public class UserManager {
         mFriendList = friendList;
     }
 
-    public void saveLoginInfo() {
+    public void save() {
+        mPrefsManager.setUserId(mUser.getUserId());
         mPrefsManager.setPhoneNum(mUser.getPhoneNum());
         mPrefsManager.setPassword(mUser.getPassword());
     }
 
-    public User restoreLoginInfo() {
-        return new User(
+    public void restore() {
+        mUser = new User(
                 Constants.INVALID_ID,
-                Constants.INVALID_USER_ID,
+                mPrefsManager.getUserId(),
                 mPrefsManager.getPassword(),
                 "",
                 "",

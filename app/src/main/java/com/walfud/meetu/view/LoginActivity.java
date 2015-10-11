@@ -70,9 +70,10 @@ public class LoginActivity extends BaseActivity
         mPassword.setOnEditorActionListener(this);
 
         // Auto fill last login info
-        com.walfud.meetu.database.User loginInfo = UserManager.getInstance().restoreLoginInfo();
-        mPhoneNum.setText(loginInfo.getPhoneNum());
-        mPassword.setText(loginInfo.getPassword());
+        UserManager.getInstance().restore();
+        com.walfud.meetu.database.User currentUser = UserManager.getInstance().getCurrentUser();
+        mPhoneNum.setText(currentUser.getPhoneNum());
+        mPassword.setText(currentUser.getPassword());
     }
 
     @Override

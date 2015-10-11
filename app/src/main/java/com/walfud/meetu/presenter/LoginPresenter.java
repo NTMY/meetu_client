@@ -93,7 +93,7 @@ public class LoginPresenter {
                     mUserManager.getCurrentUser().setPassword(user.getPwd());
 
                     // Save login info
-                    mUserManager.saveLoginInfo();
+                    mUserManager.save();
 
                     if (mOnLoginListener != null) {
                         if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())) {

@@ -10,8 +10,8 @@
 
     <SwitchPreference
         android:key="auto_search"
-        android:summaryOff="I can do nothing for you （╯_╰）. You must search your friend manually."
-        android:summaryOn="Now, I will search your friend automatically （￣▽￣）."
+        android:summaryOff="You must search your friend manually\n（╯_╰）"
+        android:summaryOn="Now, I will search your friend automatically\n（￣▽￣）."
         android:title="Auto Search" />
 
 </PreferenceScreen>

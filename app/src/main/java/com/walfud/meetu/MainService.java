@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.walfud.common.ServiceBinder;
+import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.DbManager;
 import com.walfud.meetu.manager.LocationManager;
 import com.walfud.meetu.manager.PrefsManager;
@@ -48,6 +49,7 @@ public class MainService extends Service {
     private TimerTask mReportSelfTimerTask;
     private TimerTask mSearchOthersTimerTask;
     private DbManager mDbManager;
+    private UserManager mUserManager;
 
     @Override
     public void onCreate() {
@@ -68,6 +70,7 @@ public class MainService extends Service {
         mLocationManager = LocationManager.getInstance();
         mLocationManager.init();
         mDbManager = DbManager.getInstance();
+        mUserManager = UserManager.getInstance();
 
         Toast.makeText(MeetUApplication.getContext(), "Nice to Meet U", Toast.LENGTH_SHORT).show();
     }
@@ -78,7 +81,7 @@ public class MainService extends Service {
             return START_REDELIVER_INTENT;
         }
 
-        if (intent.getBooleanExtra(EXTRA_READ_SETTING, false)) {
+        if (intent.getBooleanExtra(EXTRA_READ_SETTING, true)) {
             configWithSetting();
         }
 
@@ -274,8 +277,13 @@ public class MainService extends Service {
      * Configure service with setting value
      */
     public void configWithSetting() {
-        setAutoReport(PrefsManager.getInstance().isAutoReport());
-        setAutoSearch(PrefsManager.getInstance().isAutoSearch());
+        mUserManager.restore();
+        User currentUser = mUserManager.getCurrentUser();
+
+        if (currentUser.getUserId() != Constants.INVALID_USER_ID) {
+            setAutoReport(PrefsManager.getInstance().isAutoReport());
+            setAutoSearch(PrefsManager.getInstance().isAutoSearch());
+        }
     }
 
     // Helper

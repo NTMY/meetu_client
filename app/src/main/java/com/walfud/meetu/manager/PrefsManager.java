@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.walfud.meetu.Constants;
 import com.walfud.meetu.MeetUApplication;
 
 /**
@@ -41,6 +42,14 @@ public class PrefsManager {
     }
     public void setPassword(String password) {
         mSharePreference.edit().putString(PREFS_PASSWORD, password).commit();
+    }
+
+    public static final String PREFS_USER_ID = "user_id";
+    public long getUserId() {
+        return mSharePreference.getLong(PREFS_USER_ID, Constants.INVALID_USER_ID);
+    }
+    public void setUserId(long userId) {
+        mSharePreference.edit().putLong(PREFS_USER_ID, userId).commit();
     }
 
     public static final String PREFS_AUTO_REPORT = "auto_report";
