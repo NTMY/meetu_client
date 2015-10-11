@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,7 +59,7 @@ public class MainActivity extends BaseActivity
         mToolbar = $(R.id.tb);
         mContentLayout = $(R.id.cl_content);
         mFragmentLayout = $(R.id.fl_fragment);
-        mFriendFragment = (FriendFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_search);
+        mFriendFragment = (FriendFragment) getSupportFragmentManager().findFragmentById(R.id.drawer);
         mFab = $(R.id.fab_search);
 
         //
@@ -136,7 +137,11 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        moveTaskToBack(true);
+        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
+            mDrawerLayout.closeDrawers();
+        } else {
+            moveTaskToBack(true);
+        }
     }
 
     // View Function
