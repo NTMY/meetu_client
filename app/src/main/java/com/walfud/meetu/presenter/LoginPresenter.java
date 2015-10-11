@@ -11,7 +11,9 @@ import com.walfud.meetu.view.MainActivity;
 
 import org.meetu.client.handler.UserHandler;
 import org.meetu.client.listener.UserAccessListener;
+import org.meetu.client.listener.UserUpdateListener;
 import org.meetu.constant.Constant;
+import org.meetu.dto.BaseDto;
 import org.meetu.dto.UserAccessDto;
 import org.meetu.model.User;
 
@@ -40,9 +42,6 @@ public class LoginPresenter {
 
     // View Event
     public void onClickLogin(final User user) {
-        TelephonyManager telephonyManager = (TelephonyManager) mView.getSystemService(Context.TELEPHONY_SERVICE);
-        user.setImei(telephonyManager.getDeviceId());
-
         // Login procedure
         new AsyncTask<Void, Void, UserAccessDto>() {
 
@@ -58,6 +57,7 @@ public class LoginPresenter {
             @Override
             protected UserAccessDto doInBackground(Void... params) {
                 try {
+                    // Login
                     new UserHandler().onAccess(new UserAccessListener() {
                         @Override
                         public void access(UserAccessDto userAccessDto) {
@@ -109,6 +109,10 @@ public class LoginPresenter {
                     Bundle bundle = new Bundle();
                     MainActivity.startActivity(mView, bundle);
                     mView.finish();
+
+                    // Upload imei
+                    TelephonyManager telephonyManager = (TelephonyManager) mView.getSystemService(Context.TELEPHONY_SERVICE);
+                    uploadImei(userAccessDto.getUser().getId(), telephonyManager.getDeviceId());
                 } else {
                     // Fail
                     if (mOnLoginListener != null) {
@@ -138,5 +142,25 @@ public class LoginPresenter {
                 serverUser.getMobile(),
                 serverUser.getImei()
         );
+    }
+
+    private void uploadImei(long userId, String imei) {
+        User imeiInfo = new User();
+        imeiInfo.setId((int) userId);
+        imeiInfo.setImei(imei);
+        new AsyncTask<User, Void, Void>() {
+            @Override
+            protected Void doInBackground(User... params) {
+                User user = params[0];
+                new UserHandler().onUpdate(new UserUpdateListener() {
+                    @Override
+                    public void update(BaseDto baseDto) {
+
+                    }
+                }, user);
+
+                return null;
+            }
+        }.execute(imeiInfo);
     }
 }
