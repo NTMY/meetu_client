@@ -53,11 +53,11 @@ public class UserManager {
         return new User(
                 Constants.INVALID_ID,
                 Constants.INVALID_USER_ID,
-                mUser.getPassword(),
+                mPrefsManager.getPassword(),
                 "",
                 "",
                 "",
-                mUser.getPhoneNum(),
+                mPrefsManager.getPhoneNum(),
                 ""
         );
     }
