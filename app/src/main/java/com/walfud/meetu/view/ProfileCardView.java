@@ -109,9 +109,12 @@ public class ProfileCardView extends FrameLayout
                 setFocus(mMood, true);
                 break;
 
-            default:
+            default: {
+                InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getWindowToken(), 0);
                 setFocus(mNick, false);
                 setFocus(mMood, false);
+            }
                 break;
         }
     }
@@ -149,6 +152,9 @@ public class ProfileCardView extends FrameLayout
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getWindowToken(), 0);
+
         switch (v.getId()) {
             case R.id.nick:
                 setFocus(mNick, false);
@@ -276,16 +282,16 @@ public class ProfileCardView extends FrameLayout
     private void setFocus(EditText et, boolean focus) {
         et.setFocusable(focus);
         et.setFocusableInTouchMode(focus);
-        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (focus) {
             et.requestFocus();
+
+            InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.showSoftInput(et, 0);
 
             et.setTextColor(Color.BLACK);
             et.setBackgroundColor(Color.WHITE);
         } else {
             et.clearFocus();
-            inputMethodManager.hideSoftInputFromWindow(et.getWindowToken(), 0);
             et.setTextColor((ColorStateList) et.getTag(R.id.tag_text_fg_color));
             et.setBackground((Drawable) et.getTag(R.id.tag_text_bg_color));
         }
