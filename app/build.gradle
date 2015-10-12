@@ -20,5 +20,6 @@ dependencies {
     compile 'com.baoyz.pg:core:2.1.0'
     compile 'com.facebook.fresco:fresco:0.7.0'
     compile project(':common')
+    compile project(':LibPuller')
 }
 
