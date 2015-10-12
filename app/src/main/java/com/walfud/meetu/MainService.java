@@ -50,6 +50,7 @@ public class MainService extends Service {
     private TimerTask mSearchOthersTimerTask;
     private DbManager mDbManager;
     private UserManager mUserManager;
+    private PrefsManager mPrefsManager;
 
     @Override
     public void onCreate() {
@@ -71,6 +72,7 @@ public class MainService extends Service {
         mLocationManager.init();
         mDbManager = DbManager.getInstance();
         mUserManager = UserManager.getInstance();
+        mPrefsManager = PrefsManager.getInstance();
 
         Toast.makeText(MeetUApplication.getContext(), "Nice to Meet U", Toast.LENGTH_SHORT).show();
     }
@@ -277,12 +279,11 @@ public class MainService extends Service {
      * Configure service with setting value
      */
     public void configWithSetting() {
-        mUserManager.restore();
-        User currentUser = mUserManager.getCurrentUser();
+        User settingUser = mUserManager.restore();
 
-        if (currentUser.getUserId() != Constants.INVALID_USER_ID) {
-            setAutoReport(PrefsManager.getInstance().isAutoReport());
-            setAutoSearch(PrefsManager.getInstance().isAutoSearch());
+        if (settingUser.getUserId() != Constants.INVALID_USER_ID) {
+            setAutoReport(mPrefsManager.isAutoReport());
+            setAutoSearch(mPrefsManager.isAutoSearch());
         }
     }
 
