@@ -7,8 +7,8 @@ android {
         applicationId "com.walfud.meetu"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 14
-        versionName "v0.8.0-alpha"
+        versionCode 15
+        versionName "v0.8.1-alpha"
     }
 }
 dependencies {
