@@ -19,7 +19,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.walfud.common.DensityTransformer;
 import com.walfud.common.collection.CollectionUtil;
 import com.walfud.common.widget.JumpBar;
@@ -284,7 +286,6 @@ public class FriendFragment extends Fragment {
                         if (mFailImgTooLarge) {
                             // Client error
                         } else {
-                            // Server error
                             if (TextUtils.isEmpty(serverUser.getErrCode())) {
                                 // Update user info
                                 mUserManager.getCurrentUser().setPortraitUrl(serverUser.getImgUrlReal());
@@ -293,6 +294,9 @@ public class FriendFragment extends Fragment {
                             }
                         }
 
+                        // Invalid fresco cache
+                        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+                        imagePipeline.evictFromCache(Uri.parse(serverUser.getImgUrlReal()));
                         FriendFragment.this.showUpdateResult(suc, "Portrait");
                     }
                 }.execute(portraitUri);
