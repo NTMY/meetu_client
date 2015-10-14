@@ -15,6 +15,13 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
+    <!--Umeng-->
+    <uses-sdk android:minSdkVersion="4"></uses-sdk>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+
     <!--..-->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -30,6 +37,9 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="3bd8c7ca521c2378f1b134509f423b88" />
+
+        <meta-data android:value="55facf1467e58e2769003a2f" android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="murphy" android:name="UMENG_CHANNEL"/>
 
         <activity
             android:name=".view.LauncherActivity"

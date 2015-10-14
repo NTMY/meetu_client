@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.walfud.meetu.MainService;
 import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.R;
+import com.walfud.meetu.Statistics;
 import com.walfud.meetu.Utils;
 import com.walfud.meetu.manager.PrefsManager;
 import com.walfud.meetu.view.FriendFragment;
@@ -75,6 +76,8 @@ public class MainActivityPresenter {
     // Function
     public void search() {
         mMainService.search();
+
+        Statistics.getInstance().search();
     }
 
     public void exit() {

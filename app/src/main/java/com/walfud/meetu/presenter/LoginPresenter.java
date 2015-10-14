@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 
+import com.umeng.analytics.MobclickAgent;
 import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.view.LoginActivity;
 import com.walfud.meetu.view.MainActivity;
@@ -113,6 +114,8 @@ public class LoginPresenter {
                     // Upload imei
                     TelephonyManager telephonyManager = (TelephonyManager) mView.getSystemService(Context.TELEPHONY_SERVICE);
                     uploadImei(userAccessDto.getUser().getId(), telephonyManager.getDeviceId());
+
+                    MobclickAgent.onProfileSignIn(String.valueOf(user.getId()));
                 } else {
                     // Fail
                     if (mOnLoginListener != null) {
