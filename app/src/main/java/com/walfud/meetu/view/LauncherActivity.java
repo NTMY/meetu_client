@@ -37,7 +37,7 @@ public class LauncherActivity extends BaseActivity {
             for (String perm : allPerms) {
                 // Required
                 if (PermissionUtils.isDangerousPerm(perm)
-                        && checkSelfPermission(perm) == PackageManager.PERMISSION_DENIED) {
+                        && ActivityCompat.checkSelfPermission(this, perm) == PackageManager.PERMISSION_DENIED) {
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(this, perm)) {
                         // If permission is denied forever, exit
                         showFailureTip();
