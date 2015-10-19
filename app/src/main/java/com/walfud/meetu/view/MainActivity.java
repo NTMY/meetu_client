@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 
-import com.umeng.analytics.MobclickAgent;
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.R;
 import com.walfud.meetu.presenter.MainActivityPresenter;
@@ -129,7 +128,6 @@ public class MainActivity extends BaseActivity
         switch (v.getId()) {
             case R.id.fab_search:
                 mPresenter.search();
-                MobclickAgent.onEvent(this, "search");
                 break;
 
             default:
