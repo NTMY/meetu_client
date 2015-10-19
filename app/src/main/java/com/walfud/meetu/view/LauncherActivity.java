@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.umeng.update.UmengUpdateAgent;
 import com.walfud.common.PermissionUtils;
 import com.walfud.common.collection.CollectionUtil;
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.Constants;
 import com.walfud.meetu.MainService;
+import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.manager.PrefsManager;
 
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ public class LauncherActivity extends BaseActivity {
                         && ActivityCompat.checkSelfPermission(this, perm) == PackageManager.PERMISSION_DENIED) {
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(this, perm)) {
                         // If permission is denied forever, exit
-                        showFailureTip();
+                        showFailureTip("Please grant all permission to me -_-...");
                         return;
                     }
 
@@ -72,7 +74,7 @@ public class LauncherActivity extends BaseActivity {
                     boolean granted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
                     if (!granted) {
                         // If lack of some permission, exit
-                        showFailureTip();
+                        showFailureTip("Please grant all permission to me -_-...");
                         return;
                     }
                 }
@@ -87,6 +89,9 @@ public class LauncherActivity extends BaseActivity {
 
     // Internal
     private void launch() {
+        // Check update
+        UmengUpdateAgent.update(MeetUApplication.getContext());
+
         if (false) {
         } else if (PrefsManager.getInstance().getShowSplash()) {
             SplashActivity.startActivity(this);
@@ -99,8 +104,8 @@ public class LauncherActivity extends BaseActivity {
         finish();
     }
 
-    private void showFailureTip() {
-        Toast.makeText(this, "Please grant all permission to me -_-...", Toast.LENGTH_SHORT).show();
+    private void showFailureTip(String tip) {
+        Toast.makeText(this, tip, Toast.LENGTH_LONG).show();
         finish();
         return;
     }
