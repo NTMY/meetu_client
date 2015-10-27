@@ -40,11 +40,11 @@ public class LauncherActivity extends BaseActivity {
                 // Required
                 if (PermissionUtils.isDangerousPerm(perm)
                         && ActivityCompat.checkSelfPermission(this, perm) == PackageManager.PERMISSION_DENIED) {
-                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, perm)) {
-                        // If permission is denied forever, exit
-                        showFailureTip("Please grant all permission to me -_-...");
-                        return;
-                    }
+//                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, perm)) {
+//                        // If permission is denied forever, exit
+//                        showFailureTip("Please grant all permission to me -_-...");
+//                        return;
+//                    }
 
                     requestPermList.add(perm);
                 }
