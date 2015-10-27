@@ -30,11 +30,11 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:design:23.0.1'
     compile 'de.greenrobot:greendao:2.0.0'
-    //    compile 'com.bugtags.library:bugtags-lib:latest.integration'
+    compile 'com.bugtags.library:bugtags-lib:latest.integration'
     compile 'com.umeng.analytics:analytics:latest.integration'
     provided 'com.baoyz.pg:compiler:2.1.0'
     compile 'com.baoyz.pg:core:2.1.0'
-    compile 'com.facebook.fresco:fresco:0.7.0'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile project(':common')
     compile project(':LibPuller')
 }

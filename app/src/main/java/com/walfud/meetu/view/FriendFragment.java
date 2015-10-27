@@ -16,12 +16,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.core.ImagePipeline;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.utils.DiskCacheUtils;
+import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
 import com.walfud.common.DensityTransformer;
 import com.walfud.common.collection.CollectionUtil;
 import com.walfud.common.widget.JumpBar;
@@ -32,6 +33,7 @@ import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.presenter.MainActivityPresenter;
 import com.walfud.meetu.util.Transformer;
+import com.walfud.meetu.util.UniversalImageLoaderOption;
 
 import org.meetu.client.handler.FriendHandler;
 import org.meetu.client.handler.PortraitHandler;
@@ -147,13 +149,13 @@ public class FriendFragment extends Fragment {
                 FriendData friendData = mFriendDataList.get(i);
 
                 LinearLayout itemRoot = (LinearLayout) viewHolder.itemView;
-                SimpleDraweeView portrait = (SimpleDraweeView) itemRoot.findViewById(R.id.portrait);
+                ImageView portrait = (ImageView) itemRoot.findViewById(R.id.portrait);
                 TextView nick = (TextView) itemRoot.findViewById(R.id.nick);
                 TextView mood = (TextView) itemRoot.findViewById(R.id.mood);
 
                 //
                 Uri portraitUri = friendData.portraitUri;
-                portrait.setImageURI(portraitUri);
+                ImageLoader.getInstance().displayImage(portraitUri.toString(), portrait, UniversalImageLoaderOption.getCircleOption());
                 nick.setText(friendData.nick);
                 mood.setText(friendData.mood);
             }
@@ -288,15 +290,18 @@ public class FriendFragment extends Fragment {
                         } else {
                             if (TextUtils.isEmpty(serverUser.getErrCode())) {
                                 // Update user info
-                                mUserManager.getCurrentUser().setPortraitUrl(serverUser.getImgUrlReal());
+                                String portraitUrl = serverUser.getImgUrlReal();
+
+                                mUserManager.getCurrentUser().setPortraitUrl(portraitUrl);
 
                                 suc = true;
+
+                                // Invalid cache
+                                MemoryCacheUtils.removeFromCache(portraitUrl, ImageLoader.getInstance().getMemoryCache());
+                                DiskCacheUtils.removeFromCache(portraitUrl, ImageLoader.getInstance().getDiskCache());
                             }
                         }
 
-                        // Invalid fresco cache
-                        ImagePipeline imagePipeline = Fresco.getImagePipeline();
-                        imagePipeline.evictFromCache(Uri.parse(serverUser.getImgUrlReal()));
                         FriendFragment.this.showUpdateResult(suc, "Portrait");
                     }
                 }.execute(portraitUri);
@@ -306,14 +311,14 @@ public class FriendFragment extends Fragment {
             public void onNickChanged(String newNick) {
                 mUserManager.getCurrentUser().setNick(newNick);
 
-                updateUserInfo(mUserManager.getCurrentUser(), "Nick");
+                updateServerUserInfo(mUserManager.getCurrentUser(), "Nick");
             }
 
             @Override
             public void onMoodChanged(String newMood) {
                 mUserManager.getCurrentUser().setMood(newMood);
 
-                updateUserInfo(mUserManager.getCurrentUser(), "Mood");
+                updateServerUserInfo(mUserManager.getCurrentUser(), "Mood");
             }
         };
         mPcv.setStartActivityForResultHost(this);
@@ -358,7 +363,7 @@ public class FriendFragment extends Fragment {
      * @param user
      * @param field the field which is modified
      */
-    private void updateUserInfo(User user, final String field) {
+    private void updateServerUserInfo(User user, final String field) {
         new AsyncTask<org.meetu.model.User, Void, BaseDto>() {
             private BaseDto mResult;
 

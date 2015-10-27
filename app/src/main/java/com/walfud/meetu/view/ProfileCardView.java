@@ -18,12 +18,14 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.walfud.meetu.Constants;
 import com.walfud.meetu.R;
+import com.walfud.meetu.util.UniversalImageLoaderOption;
 
 /**
  * Created by walfud on 2015/9/28.
@@ -42,7 +44,7 @@ public class ProfileCardView extends FrameLayout
     protected ProfileData mProfileData;
 
     protected RelativeLayout mRootLayout;
-    protected SimpleDraweeView mPortrait;
+    protected ImageView mPortrait;
     protected EditText mNick;
     protected EditText mMood;
 
@@ -58,7 +60,7 @@ public class ProfileCardView extends FrameLayout
 
         mRootLayout = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.view_profile_card, this, false);
         addView(mRootLayout);
-        mPortrait = (SimpleDraweeView) mRootLayout.findViewById(R.id.portrait);
+        mPortrait = (ImageView) mRootLayout.findViewById(R.id.portrait);
         mNick = (EditText) mRootLayout.findViewById(R.id.nick);
         mMood = (EditText) mRootLayout.findViewById(R.id.mood);
 
@@ -179,7 +181,7 @@ public class ProfileCardView extends FrameLayout
     public void set(ProfileData profileData) {
         mProfileData = profileData;
 
-        mPortrait.setImageURI(profileData.portraitUri);
+        ImageLoader.getInstance().displayImage(profileData.portraitUri.toString(), mPortrait, UniversalImageLoaderOption.getRoundedOption());
         mNick.setText(profileData.nick);
         mMood.setText(profileData.mood);
     }
