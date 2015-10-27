@@ -4,12 +4,12 @@ import android.app.Application;
 import android.content.Context;
 
 import com.bugtags.library.Bugtags;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.umeng.analytics.MobclickAgent;
 import com.walfud.common.WallE;
 import com.walfud.libpuller.Puller;
-import com.walfud.meetu.util.UniversalImageLoaderOption;
 
 /**
  * Created by song on 2015/6/22.
@@ -58,7 +58,10 @@ public class MeetUApplication extends Application {
 //                .discCacheFileNameGenerator(new HashCodeFileNameGenerator()) // default
 //                .imageDownloader(new BaseImageDownloader(context)) // default
 //                .imageDecoder(new BaseImageDecoder()) // default
-                .defaultDisplayImageOptions(UniversalImageLoaderOption.getOption()) // default
+                .defaultDisplayImageOptions(new DisplayImageOptions.Builder()
+                        .cacheInMemory(true) // default
+                        .cacheOnDisk(true) // default
+                        .build())
                 .writeDebugLogs()
                 .build();
 
