@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
 import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
@@ -142,6 +143,7 @@ public class FriendFragment extends Fragment {
             private DisplayImageOptions mListPortraitOptions = new DisplayImageOptions.Builder()
                     .cacheInMemory(true) // default
                     .cacheOnDisk(true) // default
+                    .imageScaleType(ImageScaleType.EXACTLY)
                     .displayer(new RoundedBitmapDisplayer(Integer.MAX_VALUE))
                     .build();
 

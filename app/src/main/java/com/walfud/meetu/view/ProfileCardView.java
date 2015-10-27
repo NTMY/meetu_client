@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.walfud.common.DensityTransformer;
 import com.walfud.meetu.Constants;
@@ -72,6 +73,7 @@ public class ProfileCardView extends FrameLayout
         mPortraitOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true) // default
                 .cacheOnDisk(true) // default
+                .imageScaleType(ImageScaleType.EXACTLY)
                 .displayer(new RoundedBitmapDisplayer(DensityTransformer.dp2px(MeetUApplication.getContext(), 10)))
                 .build();
 
