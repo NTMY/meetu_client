@@ -7,8 +7,8 @@ android {
         applicationId "com.walfud.meetu"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 18
-        versionName "v0.10.1-alpha"
+        versionCode 19
+        versionName "v0.10.2-alpha"
 
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "default_channel"]
     }
