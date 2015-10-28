@@ -20,12 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-import com.nostra13.universalimageloader.utils.DiskCacheUtils;
-import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
+import com.squareup.picasso.Picasso;
 import com.walfud.common.DensityTransformer;
 import com.walfud.common.collection.CollectionUtil;
 import com.walfud.common.widget.JumpBar;
@@ -140,13 +135,6 @@ public class FriendFragment extends Fragment {
         });
         mSv.setLayoutManager(new LinearLayoutManager(mActivity));
         mSv.setAdapter(new SelectView.Adapter<SelectView.ViewHolder>() {
-            private DisplayImageOptions mListPortraitOptions = new DisplayImageOptions.Builder()
-                    .cacheInMemory(true) // default
-                    .cacheOnDisk(true) // default
-                    .imageScaleType(ImageScaleType.EXACTLY)
-                    .displayer(new RoundedBitmapDisplayer(Integer.MAX_VALUE))
-                    .build();
-
             @Override
             public SelectView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                 View view = LayoutInflater.from(mActivity).inflate(R.layout.item_friend_list, viewGroup, false);
@@ -164,7 +152,7 @@ public class FriendFragment extends Fragment {
 
                 //
                 Uri portraitUri = friendData.portraitUri;
-                ImageLoader.getInstance().displayImage(portraitUri.toString(), portrait, mListPortraitOptions);
+                Picasso.with(FriendFragment.this.mActivity).load(portraitUri).error(R.drawable.ic_account_circle_light_gray_48dp).into(portrait);
                 nick.setText(friendData.nick);
                 mood.setText(friendData.mood);
             }
@@ -306,8 +294,7 @@ public class FriendFragment extends Fragment {
                                 suc = true;
 
                                 // Invalid cache
-                                MemoryCacheUtils.removeFromCache(portraitUrl, ImageLoader.getInstance().getMemoryCache());
-                                DiskCacheUtils.removeFromCache(portraitUrl, ImageLoader.getInstance().getDiskCache());
+                                Picasso.with(FriendFragment.this.mActivity).invalidate(portraitUrl);
                             }
                         }
 

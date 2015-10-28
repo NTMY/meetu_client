@@ -22,13 +22,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-import com.walfud.common.DensityTransformer;
+import com.squareup.picasso.Picasso;
 import com.walfud.meetu.Constants;
-import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.R;
 
 /**
@@ -52,8 +47,6 @@ public class ProfileCardView extends FrameLayout
     protected EditText mNick;
     protected EditText mMood;
 
-    protected DisplayImageOptions mPortraitOptions;
-
     public ProfileCardView(Context context) {
         this(context, null);
     }
@@ -69,13 +62,6 @@ public class ProfileCardView extends FrameLayout
         mPortrait = (ImageView) mRootLayout.findViewById(R.id.portrait);
         mNick = (EditText) mRootLayout.findViewById(R.id.nick);
         mMood = (EditText) mRootLayout.findViewById(R.id.mood);
-
-        mPortraitOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true) // default
-                .cacheOnDisk(true) // default
-                .imageScaleType(ImageScaleType.EXACTLY)
-                .displayer(new RoundedBitmapDisplayer(DensityTransformer.dp2px(MeetUApplication.getContext(), 10)))
-                .build();
 
         //
         mRootLayout.setOnClickListener(this);
@@ -194,7 +180,7 @@ public class ProfileCardView extends FrameLayout
     public void set(ProfileData profileData) {
         mProfileData = profileData;
 
-        ImageLoader.getInstance().displayImage(profileData.portraitUri.toString(), mPortrait, mPortraitOptions);
+        Picasso.with(mContext).load(profileData.portraitUri).error(R.drawable.ic_account_box_white_48dp).into(mPortrait);
         mNick.setText(profileData.nick);
         mMood.setText(profileData.mood);
     }
