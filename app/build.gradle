@@ -1,31 +1,47 @@
 apply plugin: 'com.android.application'
 
 android {
+
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
+
     defaultConfig {
         applicationId "com.walfud.meetu"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 19
-        versionName "v0.10.2-alpha"
+        versionCode 20
+        versionName "v0.10.3-alpha"
+    }
+    productFlavors {
+        walfud {}
+        murphy {}
+        fir {}
+        umeng {}
+    }
 
-        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "default_channel"]
+    signingConfigs {
+        release {
+            keyAlias 'meetu'
+            keyPassword KEYSTORE_PASSWORD
+            storeFile file('../common/android.keystore')
+            storePassword KEYSTORE_PASSWORD
+        }
     }
 
     buildTypes {
+        debug {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: 'debug']
+        }
         release {
-            productFlavors {
-                murphy {}
-                fir {}
-                umeng {}
-            }
             productFlavors.all { flavor ->
-                flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+                manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
             }
+            signingConfig signingConfigs.release
         }
     }
+
 }
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:design:23.0.1'
@@ -36,7 +52,6 @@ dependencies {
     compile 'com.baoyz.pg:core:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:2.2.1'
-
     compile project(':common')
     compile project(':LibPuller')
 }
