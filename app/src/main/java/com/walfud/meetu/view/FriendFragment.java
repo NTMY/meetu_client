@@ -152,7 +152,7 @@ public class FriendFragment extends Fragment {
 
                 //
                 Uri portraitUri = friendData.portraitUri;
-                Picasso.with(FriendFragment.this.mActivity).load(portraitUri).error(R.drawable.ic_account_circle_light_gray_48dp).into(portrait);
+                Picasso.with(FriendFragment.this.mActivity).load(portraitUri).fit().centerCrop().error(R.drawable.ic_account_circle_light_gray_48dp).into(portrait);
                 nick.setText(friendData.nick);
                 mood.setText(friendData.mood);
             }

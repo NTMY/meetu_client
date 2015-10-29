@@ -180,7 +180,7 @@ public class ProfileCardView extends FrameLayout
     public void set(ProfileData profileData) {
         mProfileData = profileData;
 
-        Picasso.with(mContext).load(profileData.portraitUri).error(R.drawable.ic_account_box_white_48dp).into(mPortrait);
+        Picasso.with(mContext).load(profileData.portraitUri).fit().centerCrop().error(R.drawable.ic_account_box_white_48dp).into(mPortrait);
         mNick.setText(profileData.nick);
         mMood.setText(profileData.mood);
     }
