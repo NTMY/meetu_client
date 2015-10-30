@@ -12,12 +12,6 @@ android {
         versionCode 20
         versionName "v0.10.3-alpha"
     }
-    productFlavors {
-        walfud {}
-        murphy {}
-        fir {}
-        umeng {}
-    }
 
     signingConfigs {
         release {
@@ -31,8 +25,15 @@ android {
     buildTypes {
         debug {
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: 'debug']
+            signingConfig signingConfigs.release
         }
         release {
+            productFlavors {
+                walfud {}
+                murphy {}
+                fir {}
+                umeng {}
+            }
             productFlavors.all { flavor ->
                 manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
             }

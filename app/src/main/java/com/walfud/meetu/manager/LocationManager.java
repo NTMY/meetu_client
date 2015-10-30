@@ -7,9 +7,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
-import com.walfud.meetu.Constants;
 import com.walfud.meetu.MeetUApplication;
-import com.walfud.meetu.database.Location;
 
 /**
  * Created by song on 2015/7/25.
@@ -48,9 +46,6 @@ public class LocationManager {
         mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, -1, 0, new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
-                // Save to db
-                DbManager.getInstance().insert(aMapLocation2DbLocation(aMapLocation));
-
                 //
                 if (listener != null) {
                     listener.onLocation(aMapLocation);
@@ -76,17 +71,7 @@ public class LocationManager {
     }
 
     // Internal
-    private Location aMapLocation2DbLocation(AMapLocation aMapLocation) {
-        return new Location(
-                null,
-                aMapLocation.getLongitude(),
-                aMapLocation.getLatitude(),
-                aMapLocation.getAddress(),
-                aMapLocation.getDistrict(),
-                Constants.INVALID_UPLOAD_TIME,
-                UserManager.getInstance().getCurrentUser().getUserId()
-        );
-    }
+
 
     // Helper
     public static LocationManager getInstance() {

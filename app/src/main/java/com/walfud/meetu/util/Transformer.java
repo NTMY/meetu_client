@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
+import com.walfud.meetu.Constants;
 import com.walfud.meetu.database.Location;
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.UserManager;
@@ -128,6 +129,18 @@ public class Transformer {
         location.setUserId(UserManager.getInstance().getCurrentUser().getUserId());
 
         return location;
+    }
+
+    public static Location aMapLocation2DbLocation(AMapLocation aMapLocation) {
+        return new Location(
+                null,
+                aMapLocation.getLongitude(),
+                aMapLocation.getLatitude(),
+                aMapLocation.getAddress(),
+                aMapLocation.getDistrict(),
+                Constants.INVALID_UPLOAD_TIME,
+                UserManager.getInstance().getCurrentUser().getUserId()
+        );
     }
 
     public static LocationCurr aMapLocation2LocationCurr(AMapLocation aMapLocation) {

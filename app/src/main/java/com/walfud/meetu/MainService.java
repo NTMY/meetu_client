@@ -170,6 +170,9 @@ public class MainService extends Service {
         mLocationManager.getLocation(new LocationManager.OnLocationListener() {
             @Override
             public void onLocation(AMapLocation aMapLocation) {
+                // Save to db
+                DbManager.getInstance().insert(Transformer.aMapLocation2DbLocation(aMapLocation));
+
                 // Report location & get network result
                 new AsyncTask<AMapLocation, Void, List<LocationCurr>>() {
                     @Override
