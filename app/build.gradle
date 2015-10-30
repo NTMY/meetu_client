@@ -9,8 +9,8 @@ android {
         applicationId "com.walfud.meetu"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 21
-        versionName "v0.10.4-alpha"
+        versionCode 22
+        versionName "v0.11.0-alpha"
     }
 
     signingConfigs {

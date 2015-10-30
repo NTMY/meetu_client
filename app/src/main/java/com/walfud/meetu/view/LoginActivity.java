@@ -3,6 +3,8 @@ package com.walfud.meetu.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -96,6 +98,37 @@ public class LoginActivity extends BaseActivity
     public void onClick(View v) {
         String phoneNum = mPhoneNum.getText().toString();
         String password = mPassword.getText().toString();
+
+        // For dev
+        if (TextUtils.isEmpty(phoneNum) && TextUtils.isEmpty(password)) {
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            String imei = telephonyManager.getDeviceId();
+            if (false) {
+                // Stub
+            } else if (TextUtils.equals("355470063007237", imei)) {
+                // walfud -- 4559
+                mPhoneNum.setText("18511334559");
+                mPassword.setText("walfud");
+            } else if (TextUtils.equals("867569026088001", imei)) {
+                // walfud -- 2475
+                mPhoneNum.setText("13911592475");
+                mPassword.setText("walfud");
+            } else if (TextUtils.equals("355464060277356", imei)) {
+                // Murphy
+                mPhoneNum.setText("15011448840");
+                mPassword.setText("1");
+            } else if (TextUtils.equals("000000000000000", imei)) {
+                // Test account
+                mPhoneNum.setText("13800138000");
+                mPassword.setText("MeetU");
+            } else {
+                // Nothing
+            }
+
+            if (!TextUtils.isEmpty(mPhoneNum.getText().toString())) {
+                return;
+            }
+        }
 
         User user = new User();
         user.setMobile(phoneNum);
