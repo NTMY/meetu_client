@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity
 
     public void showSearching(boolean start) {
         mIsSearchingAnimate = start;
-        if (start == false) {
+        if (!start) {
             return;
         }
 
