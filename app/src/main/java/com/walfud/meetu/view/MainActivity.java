@@ -67,7 +67,14 @@ public class MainActivity extends BaseActivity
 
         //
         setSupportActionBar(mToolbar);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+
+                mFriendFragment.checkAndShowGuide();
+            }
+        };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
         mIsSearchingAnimate = false;

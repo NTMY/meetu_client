@@ -14,7 +14,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnticipateInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -23,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.walfud.common.DensityTransformer;
 import com.walfud.meetu.Constants;
 import com.walfud.meetu.R;
 
@@ -116,7 +119,7 @@ public class ProfileCardView extends FrameLayout
                 setFocus(mNick, false);
                 setFocus(mMood, false);
             }
-                break;
+            break;
         }
     }
 
@@ -135,7 +138,7 @@ public class ProfileCardView extends FrameLayout
                     mEventListener.onNickChanged(nick);
                 }
             }
-                break;
+            break;
 
             case R.id.mood: {
                 String mood = mMood.getText().toString();
@@ -144,7 +147,7 @@ public class ProfileCardView extends FrameLayout
                     mEventListener.onMoodChanged(mood);
                 }
             }
-                break;
+            break;
 
             default:
                 break;
@@ -252,6 +255,32 @@ public class ProfileCardView extends FrameLayout
         }
 
         return false;
+    }
+
+    public void checkAndShowGuide() {
+        // If is editing someone, should not show guide at the same time
+        if (mNick.isFocused() || mMood.isFocused()) {
+            return;
+        }
+
+        if (false) {
+            // Stub
+        } else if (TextUtils.isEmpty(mProfileData.nick)) {
+            showGuideTo(mNick);
+        } else if (TextUtils.isEmpty(mProfileData.mood)) {
+            showGuideTo(mMood);
+        } else {
+            // Nothing
+        }
+    }
+
+    private void showGuideTo(final View view) {
+        view.animate().translationX(DensityTransformer.dp2px(mContext, 24)).setInterpolator(new LinearInterpolator()).setDuration(100).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                view.animate().translationX(0).setInterpolator(new BounceInterpolator()).setDuration(500);
+            }
+        });
     }
 
     //

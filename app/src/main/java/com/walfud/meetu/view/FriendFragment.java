@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -347,6 +348,23 @@ public class FriendFragment extends Fragment {
         mSv.getAdapter().notifyDataSetChanged();
     }
 
+    public void checkAndShowGuide() {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPcv.checkAndShowGuide();
+
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkAndShowGuide();
+                    }
+                }, 1800);
+            }
+        }, 2000);
+    }
+
     //
     public static class FriendData extends ProfileCardView.ProfileData {
 
@@ -355,7 +373,6 @@ public class FriendFragment extends Fragment {
     // Internal
 
     /**
-     *
      * @param user
      * @param field the field which is modified
      */
@@ -381,7 +398,7 @@ public class FriendFragment extends Fragment {
             protected void onPostExecute(BaseDto baseDto) {
                 super.onPostExecute(baseDto);
 
-                boolean suc =false;
+                boolean suc = false;
                 if (TextUtils.isEmpty(baseDto.getErrCode())) {
                     suc = true;
                 }
