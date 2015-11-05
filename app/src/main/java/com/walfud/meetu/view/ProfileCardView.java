@@ -44,6 +44,7 @@ public class ProfileCardView extends FrameLayout
      */
     protected Object mForResultHost;
     protected ProfileData mProfileData;
+    protected boolean mEditable;
 
     protected RelativeLayout mRootLayout;
     protected ImageView mPortrait;
@@ -189,7 +190,7 @@ public class ProfileCardView extends FrameLayout
     }
 
     /**
-     * `set` & `refresh`
+     * `set` with animation
      */
     public void update(final ProfileData profileData) {
         final int duration = 200;
@@ -274,13 +275,8 @@ public class ProfileCardView extends FrameLayout
         }
     }
 
-    private void showGuideTo(final View view) {
-        view.animate().translationX(DensityTransformer.dp2px(mContext, 24)).setInterpolator(new LinearInterpolator()).setDuration(100).withEndAction(new Runnable() {
-            @Override
-            public void run() {
-                view.animate().translationX(0).setInterpolator(new BounceInterpolator()).setDuration(500);
-            }
-        });
+    public void setEditable(boolean editable) {
+        mEditable = editable;
     }
 
     //
@@ -325,5 +321,14 @@ public class ProfileCardView extends FrameLayout
             et.setTextColor((ColorStateList) et.getTag(R.id.tag_text_fg_color));
             et.setBackground((Drawable) et.getTag(R.id.tag_text_bg_color));
         }
+    }
+
+    private void showGuideTo(final View view) {
+        view.animate().translationX(DensityTransformer.dp2px(mContext, 24)).setInterpolator(new LinearInterpolator()).setDuration(100).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                view.animate().translationX(0).setInterpolator(new BounceInterpolator()).setDuration(500);
+            }
+        });
     }
 }
