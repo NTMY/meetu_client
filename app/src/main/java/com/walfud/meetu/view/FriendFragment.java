@@ -153,7 +153,7 @@ public class FriendFragment extends Fragment {
 
                 //
                 Uri portraitUri = friendData.portraitUri;
-                Picasso.with(FriendFragment.this.mActivity).load(portraitUri).fit().centerCrop().error(R.drawable.ic_account_circle_light_gray_48dp).into(portrait);
+                Picasso.with(null).load(portraitUri).fit().centerCrop().error(R.drawable.ic_account_circle_light_gray_48dp).into(portrait);
                 nick.setText(friendData.nick);
                 mood.setText(friendData.mood);
             }
@@ -295,7 +295,7 @@ public class FriendFragment extends Fragment {
                                 suc = true;
 
                                 // Invalid cache
-                                Picasso.with(FriendFragment.this.mActivity).invalidate(portraitUrl);
+                                Picasso.with(null).invalidate(portraitUrl);
                             }
                         }
 

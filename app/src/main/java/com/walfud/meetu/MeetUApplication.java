@@ -4,7 +4,9 @@ import android.app.Application;
 import android.content.Context;
 
 import com.bugtags.library.Bugtags;
+import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
 import com.walfud.common.WallE;
 import com.walfud.libpuller.Puller;
 
@@ -23,9 +25,14 @@ public class MeetUApplication extends Application {
             Bugtags.start("b27243a172339c9df358ab036868ec05", this, Bugtags.BTGInvocationEventBubble);
         }
 
+        // Umeng full package update
+        UmengUpdateAgent.setDeltaUpdate(false);
+
         Puller.getInstance().initialize(this);
 
         WallE.initialize();
+
+        Picasso.with(this);
     }
 
     private static Context sApplicationContext;
