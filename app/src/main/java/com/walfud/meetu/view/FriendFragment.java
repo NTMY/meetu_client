@@ -168,12 +168,7 @@ public class FriendFragment extends Fragment {
                 FriendData friendData = mFriendDataList.get(position);
                 mPcv.update(Transformer.friendData2ProfileData(friendData));
 
-                if (position == 0) {
-                    // Current user, editable
-                    mPcv.setEditable(true);
-                } else {
-                    mPcv.setEditable(false);
-                }
+                initPcv(position == 0);
             }
         });
         mPcv.setStartActivityForResultHost(this);
@@ -318,7 +313,7 @@ public class FriendFragment extends Fragment {
                 updateServerUserInfo(mUserManager.getCurrentUser(), "Mood");
             }
         });
-        mPcv.setEditable(true);
+        initPcv(true);
 
         checkAndShowGuide();
 
@@ -428,5 +423,16 @@ public class FriendFragment extends Fragment {
             tip = String.format("%s upload fail", field);
         }
         Snackbar.make(mPcv, tip, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void initPcv(boolean currentUser) {
+        mPcv.setEditable(currentUser);
+        if (currentUser) {
+            mPcv.setNickHint("Let world knows WHO ARE U");
+            mPcv.setMoodHint("Do u wanna say something to the world");
+        } else {
+            mPcv.setNickHint("Who knows?");
+            mPcv.setMoodHint("God knows...");
+        }
     }
 }

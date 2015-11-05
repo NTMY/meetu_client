@@ -302,6 +302,14 @@ public class ProfileCardView extends FrameLayout
         setFocus(mMood, false);
     }
 
+    public void setNickHint(String nickHint) {
+        mNick.setHint(nickHint);
+    }
+
+    public void setMoodHint(String moodHint) {
+        mMood.setHint(moodHint);
+    }
+
     //
     public static class ProfileData {
         public Uri portraitUri;
