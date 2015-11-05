@@ -320,6 +320,8 @@ public class FriendFragment extends Fragment {
         });
         mPcv.setEditable(true);
 
+        checkAndShowGuide();
+
         return view;
     }
 
@@ -352,7 +354,10 @@ public class FriendFragment extends Fragment {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPcv.checkAndShowGuide();
+                if (mPcv.getEditable()) {
+                    // If is current user, we tip to fill user infomation
+                    mPcv.checkAndShowGuide();
+                }
 
                 handler.postDelayed(new Runnable() {
                     @Override

@@ -71,8 +71,6 @@ public class MainActivity extends BaseActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-
-                mFriendFragment.checkAndShowGuide();
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);

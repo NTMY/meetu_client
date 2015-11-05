@@ -292,6 +292,9 @@ public class ProfileCardView extends FrameLayout
         }
     }
 
+    public boolean getEditable() {
+        return mEditable;
+    }
     public void setEditable(boolean editable) {
         mEditable = editable;
 
