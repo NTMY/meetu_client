@@ -86,32 +86,40 @@ public class ProfileCardView extends FrameLayout
 
     @Override
     public void onClick(View v) {
-        if (mEventListener == null) {
-            return;
-        }
-
         switch (v.getId()) {
             case R.id.portrait: {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                if (false) {
-                } else if (mForResultHost instanceof Activity) {
-                    ((Activity) (mForResultHost)).startActivityForResult(intent, Constants.REQUEST_PICK_PORTRAIT);
-                } else if (mForResultHost instanceof android.support.v4.app.Fragment) {
-                    ((android.support.v4.app.Fragment) (mForResultHost)).startActivityForResult(intent, Constants.REQUEST_PICK_PORTRAIT);
+                if (mEditable) {
+                    // Choose picture
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+                    if (false) {
+                        // Stub
+                    } else if (mForResultHost instanceof Activity) {
+                        ((Activity) (mForResultHost)).startActivityForResult(intent, Constants.REQUEST_PICK_PORTRAIT);
+                    } else if (mForResultHost instanceof android.support.v4.app.Fragment) {
+                        ((android.support.v4.app.Fragment) (mForResultHost)).startActivityForResult(intent, Constants.REQUEST_PICK_PORTRAIT);
+                    } else {
+                        // Nothing
+                    }
                 } else {
+                    // TODO: show HD picture
                 }
+
             }
             break;
 
             case R.id.nick:
-                setFocus(mNick, true);
-                setFocus(mMood, false);
+                if (mEditable) {
+                    setFocus(mNick, true);
+                    setFocus(mMood, false);
+                }
                 break;
 
             case R.id.mood:
-                setFocus(mNick, false);
-                setFocus(mMood, true);
+                if (mEditable) {
+                    setFocus(mNick, false);
+                    setFocus(mMood, true);
+                }
                 break;
 
             default: {
@@ -136,7 +144,10 @@ public class ProfileCardView extends FrameLayout
                 String nick = mNick.getText().toString();
                 if (!TextUtils.equals(mProfileData.nick, nick)) {
                     mProfileData.nick = nick;
-                    mEventListener.onNickChanged(nick);
+
+                    if (mEventListener == null) {
+                        mEventListener.onNickChanged(nick);
+                    }
                 }
             }
             break;
@@ -145,7 +156,10 @@ public class ProfileCardView extends FrameLayout
                 String mood = mMood.getText().toString();
                 if (!TextUtils.equals(mProfileData.mood, mood)) {
                     mProfileData.mood = mood;
-                    mEventListener.onMoodChanged(mood);
+
+                    if (mEventListener == null) {
+                        mEventListener.onMoodChanged(mood);
+                    }
                 }
             }
             break;
@@ -247,7 +261,10 @@ public class ProfileCardView extends FrameLayout
                     Uri portraitUri = data.getData();
 
                     mProfileData.portraitUri = portraitUri;
-                    mEventListener.onPortraitChanged(portraitUri);
+
+                    if (mEventListener == null) {
+                        mEventListener.onPortraitChanged(portraitUri);
+                    }
                 }
                 return true;
 
@@ -277,6 +294,9 @@ public class ProfileCardView extends FrameLayout
 
     public void setEditable(boolean editable) {
         mEditable = editable;
+
+        setFocus(mNick, false);
+        setFocus(mMood, false);
     }
 
     //

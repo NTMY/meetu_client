@@ -60,7 +60,6 @@ public class FriendFragment extends Fragment {
     private UserManager mUserManager;
     // Header
     private ProfileCardView mPcv;
-    private ProfileCardView.OnEventListener mProfileCardEventListener;
     // List
     private SelectView mSv;
     private JumpBar mJb;
@@ -171,13 +170,14 @@ public class FriendFragment extends Fragment {
 
                 if (position == 0) {
                     // Current user, editable
-                    mPcv.setOnEventListener(mProfileCardEventListener);
+                    mPcv.setEditable(true);
                 } else {
-                    mPcv.setOnEventListener(null);
+                    mPcv.setEditable(false);
                 }
             }
         });
-        mProfileCardEventListener = new ProfileCardView.OnEventListener() {
+        mPcv.setStartActivityForResultHost(this);
+        mPcv.setOnEventListener(new ProfileCardView.OnEventListener() {
             @Override
             public void onPortraitChanged(Uri portraitUri) {
                 new AsyncTask<Uri, Void, org.meetu.model.User>() {
@@ -317,8 +317,8 @@ public class FriendFragment extends Fragment {
 
                 updateServerUserInfo(mUserManager.getCurrentUser(), "Mood");
             }
-        };
-        mPcv.setStartActivityForResultHost(this);
+        });
+        mPcv.setEditable(true);
 
         return view;
     }
@@ -341,7 +341,6 @@ public class FriendFragment extends Fragment {
 
         // Set default profile card
         mPcv.set(friendList.get(0));
-        mPcv.setOnEventListener(mProfileCardEventListener);
 
         // Set list
         mFriendDataList = friendList;
