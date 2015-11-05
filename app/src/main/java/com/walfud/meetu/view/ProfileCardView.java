@@ -145,7 +145,7 @@ public class ProfileCardView extends FrameLayout
                 if (!TextUtils.equals(mProfileData.nick, nick)) {
                     mProfileData.nick = nick;
 
-                    if (mEventListener == null) {
+                    if (mEventListener != null) {
                         mEventListener.onNickChanged(nick);
                     }
                 }
@@ -157,7 +157,7 @@ public class ProfileCardView extends FrameLayout
                 if (!TextUtils.equals(mProfileData.mood, mood)) {
                     mProfileData.mood = mood;
 
-                    if (mEventListener == null) {
+                    if (mEventListener != null) {
                         mEventListener.onMoodChanged(mood);
                     }
                 }
@@ -262,7 +262,7 @@ public class ProfileCardView extends FrameLayout
 
                     mProfileData.portraitUri = portraitUri;
 
-                    if (mEventListener == null) {
+                    if (mEventListener != null) {
                         mEventListener.onPortraitChanged(portraitUri);
                     }
                 }
