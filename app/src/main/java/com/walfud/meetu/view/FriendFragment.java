@@ -345,23 +345,17 @@ public class FriendFragment extends Fragment {
     }
 
     public void checkAndShowGuide() {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        if (mPcv.getEditable()) {
+            // If is current user, we tip to fill user infomation
+            mPcv.checkAndShowGuide();
+        }
+
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mPcv.getEditable()) {
-                    // If is current user, we tip to fill user infomation
-                    mPcv.checkAndShowGuide();
-                }
-
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkAndShowGuide();
-                    }
-                }, 1800);
+                checkAndShowGuide();
             }
-        }, 2000);
+        }, 1800);
     }
 
     //
