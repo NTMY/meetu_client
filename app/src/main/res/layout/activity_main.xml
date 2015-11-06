@@ -33,16 +33,14 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:showIn="@layout/app_bar_main">
 
-        </FrameLayout>
+            <fragment
+                android:id="@+id/fragment_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="com.walfud.meetu.view.MainFragment"
+                tools:layout="@layout/fragment_main" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_search_white_48dp"
-            android:onClick="onClick" />
+        </FrameLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

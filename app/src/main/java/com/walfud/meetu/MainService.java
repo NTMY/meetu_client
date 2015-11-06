@@ -258,7 +258,7 @@ public class MainService extends Service {
 
     public void setAutoSearch(boolean start) {
         if (start) {
-            // Start auto search
+            // Start auto onSearch
             if (mSearchOthersTimerTask == null) {
                 mSearchOthersTimerTask = new TimerTask() {
                     @Override

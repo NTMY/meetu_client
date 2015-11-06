@@ -24,7 +24,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
 
-        mFlipper = (ViewFlipper) findViewById(R.id.flipper);
+        mFlipper = $(R.id.flipper);
         mFlipper.setInAnimation(this, android.R.anim.fade_in);
         mFlipper.setOutAnimation(this, android.R.anim.fade_out);
     }

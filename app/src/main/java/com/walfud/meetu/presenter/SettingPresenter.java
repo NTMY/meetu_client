@@ -37,7 +37,7 @@ public class SettingPresenter implements Preference.OnPreferenceChangeListener {
             suc = autoReport == mMainService.isAutoReport();
 
         } else if (PrefsManager.PREFS_AUTO_SEARCH.equals(key)) {
-            // Auto search
+            // Auto onSearch
             boolean autoSearch = (boolean) newValue;
             mMainService.setAutoSearch(autoSearch);
 

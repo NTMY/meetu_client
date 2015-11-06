@@ -30,7 +30,6 @@ import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.R;
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.UserManager;
-import com.walfud.meetu.presenter.MainActivityPresenter;
 import com.walfud.meetu.util.Transformer;
 
 import org.meetu.client.handler.FriendHandler;
@@ -55,8 +54,7 @@ public class FriendFragment extends Fragment {
 
     public static final String TAG = "FriendFragment";
 
-    private MainActivity mActivity;
-    private MainActivityPresenter mPresenter;
+    private MainActivity mHostActivity;
     private UserManager mUserManager;
     // Header
     private ProfileCardView mPcv;
@@ -72,10 +70,10 @@ public class FriendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
         mPcv = (ProfileCardView) view.findViewById(R.id.pcv);
         mJb = (JumpBar) view.findViewById(R.id.jb);
-        mSv = (SelectView) view.findViewById(R.id.sv_list);
+        mSv = (SelectView) view.findViewById(R.id.sv_friend_list);
 
         //
-        mActivity = (MainActivity) getActivity();
+        mHostActivity = (MainActivity) getActivity();
         mUserManager = UserManager.getInstance();
         mFriendDataList = new ArrayList<>();
         // Get friend list
@@ -133,11 +131,11 @@ public class FriendFragment extends Fragment {
                 return false;
             }
         });
-        mSv.setLayoutManager(new LinearLayoutManager(mActivity));
+        mSv.setLayoutManager(new LinearLayoutManager(mHostActivity));
         mSv.setAdapter(new SelectView.Adapter<SelectView.ViewHolder>() {
             @Override
             public SelectView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-                View view = LayoutInflater.from(mActivity).inflate(R.layout.item_friend_list, viewGroup, false);
+                View view = LayoutInflater.from(mHostActivity).inflate(R.layout.item_friend_list, viewGroup, false);
                 return new SelectView.ViewHolder(view);
             }
 
@@ -403,7 +401,7 @@ public class FriendFragment extends Fragment {
 
     private void showUpdateResult(boolean suc, String field) {
         // Update ProfileCard
-        mPcv.set(Transformer.user2ProfileData(mActivity, mUserManager.getCurrentUser()));
+        mPcv.set(Transformer.user2ProfileData(mHostActivity, mUserManager.getCurrentUser()));
 
         // Update list
         mFriendDataList.set(0, Transformer.user2FriendData(mUserManager.getCurrentUser()));

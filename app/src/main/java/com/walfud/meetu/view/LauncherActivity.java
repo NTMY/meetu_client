@@ -73,7 +73,7 @@ public class LauncherActivity extends BaseActivity {
                     String perm = permissions[i];
                     boolean granted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
                     if (!granted) {
-                        // If lack of some permission, exit
+                        // If lack of some permission, onExit
                         showFailureTip("Please grant all permission to me -_-...");
                         return;
                     }

@@ -1,12 +1,9 @@
 package com.walfud.meetu.view;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -14,38 +11,26 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.R;
 import com.walfud.meetu.presenter.MainActivityPresenter;
 
-import org.meetu.model.LocationCurr;
 
-import java.util.List;
-
-
-public class MainActivity extends BaseActivity
-        implements View.OnClickListener {
+public class MainActivity extends BaseActivity {
 
     public static final String TAG = "MainActivity";
 
     private MainActivityPresenter mPresenter;
     private ActionBarDrawerToggle mDrawerToggle;
-    /**
-     * Whether need searching animation
-     */
-    private boolean mIsSearchingAnimate;
-
-    // Fragment
 
     // Content
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private CoordinatorLayout mContentLayout;
     private FrameLayout mFragmentLayout;
-    private FloatingActionButton mFab;
+    private MainFragment mMainFragment;
 
     // Navigation
     private FriendFragment mFriendFragment;
@@ -59,11 +44,11 @@ public class MainActivity extends BaseActivity
         mToolbar = $(R.id.tb);
         mContentLayout = $(R.id.cl_content);
         mFragmentLayout = $(R.id.fl_fragment);
+        mMainFragment = (MainFragment) getFragmentManager().findFragmentById(R.id.fragment_main);
         mFriendFragment = (FriendFragment) getSupportFragmentManager().findFragmentById(R.id.drawer);
-        mFab = $(R.id.fab_search);
 
         //
-        mPresenter = new MainActivityPresenter(this, mFriendFragment);
+        mPresenter = new MainActivityPresenter(this);
 
         //
         setSupportActionBar(mToolbar);
@@ -75,26 +60,6 @@ public class MainActivity extends BaseActivity
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
-        mIsSearchingAnimate = false;
-        mFab.animate().setListener(new AnimatorListenerAdapter() {
-
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                mFab.setEnabled(false);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-
-                if (mIsSearchingAnimate) {
-                    mFab.animate().rotationYBy(180).setInterpolator(new OvershootInterpolator()).setStartDelay(500).setDuration(1000);
-                } else {
-                    mFab.setEnabled(true);
-                }
-            }
-        });
     }
 
     @Override
@@ -121,23 +86,11 @@ public class MainActivity extends BaseActivity
             SettingActivity.startActivity(this, null);
             return true;
         } else if (id == R.id.action_exit) {
-            mPresenter.exit();
+            mPresenter.onExit();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab_search:
-                mPresenter.search();
-                break;
-
-            default:
-                break;
-        }
     }
 
     @Override
@@ -149,18 +102,7 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    // View Function
-    public void showSearchResult(List<LocationCurr> locationList) {
-    }
-
-    public void showSearching(boolean start) {
-        mIsSearchingAnimate = start;
-        if (!start) {
-            return;
-        }
-
-        mFab.animate().rotationYBy(180).setInterpolator(new OvershootInterpolator()).setDuration(1000);
-    }
+    // Function
 
     //
     public static void startActivity(Context context, Bundle bundle) {

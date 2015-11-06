@@ -67,7 +67,7 @@
         </com.walfud.common.widget.JumpBar>
 
         <com.walfud.common.widget.SelectView
-            android:id="@+id/sv_list"
+            android:id="@+id/sv_friend_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
