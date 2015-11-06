@@ -60,7 +60,7 @@ public class MainActivityPresenter {
                 // Notify
                 Intent intent = new Intent(MeetUApplication.getContext(), MainActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(MeetUApplication.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                Utils.showNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID, pendingIntent, null, R.drawable.portrait,
+                Utils.showNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID, pendingIntent, null, R.drawable.ic_favorite_border_white_48dp,
                         String.format("%d friends nearby", nearbyFriendList.size()), null, null, null);
             }
 
