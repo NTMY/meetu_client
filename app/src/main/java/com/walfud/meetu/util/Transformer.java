@@ -64,6 +64,15 @@ public class Transformer {
         return friendData;
     }
 
+    public static MainFragment.NearbyFriendData user2NearbyFriendData(User user) {
+        MainFragment.NearbyFriendData nearbyFriendData = new MainFragment.NearbyFriendData();
+        nearbyFriendData.portraitUri = !TextUtils.isEmpty(user.getPortraitUrl()) ? Uri.parse(user.getPortraitUrl()) : Uri.EMPTY;
+        nearbyFriendData.nick = user.getNick();
+        nearbyFriendData.mood = user.getMood();
+
+        return nearbyFriendData;
+    }
+
     public static List<FriendFragment.FriendData> userList2FriendDataList(List<User> userList) {
         List<FriendFragment.FriendData> friendDataList = new ArrayList<>();
         for (User user : userList) {

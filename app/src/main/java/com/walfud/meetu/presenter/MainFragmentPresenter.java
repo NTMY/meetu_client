@@ -57,6 +57,7 @@ public class MainFragmentPresenter {
                 // Notify
                 if (!nearbyFriendDataList.isEmpty()) {
                     Intent intent = new Intent(MeetUApplication.getContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     List<Long> nearbyFriendIds = new ArrayList<>();
                     for (MainFragment.NearbyFriendData nearbyFriendData : nearbyFriendDataList) {
                         nearbyFriendIds.add(nearbyFriendData.userId);

@@ -44,6 +44,22 @@ public class UserManager {
         mFriendList = friendList;
     }
 
+    public User getUser(long userId) {
+        User user = new User();
+        if (userId == mUser.getUserId()) {
+            user = mUser;
+        } else {
+            for (User friendUser : mFriendList) {
+                if (friendUser.getUserId() == userId) {
+                    user = friendUser;
+                    break;
+                }
+            }
+        }
+
+        return user;
+    }
+
     public void save(User user) {
         mPrefsManager.setUserId(user.getUserId());
         mPrefsManager.setPhoneNum(user.getPhoneNum());

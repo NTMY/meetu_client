@@ -16,7 +16,10 @@ import android.widget.FrameLayout;
 import com.walfud.common.collection.CollectionUtils;
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.R;
+import com.walfud.meetu.database.User;
+import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.presenter.MainActivityPresenter;
+import com.walfud.meetu.util.Transformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,9 +71,9 @@ public class MainActivity extends BaseActivity {
 
         // Parse intent
         // Nearby friend
-        List<MainFragment.NearbyFriendData> nearbyFriendId = getNearbyFriendIdsExtra(getIntent());
-        if (!nearbyFriendId.isEmpty()) {
-            mMainFragment.showNearbyFriend(nearbyFriendId);
+        List<MainFragment.NearbyFriendData> nearbyFriendIdList = getNearbyFriendIdsExtra(getIntent());
+        if (!nearbyFriendIdList.isEmpty()) {
+            mMainFragment.showNearbyFriend(nearbyFriendIdList);
         }
     }
 
@@ -132,7 +135,15 @@ public class MainActivity extends BaseActivity {
     }
     public static List<MainFragment.NearbyFriendData> getNearbyFriendIdsExtra(Intent intent) {
         List<MainFragment.NearbyFriendData> nearbyFriendDataList = new ArrayList<>();
-        intent.getLongArrayExtra(EXTRA_NEARBY_FRIEND_IDS);
+
+        long[] nearbyFriendIds = intent.getLongArrayExtra(EXTRA_NEARBY_FRIEND_IDS);
+        if (nearbyFriendIds != null) {
+            for (long userId : nearbyFriendIds) {
+                User user = UserManager.getInstance().getUser(userId);
+                nearbyFriendDataList.add(Transformer.user2NearbyFriendData(user));
+            }
+        }
+
         return nearbyFriendDataList;
     }
 }
