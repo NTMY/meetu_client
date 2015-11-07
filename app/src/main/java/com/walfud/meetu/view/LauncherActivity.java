@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.umeng.update.UmengUpdateAgent;
 import com.walfud.common.PermissionUtils;
-import com.walfud.common.collection.CollectionUtil;
+import com.walfud.common.collection.CollectionUtils;
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.Constants;
 import com.walfud.meetu.MainService;
@@ -58,7 +58,7 @@ public class LauncherActivity extends BaseActivity {
             launch();
         } else {
             // Request lacked of permission
-            ActivityCompat.requestPermissions(this, CollectionUtil.toStrings(requestPermList), Constants.REQUEST_PERMISSION);
+            ActivityCompat.requestPermissions(this, CollectionUtils.toStrings(requestPermList), Constants.REQUEST_PERMISSION);
         }
     }
 

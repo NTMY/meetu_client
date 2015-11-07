@@ -47,24 +47,30 @@ public class MainFragmentPresenter {
             }
 
             @Override
-            public void onNoFriendNearby() {
-                mView.showSearchResult(new ArrayList<LocationCurr>());
-            }
+            public void onFoundFriends(List<LocationCurr> nearbyFriendLocationList) {
+                // Transform to ui data
+                List<MainFragment.NearbyFriendData> nearbyFriendDataList = new ArrayList<>();
+                for (LocationCurr locationCurr : nearbyFriendLocationList) {
+                    // TODO: Transform
+                }
 
-            @Override
-            public void onFoundFriends(List<LocationCurr> nearbyFriendList) {
-                mView.showSearchResult(nearbyFriendList);
+                mView.showNearbyFriend(nearbyFriendDataList);
 
                 // Notify
                 Intent intent = new Intent(MeetUApplication.getContext(), MainActivity.class);
+                List<Long> nearbyFriendIds = new ArrayList<>();
+                for (MainFragment.NearbyFriendData nearbyFriendData : nearbyFriendDataList) {
+                    nearbyFriendIds.add(nearbyFriendData.userId);
+                }
+                MainActivity.setNearbyFriendIdsExtra(intent, nearbyFriendIds);
                 PendingIntent pendingIntent = PendingIntent.getActivity(MeetUApplication.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 Utils.showNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID, pendingIntent, null, R.drawable.ic_favorite_border_white_48dp,
-                        String.format("%d friends nearby", nearbyFriendList.size()), null, null, null);
+                        String.format("%d friends nearby", nearbyFriendDataList.size()), "click here to meet each other", null, null);
             }
 
             @Override
             public void onError(int errorCode) {
-                mView.showSearchResult(new ArrayList<LocationCurr>());
+                mView.showNearbyFriend(new ArrayList<MainFragment.NearbyFriendData>());
                 Toast.makeText(MeetUApplication.getContext(), String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
             }
         });

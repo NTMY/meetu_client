@@ -111,9 +111,7 @@ public class MainService extends Service {
         void onStartSearch();
         void onStopSearch();
 
-        void onNoFriendNearby();
-
-        void onFoundFriends(List<LocationCurr> nearbyFriendList);
+        void onFoundFriends(List<LocationCurr> nearbyFriendLocationList);
 
         void onError(int errorCode);
     }
@@ -214,11 +212,10 @@ public class MainService extends Service {
                         if (mOnSearchListener != null) {
                             mOnSearchListener.onStopSearch();
 
-                            if (locationCurrList != null && !locationCurrList.isEmpty()) {
-                                mOnSearchListener.onFoundFriends(locationCurrList);
-                            } else {
-                                mOnSearchListener.onNoFriendNearby();
+                            if (locationCurrList == null) {
+                                locationCurrList = new ArrayList<>();
                             }
+                            mOnSearchListener.onFoundFriends(locationCurrList);
                         }
                     }
                 }.execute(aMapLocation);

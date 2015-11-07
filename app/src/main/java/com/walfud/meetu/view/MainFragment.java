@@ -16,8 +16,6 @@ import com.walfud.common.widget.SelectView;
 import com.walfud.meetu.R;
 import com.walfud.meetu.presenter.MainFragmentPresenter;
 
-import org.meetu.model.LocationCurr;
-
 import java.util.List;
 
 /**
@@ -98,6 +96,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mFabSearch.animate().rotationYBy(180).setInterpolator(new OvershootInterpolator()).setDuration(1000);
     }
 
-    public void showSearchResult(List<LocationCurr> locationList) {
+    public void showNearbyFriend(List<NearbyFriendData> nearbyFriendDataList) {
+        // TODO: show UI
+    }
+
+    //
+    public static class NearbyFriendData extends FriendFragment.FriendData {
+
     }
 }

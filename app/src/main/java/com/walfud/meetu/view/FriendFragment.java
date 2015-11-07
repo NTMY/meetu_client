@@ -23,9 +23,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.walfud.common.DensityTransformer;
-import com.walfud.common.collection.CollectionUtil;
+import com.walfud.common.collection.CollectionUtils;
 import com.walfud.common.widget.JumpBar;
 import com.walfud.common.widget.SelectView;
+import com.walfud.meetu.Constants;
 import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.R;
 import com.walfud.meetu.database.User;
@@ -329,7 +330,7 @@ public class FriendFragment extends Fragment {
 
     // Function
     public void setFriendList(List<FriendData> friendList) {
-        if (CollectionUtil.isEmpty(friendList)) {
+        if (CollectionUtils.isEmpty(friendList)) {
             mSv.removeAllViews();
             return;
         }
@@ -358,7 +359,15 @@ public class FriendFragment extends Fragment {
 
     //
     public static class FriendData extends ProfileCardView.ProfileData {
+        public long userId = Constants.INVALID_USER_ID;
 
+        public FriendData() {
+        }
+
+        public FriendData(Uri portraitUri, String nick, String mood, long userId) {
+            super(portraitUri, nick, mood);
+            this.userId = userId;
+        }
     }
 
     // Internal

@@ -13,14 +13,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.walfud.common.collection.CollectionUtils;
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.R;
 import com.walfud.meetu.presenter.MainActivityPresenter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends BaseActivity {
 
     public static final String TAG = "MainActivity";
+    private static final String EXTRA_NEARBY_FRIEND_IDS = "EXTRA_NEARBY_FRIEND_IDS";
 
     private MainActivityPresenter mPresenter;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -60,6 +65,13 @@ public class MainActivity extends BaseActivity {
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
+
+        // Parse intent
+        // Nearby friend
+        List<MainFragment.NearbyFriendData> nearbyFriendId = getNearbyFriendIdsExtra(getIntent());
+        if (!nearbyFriendId.isEmpty()) {
+            mMainFragment.showNearbyFriend(nearbyFriendId);
+        }
     }
 
     @Override
@@ -104,12 +116,23 @@ public class MainActivity extends BaseActivity {
 
     // Function
 
-    //
+    // Helper
     public static void startActivity(Context context, Bundle bundle) {
         Intent intent = new Intent(context, MainActivity.class);
         if (bundle != null) {
             intent.putExtras(bundle);
         }
         context.startActivity(intent);
+    }
+
+    public static void setNearbyFriendIdsExtra(Intent intent, List<Long> nearbyFriendIdList) {
+        Bundle bundle = new Bundle();
+        bundle.putLongArray(EXTRA_NEARBY_FRIEND_IDS, CollectionUtils.toLongs(nearbyFriendIdList));
+        intent.putExtras(bundle);
+    }
+    public static List<MainFragment.NearbyFriendData> getNearbyFriendIdsExtra(Intent intent) {
+        List<MainFragment.NearbyFriendData> nearbyFriendDataList = new ArrayList<>();
+        intent.getLongArrayExtra(EXTRA_NEARBY_FRIEND_IDS);
+        return nearbyFriendDataList;
     }
 }
