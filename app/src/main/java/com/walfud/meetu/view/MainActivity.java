@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity {
         // Nearby friend
         List<MainFragment.NearbyFriendData> nearbyFriendIdList = getNearbyFriendIdsExtra(getIntent());
         if (!nearbyFriendIdList.isEmpty()) {
-            mMainFragment.showNearbyFriend(nearbyFriendIdList);
+            mMainFragment.setNearbyFriend(nearbyFriendIdList);
         }
     }
 

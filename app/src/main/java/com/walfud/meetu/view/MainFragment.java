@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.walfud.common.DensityTransformer;
 import com.walfud.common.widget.SelectView;
 import com.walfud.meetu.R;
 import com.walfud.meetu.presenter.MainFragmentPresenter;
@@ -37,6 +39,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private MainFragmentPresenter mPresenter;
 
     private SelectView mSvFriendList;
+    private FloatingActionButton mFabClean;
     private FloatingActionButton mFabSearch;
 
     private List<NearbyFriendData> mNearbyFriendDataList = new ArrayList<>();
@@ -53,6 +56,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         RelativeLayout root = (RelativeLayout) inflater.inflate(R.layout.fragment_main, container, false);
         mSvFriendList = (SelectView) root.findViewById(R.id.sv_friend_list);
+        mFabClean = (FloatingActionButton) root.findViewById(R.id.fab_clean);
         mFabSearch = (FloatingActionButton) root.findViewById(R.id.fab_search);
 
         //
@@ -85,6 +89,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 return mNearbyFriendDataList.size();
             }
         });
+        mFabClean.setOnClickListener(this);
         mFabSearch.setOnClickListener(this);
         mFabSearch.animate().setListener(new AnimatorListenerAdapter() {
 
@@ -119,6 +124,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 mPresenter.onSearch();
                 break;
 
+            case R.id.fab_clean:
+                mPresenter.onCleanNearbyFriendList();
+                break;
+
             default:
                 break;
         }
@@ -134,9 +143,34 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mFabSearch.animate().rotationYBy(180).setInterpolator(new OvershootInterpolator()).setDuration(1000);
     }
 
-    public void showNearbyFriend(List<NearbyFriendData> nearbyFriendDataList) {
+    public void setNearbyFriend(List<NearbyFriendData> nearbyFriendDataList) {
         mNearbyFriendDataList = nearbyFriendDataList;
         mSvFriendList.getAdapter().notifyDataSetChanged();
+    }
+
+    public void showCleanBtn(boolean show) {
+        if (show) {
+            mFabClean.animate()
+                    .translationX(-DensityTransformer.dp2px(mHostActivity, 100))
+                    .rotationBy(-720)
+                    .setInterpolator(new OvershootInterpolator()).setDuration(500)
+                    .withStartAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            mFabClean.setVisibility(View.VISIBLE);
+                        }
+                    });
+        } else {
+            mFabClean.animate()
+                    .translationX(0)
+                    .setInterpolator(new DecelerateInterpolator()).setDuration(200)
+                    .withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            mFabClean.setVisibility(View.INVISIBLE);
+                        }
+                    });
+        }
     }
 
     //

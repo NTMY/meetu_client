@@ -52,12 +52,16 @@ public class MainFragmentPresenter {
                 // Transform to ui data
                 List<MainFragment.NearbyFriendData> nearbyFriendDataList = Transformer.locationCurr2NearbyFriendData(nearbyFriendLocationList);
 
-                mView.showNearbyFriend(nearbyFriendDataList);
+                mView.setNearbyFriend(nearbyFriendDataList);
 
-                // Notify
                 if (!nearbyFriendDataList.isEmpty()) {
+                    // Found friends
+
+                    //
+                    mView.showCleanBtn(true);
+
+                    // Notify
                     Intent intent = new Intent(MeetUApplication.getContext(), MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     List<Long> nearbyFriendIds = new ArrayList<>();
                     for (MainFragment.NearbyFriendData nearbyFriendData : nearbyFriendDataList) {
                         nearbyFriendIds.add(nearbyFriendData.userId);
@@ -71,7 +75,7 @@ public class MainFragmentPresenter {
 
             @Override
             public void onError(int errorCode) {
-                mView.showNearbyFriend(new ArrayList<MainFragment.NearbyFriendData>());
+                mView.setNearbyFriend(new ArrayList<MainFragment.NearbyFriendData>());
                 Toast.makeText(MeetUApplication.getContext(), String.format("DataRequest.onError(%d)", errorCode), Toast.LENGTH_LONG).show();
             }
         });
@@ -82,5 +86,10 @@ public class MainFragmentPresenter {
         mMainService.search();
 
         Statistics.getInstance().search();
+    }
+
+    public void onCleanNearbyFriendList() {
+        mView.setNearbyFriend(new ArrayList<MainFragment.NearbyFriendData>());
+        mView.showCleanBtn(false);
     }
 }
