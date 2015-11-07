@@ -3,19 +3,27 @@ package com.walfud.meetu.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.walfud.common.widget.SelectView;
 import com.walfud.meetu.R;
 import com.walfud.meetu.presenter.MainFragmentPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,10 +39,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private SelectView mSvFriendList;
     private FloatingActionButton mFabSearch;
 
+    private List<NearbyFriendData> mNearbyFriendDataList = new ArrayList<>();
+
     /**
      * Whether need searching animation
      */
-    private boolean mIsSearchingAnimate;
+    private boolean mIsSearchingAnimate = false;
 
     @Nullable
     @Override
@@ -46,6 +56,35 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mFabSearch = (FloatingActionButton) root.findViewById(R.id.fab_search);
 
         //
+        mSvFriendList.setLayoutManager(new LinearLayoutManager(mHostActivity));
+        mSvFriendList.setAdapter(new SelectView.Adapter() {
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(mHostActivity).inflate(R.layout.item_friend_list, parent, false);
+                return new SelectView.ViewHolder(view);
+            }
+
+            @Override
+            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+                LinearLayout itemRoot = (LinearLayout) holder.itemView;
+                ImageView portrait = (ImageView) itemRoot.findViewById(R.id.portrait);
+                TextView nick = (TextView) itemRoot.findViewById(R.id.nick);
+                TextView mood = (TextView) itemRoot.findViewById(R.id.mood);
+
+                NearbyFriendData friendData = mNearbyFriendDataList.get(position);
+
+                //
+                Uri portraitUri = friendData.portraitUri;
+                Picasso.with(null).load(portraitUri).fit().centerCrop().error(R.drawable.ic_account_circle_light_gray_48dp).into(portrait);
+                nick.setText(friendData.nick);
+                mood.setText(friendData.mood);
+            }
+
+            @Override
+            public int getItemCount() {
+                return mNearbyFriendDataList.size();
+            }
+        });
         mFabSearch.setOnClickListener(this);
         mFabSearch.animate().setListener(new AnimatorListenerAdapter() {
 
@@ -66,7 +105,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
-        mIsSearchingAnimate = false;
 
         mHostActivity = (MainActivity) getActivity();
         mPresenter = new MainFragmentPresenter(this);
@@ -97,11 +135,17 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     public void showNearbyFriend(List<NearbyFriendData> nearbyFriendDataList) {
-        // TODO: show UI
+        mNearbyFriendDataList = nearbyFriendDataList;
+        mSvFriendList.getAdapter().notifyDataSetChanged();
     }
 
     //
     public static class NearbyFriendData extends FriendFragment.FriendData {
+        public NearbyFriendData() {
+        }
 
+        public NearbyFriendData(Uri portraitUri, String nick, String mood, long userId) {
+            super(portraitUri, nick, mood, userId);
+        }
     }
 }

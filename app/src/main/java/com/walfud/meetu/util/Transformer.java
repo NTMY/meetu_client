@@ -10,6 +10,7 @@ import com.walfud.meetu.database.Location;
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.view.FriendFragment;
+import com.walfud.meetu.view.MainFragment;
 import com.walfud.meetu.view.ProfileCardView;
 
 import org.meetu.model.LocationCurr;
@@ -69,6 +70,21 @@ public class Transformer {
             friendDataList.add(user2FriendData(user));
         }
         return friendDataList;
+    }
+
+    // org.meetu.model.LocationCurr
+    public static MainFragment.NearbyFriendData locationCurr2NearbyFriendData(LocationCurr locationCurr) {
+        User user = serverUser2User(locationCurr.getU());
+        return new MainFragment.NearbyFriendData(
+            Uri.parse(user.getPortraitUrl()), user.getNick(), user.getMood(), user.getUserId()
+        );
+    }
+    public static List<MainFragment.NearbyFriendData> locationCurr2NearbyFriendData(List<LocationCurr> locationCurrList) {
+        List<MainFragment.NearbyFriendData> nearbyFriendDataList = new ArrayList<>();
+        for (LocationCurr locationCurr : locationCurrList) {
+            nearbyFriendDataList.add(locationCurr2NearbyFriendData(locationCurr));
+        }
+        return nearbyFriendDataList;
     }
 
     // org.meetu.model.User

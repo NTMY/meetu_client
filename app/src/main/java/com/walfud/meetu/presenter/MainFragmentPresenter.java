@@ -10,6 +10,7 @@ import com.walfud.meetu.R;
 import com.walfud.meetu.Statistics;
 import com.walfud.meetu.Utils;
 import com.walfud.meetu.manager.PrefsManager;
+import com.walfud.meetu.util.Transformer;
 import com.walfud.meetu.view.MainActivity;
 import com.walfud.meetu.view.MainFragment;
 
@@ -49,23 +50,22 @@ public class MainFragmentPresenter {
             @Override
             public void onFoundFriends(List<LocationCurr> nearbyFriendLocationList) {
                 // Transform to ui data
-                List<MainFragment.NearbyFriendData> nearbyFriendDataList = new ArrayList<>();
-                for (LocationCurr locationCurr : nearbyFriendLocationList) {
-                    // TODO: Transform
-                }
+                List<MainFragment.NearbyFriendData> nearbyFriendDataList = Transformer.locationCurr2NearbyFriendData(nearbyFriendLocationList);
 
                 mView.showNearbyFriend(nearbyFriendDataList);
 
                 // Notify
-                Intent intent = new Intent(MeetUApplication.getContext(), MainActivity.class);
-                List<Long> nearbyFriendIds = new ArrayList<>();
-                for (MainFragment.NearbyFriendData nearbyFriendData : nearbyFriendDataList) {
-                    nearbyFriendIds.add(nearbyFriendData.userId);
+                if (!nearbyFriendDataList.isEmpty()) {
+                    Intent intent = new Intent(MeetUApplication.getContext(), MainActivity.class);
+                    List<Long> nearbyFriendIds = new ArrayList<>();
+                    for (MainFragment.NearbyFriendData nearbyFriendData : nearbyFriendDataList) {
+                        nearbyFriendIds.add(nearbyFriendData.userId);
+                    }
+                    MainActivity.setNearbyFriendIdsExtra(intent, nearbyFriendIds);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(MeetUApplication.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    Utils.showNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID, pendingIntent, null, R.drawable.ic_favorite_border_white_48dp,
+                            String.format("%d friends nearby", nearbyFriendDataList.size()), "click here to meet each other", null, null);
                 }
-                MainActivity.setNearbyFriendIdsExtra(intent, nearbyFriendIds);
-                PendingIntent pendingIntent = PendingIntent.getActivity(MeetUApplication.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                Utils.showNotification(MeetUApplication.getContext(), Utils.NOTIFICATION_ID, pendingIntent, null, R.drawable.ic_favorite_border_white_48dp,
-                        String.format("%d friends nearby", nearbyFriendDataList.size()), "click here to meet each other", null, null);
             }
 
             @Override

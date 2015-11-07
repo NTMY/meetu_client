@@ -142,12 +142,12 @@ public class FriendFragment extends Fragment {
 
             @Override
             public void onBindViewHolder(SelectView.ViewHolder viewHolder, final int i) {
-                FriendData friendData = mFriendDataList.get(i);
-
                 LinearLayout itemRoot = (LinearLayout) viewHolder.itemView;
                 ImageView portrait = (ImageView) itemRoot.findViewById(R.id.portrait);
                 TextView nick = (TextView) itemRoot.findViewById(R.id.nick);
                 TextView mood = (TextView) itemRoot.findViewById(R.id.mood);
+
+                FriendData friendData = mFriendDataList.get(i);
 
                 //
                 Uri portraitUri = friendData.portraitUri;
@@ -426,6 +426,10 @@ public class FriendFragment extends Fragment {
         Snackbar.make(mPcv, tip, Snackbar.LENGTH_SHORT).show();
     }
 
+    /**
+     * Set different hint and mode
+     * @param currentUser true -> `ProfileCardView` is editable.
+     */
     private void initPcv(boolean currentUser) {
         mPcv.setEditable(currentUser);
         if (currentUser) {
