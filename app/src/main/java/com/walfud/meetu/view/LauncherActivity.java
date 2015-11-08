@@ -6,8 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.umeng.update.UmengDialogButtonListener;
 import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
+import com.umeng.update.UpdateStatus;
 import com.walfud.common.PermissionUtils;
+import com.walfud.common.Version;
 import com.walfud.common.collection.CollectionUtils;
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.Constants;
@@ -24,12 +29,48 @@ import java.util.List;
 public class LauncherActivity extends BaseActivity {
 
     public static final String TAG = "LauncherActivity";
+    private Version mUpdateVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Find all required permissions
+        // Check update
+        UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+            @Override
+            public void onUpdateReturned(int i, UpdateResponse updateResponse) {
+                switch (i) {
+                    case UpdateStatus.Yes: // has update
+                    case UpdateStatus.NoneWifi: // none wifi
+                        UmengUpdateAgent.showUpdateDialog(MeetUApplication.getContext(), updateResponse);
+                        mUpdateVersion = Version.parse(updateResponse.version);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
+        UmengUpdateAgent.setDialogListener(new UmengDialogButtonListener() {
+            @Override
+            public void onClick(int status) {
+                switch (status) {
+                    case UpdateStatus.NotNow:   // User chooses cancel
+                        // Force update: if major version update was canceled, we don't allow to continue
+                        if (Math.abs(MeetUApplication.getVersion().getMajor() - mUpdateVersion.getMajor()) > 0) {
+                            Toast.makeText(LauncherActivity.this, "Please update to newest version", Toast.LENGTH_LONG).show();
+                            finishAll();
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
+        UmengUpdateAgent.update(MeetUApplication.getContext());
+
+        // Check permission
         List<String> requestPermList = new ArrayList<>();
         try {
             PackageManager packageManager = getPackageManager();
@@ -89,11 +130,7 @@ public class LauncherActivity extends BaseActivity {
 
     // Internal
     private void launch() {
-        // Check update
-        UmengUpdateAgent.update(MeetUApplication.getContext());
-
-        if (false) {
-        } else if (PrefsManager.getInstance().getShowSplash()) {
+        if (PrefsManager.getInstance().getShowSplash()) {
             SplashActivity.startActivity(this);
         } else {
             LoginActivity.startActivity(this);

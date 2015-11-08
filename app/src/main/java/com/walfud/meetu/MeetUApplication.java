@@ -7,6 +7,7 @@ import com.bugtags.library.Bugtags;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
+import com.walfud.common.Version;
 import com.walfud.common.WallE;
 import com.walfud.libpuller.Puller;
 
@@ -33,10 +34,21 @@ public class MeetUApplication extends Application {
         WallE.initialize();
 
         Picasso.with(this);
+
+        try {
+            mVersion = Version.parse(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static Context sApplicationContext;
     public static Context getContext() {
         return sApplicationContext;
+    }
+
+    private static Version mVersion;
+    public static Version getVersion() {
+        return mVersion;
     }
 }
