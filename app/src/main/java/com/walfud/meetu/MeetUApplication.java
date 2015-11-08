@@ -23,12 +23,12 @@ public class MeetUApplication extends Application {
         if (BuildConfig.DEBUG) {
             MobclickAgent.setDebugMode(true);
             Bugtags.start("b27243a172339c9df358ab036868ec05", this, Bugtags.BTGInvocationEventBubble);
+
+            Puller.getInstance().initialize(this);
         }
 
         // Umeng full package update
         UmengUpdateAgent.setDeltaUpdate(false);
-
-        Puller.getInstance().initialize(this);
 
         WallE.initialize();
 
