@@ -152,7 +152,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         if (show) {
             mFabClean.animate()
                     .translationX(-DensityTransformer.dp2px(mHostActivity, 100))
-                    .rotationBy(-720)
+                    .rotation(-720)
                     .setInterpolator(new OvershootInterpolator()).setDuration(500)
                     .withStartAction(new Runnable() {
                         @Override
@@ -163,7 +163,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         } else {
             mFabClean.animate()
                     .translationX(0)
-                    .setInterpolator(new DecelerateInterpolator()).setDuration(200)
+                    .rotation(0)
+                    .setInterpolator(new DecelerateInterpolator()).setDuration(100)
                     .withEndAction(new Runnable() {
                         @Override
                         public void run() {

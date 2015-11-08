@@ -17,7 +17,8 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
         android:src="@drawable/ic_delete_white_48dp"
-        app:backgroundTint="?attr/colorAccent" />
+        app:backgroundTint="?attr/colorAccent"
+        android:visibility="invisible" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_search"
