@@ -89,6 +89,7 @@ public class MainFragmentPresenter {
     }
 
     public void onCleanNearbyFriendList() {
+        Utils.clearNotification(mView.getHostActivity(), Utils.NOTIFICATION_ID);
         mView.setNearbyFriend(new ArrayList<MainFragment.NearbyFriendData>());
         mView.showCleanBtn(false);
     }

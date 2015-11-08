@@ -134,6 +134,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     // Function
+    public MainActivity getHostActivity() {
+        return mHostActivity;
+    }
+
     public void showSearching(boolean start) {
         mIsSearchingAnimate = start;
         if (!start) {
