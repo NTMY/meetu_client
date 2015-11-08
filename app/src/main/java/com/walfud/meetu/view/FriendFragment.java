@@ -99,6 +99,10 @@ public class FriendFragment extends Fragment {
 
                         // Add friend
                         mServerUserList = serverUserList;
+                    }
+
+                    @Override
+                    public void getMyFriendListReal(ListBean<Object[]> listBean) {
 
                     }
                 }, Transformer.user2ServerUser(user));
