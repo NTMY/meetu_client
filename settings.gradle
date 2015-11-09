@@ -1,1 +1,1 @@
-include ':app', ':common', ':daomeetugenerator', ':lib-puller'
+include ':app', ':lib-walle', ':daomeetugenerator', ':lib-puller'
