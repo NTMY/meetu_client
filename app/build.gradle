@@ -17,7 +17,7 @@ android {
         release {
             keyAlias 'meetu'
             keyPassword KEYSTORE_PASSWORD
-            storeFile file('../lib-common/android.keystore')
+            storeFile file('../lib-walle/android.keystore')
             storePassword KEYSTORE_PASSWORD
         }
     }
@@ -53,7 +53,7 @@ dependencies {
     compile 'com.baoyz.pg:core:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:2.2.1'
-    compile project(':lib-common')
+    compile project(':lib-walle')
     compile project(':lib-puller')
 }
 
