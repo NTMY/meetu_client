@@ -1,6 +1,6 @@
-[submodule "lib-walle"]
-	path = lib-walle
-	url = https://github.com/walfud/lib-walle.git
+[submodule "lib-common"]
+	path = lib-common
+	url = https://github.com/walfud/lib-common.git
 [submodule "lib-puller"]
 	path = lib-puller
 	url = https://github.com/walfud/lib-puller.git
