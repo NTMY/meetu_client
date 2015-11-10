@@ -7,9 +7,9 @@ import com.bugtags.library.Bugtags;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
-import com.walfud.common.Version;
-import com.walfud.common.WallE;
 import com.walfud.libpuller.Puller;
+import com.walfud.walle.Version;
+import com.walfud.walle.WallE;
 
 /**
  * Created by song on 2015/6/22.

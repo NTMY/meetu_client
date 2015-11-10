@@ -13,13 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.walfud.common.collection.CollectionUtils;
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.R;
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.presenter.MainActivityPresenter;
 import com.walfud.meetu.util.Transformer;
+import com.walfud.walle.collection.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

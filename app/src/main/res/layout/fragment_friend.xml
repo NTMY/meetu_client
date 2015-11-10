@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.walfud.common.widget.JumpBar
+        <com.walfud.walle.widget.JumpBar
             android:id="@+id/jb"
             android:layout_width="24dp"
             android:layout_height="match_parent"
@@ -64,9 +64,9 @@
                 android:layout_weight="1"
                 android:background="#ff303F9F" />
 
-        </com.walfud.common.widget.JumpBar>
+        </com.walfud.walle.widget.JumpBar>
 
-        <com.walfud.common.widget.SelectView
+        <com.walfud.walle.widget.SelectView
             android:id="@+id/sv_friend_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

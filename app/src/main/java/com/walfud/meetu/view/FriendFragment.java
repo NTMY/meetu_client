@@ -22,16 +22,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.walfud.common.DensityTransformer;
-import com.walfud.common.collection.CollectionUtils;
-import com.walfud.common.widget.JumpBar;
-import com.walfud.common.widget.SelectView;
 import com.walfud.meetu.Constants;
 import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.R;
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.util.Transformer;
+import com.walfud.walle.DensityTransformer;
+import com.walfud.walle.collection.CollectionUtils;
+import com.walfud.walle.widget.JumpBar;
+import com.walfud.walle.widget.SelectView;
 
 import org.meetu.client.handler.FriendHandler;
 import org.meetu.client.handler.PortraitHandler;

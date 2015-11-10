@@ -25,9 +25,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.walfud.common.DensityTransformer;
 import com.walfud.meetu.Constants;
 import com.walfud.meetu.R;
+import com.walfud.walle.DensityTransformer;
 
 /**
  * Created by walfud on 2015/9/28.

@@ -20,10 +20,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.walfud.common.DensityTransformer;
-import com.walfud.common.widget.SelectView;
 import com.walfud.meetu.R;
 import com.walfud.meetu.presenter.MainFragmentPresenter;
+import com.walfud.walle.DensityTransformer;
+import com.walfud.walle.widget.SelectView;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -10,13 +10,13 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
-import com.walfud.common.ServiceBinder;
 import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.DbManager;
 import com.walfud.meetu.manager.LocationManager;
 import com.walfud.meetu.manager.PrefsManager;
 import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.util.Transformer;
+import com.walfud.walle.ServiceBinder;
 
 import org.meetu.client.handler.MeetuHandler;
 import org.meetu.client.listener.MeetuListener;

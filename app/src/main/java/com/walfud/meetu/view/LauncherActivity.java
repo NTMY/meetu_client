@@ -11,14 +11,14 @@ import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
-import com.walfud.common.PermissionUtils;
-import com.walfud.common.Version;
-import com.walfud.common.collection.CollectionUtils;
 import com.walfud.meetu.BaseActivity;
 import com.walfud.meetu.Constants;
 import com.walfud.meetu.MainService;
 import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.manager.PrefsManager;
+import com.walfud.walle.PermissionUtils;
+import com.walfud.walle.Version;
+import com.walfud.walle.collection.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
