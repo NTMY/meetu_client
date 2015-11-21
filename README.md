@@ -1,5 +1,5 @@
 # Nice to meet you!
-![GitHub Logo](http://dl.image.so.com/d?imgurl=http%3A%2F%2Fwww.wz6.org%2Fuploads%2Fallimg%2F121220%2F1-121220163U6.jpg&purl=http%3A%2F%2Fwww.wz6.org%2Fmeinv%2F1771.html&key=a08f41d13d)
+[![logo](https://raw.githubusercontent.com/NTMY/MeetU_client/master/doc/logo.png)](http://fir.im/meetu)
 
 Hi,
 
