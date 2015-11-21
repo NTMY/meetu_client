@@ -9,8 +9,8 @@ android {
         applicationId "com.walfud.meetu"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 32
-        versionName "v0.14.2-alpha"
+        versionCode 33
+        versionName "v1.0.0"
     }
 
     signingConfigs {
@@ -33,14 +33,30 @@ android {
                 murphy {}
                 fir {}
                 umeng {}
+                m360 {}
             }
             productFlavors.all { flavor ->
                 manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
             }
             signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    def fileName = ''
+                    def path = ''
+                    if ('debug'.equals(variant.buildType.name)) {
+                        fileName = "meetu_${variant.versionName}-debug.apk"
+                        path = getRootDir().absolutePath
+                    } else {
+                        fileName = "meetu_${variant.versionName}_${variant.flavorName}.apk"
+                        path = getRootDir().absolutePath + "/release"
+                    }
+                    output.outputFile = new File(path, fileName)
+                }
+            }
         }
     }
-
 }
 
 dependencies {
