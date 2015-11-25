@@ -1,5 +1,5 @@
-# Nice to meet you!
-[![logo](https://raw.githubusercontent.com/NTMY/MeetU_client/master/doc/logo.png)](http://fir.im/meetu)
+# Nice to meet you! [[download]](http://123.57.158.124:8081/meetu_murphy.apk)
+[![logo](https://raw.githubusercontent.com/NTMY/MeetU_client/master/doc/logo.png)](http://ntmy.github.io/meetu_client/)
 
 Hi,
 
