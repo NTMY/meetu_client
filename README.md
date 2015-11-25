@@ -9,7 +9,7 @@ Hi,
 
 &nbsp;&nbsp;&nbsp;Do you have the same experience that *on a sunny weekend you just do shopping in the central mall, you find an old friend in surprise! "Oh~ rena, you're here! bla... bla..."*
 
-&nbsp;&nbsp;&nbsp;Yes, we often miss ourselves in big city. We're busy in working, in going our way, in shopping, etc. The building divided each of us into seperated one. We have little and little time to meet our friend, which gave our many precious memory. Now, let's find the old-new friend in real world.
+&nbsp;&nbsp;&nbsp;But the fact is always be *"Oh dear, I don't know you were here yesterday, too"*... Yes, we often miss ourselves in big city. We're busy in working, in shopping, in going our way, etc. The building divided each of us into seperated one. We have little and little time to meet our friends face to face, who give our many precious memory. Now, let's find the old-new friend in real world!
 
 ## Usage
 ---
@@ -45,7 +45,7 @@ When you have **done the information**, then **click the icon to finish** the re
 
 ## Contribute
 ---
-Feel free to fork and issue to us: 
+Feel free to fork and issue to us, all our code is beautiful and of good design: 
 
 android client: https://github.com/NTMY/MeetU_client.git
 
