@@ -4,3 +4,6 @@
 [submodule "lib-puller"]
 	path = lib-puller
 	url = https://github.com/walfud/lib-puller.git
+[submodule "lib-flowimageloader"]
+	path = lib-flowimageloader
+	url = https://github.com/walfud/lib-flowimageloader.git

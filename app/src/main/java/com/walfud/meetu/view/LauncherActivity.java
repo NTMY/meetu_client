@@ -18,7 +18,6 @@ import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.manager.PrefsManager;
 import com.walfud.walle.PermissionUtils;
 import com.walfud.walle.Version;
-import com.walfud.walle.collection.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +98,7 @@ public class LauncherActivity extends BaseActivity {
             launch();
         } else {
             // Request lacked of permission
-            ActivityCompat.requestPermissions(this, CollectionUtils.toStrings(requestPermList), Constants.REQUEST_PERMISSION);
+            ActivityCompat.requestPermissions(this, com.walfud.walle.Transformer.stringCollection2Strings(requestPermList), Constants.REQUEST_PERMISSION);
         }
     }
 

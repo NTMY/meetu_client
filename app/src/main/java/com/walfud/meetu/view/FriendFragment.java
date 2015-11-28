@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.walfud.flowimageloader.flower.Rose;
 import com.walfud.meetu.Constants;
 import com.walfud.meetu.MeetUApplication;
 import com.walfud.meetu.R;
@@ -138,6 +139,11 @@ public class FriendFragment extends Fragment {
         });
         mSv.setLayoutManager(new LinearLayoutManager(mHostActivity));
         mSv.setAdapter(new SelectView.Adapter<SelectView.ViewHolder>() {
+
+            {
+                Rose.tell(R.drawable.ic_account_circle_light_gray_48dp, 0);
+            }
+
             @Override
             public SelectView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                 View view = LayoutInflater.from(mHostActivity).inflate(R.layout.item_friend_list, viewGroup, false);
@@ -155,7 +161,8 @@ public class FriendFragment extends Fragment {
 
                 //
                 Uri portraitUri = friendData.portraitUri;
-                Picasso.with(null).load(portraitUri).fit().centerCrop().error(R.drawable.ic_account_circle_light_gray_48dp).into(portrait);
+//                Picasso.with(null).load(portraitUri).fit().centerCrop().error(R.drawable.ic_account_circle_light_gray_48dp).into(portrait);
+                new Rose(portrait).open(portraitUri);
                 nick.setText(friendData.nick);
                 mood.setText(friendData.mood);
             }

@@ -72,5 +72,6 @@ dependencies {
     compile 'com.makeramen:roundedimageview:2.2.1'
     compile project(':lib-walle')
     compile project(':lib-puller')
+    compile project(':lib-flowimageloader')
 }
 

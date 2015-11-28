@@ -19,7 +19,6 @@ import com.walfud.meetu.database.User;
 import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.presenter.MainActivityPresenter;
 import com.walfud.meetu.util.Transformer;
-import com.walfud.walle.collection.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +129,7 @@ public class MainActivity extends BaseActivity {
 
     public static void setNearbyFriendIdsExtra(Intent intent, List<Long> nearbyFriendIdList) {
         Bundle bundle = new Bundle();
-        bundle.putLongArray(EXTRA_NEARBY_FRIEND_IDS, CollectionUtils.toLongs(nearbyFriendIdList));
+        bundle.putLongArray(EXTRA_NEARBY_FRIEND_IDS, com.walfud.walle.Transformer.longCollection2Longs(nearbyFriendIdList));
         intent.putExtras(bundle);
     }
     public static List<MainFragment.NearbyFriendData> getNearbyFriendIdsExtra(Intent intent) {

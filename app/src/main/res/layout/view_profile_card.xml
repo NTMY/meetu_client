@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_detail"
     android:layout_width="match_parent"
     android:layout_height="196dp"
     android:background="?attr/colorPrimary"
     android:padding="16dp">
 
-    <com.makeramen.roundedimageview.RoundedImageView
+    <ImageView
         android:id="@+id/portrait"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_account_box_white_48dp"
-        android:scaleType="centerCrop"
-        app:riv_corner_radius="6dp" />
+        android:scaleType="centerCrop" />
 
     <EditText
         android:id="@+id/nick"
