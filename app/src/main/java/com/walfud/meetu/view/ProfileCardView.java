@@ -24,7 +24,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.walfud.flowimageloader.flower.Rose;
 import com.walfud.meetu.Constants;
 import com.walfud.meetu.R;
 import com.walfud.walle.DensityTransformer;
@@ -82,6 +82,8 @@ public class ProfileCardView extends FrameLayout
         mNick.setTag(R.id.tag_text_bg_color, mNick.getBackground());
         mMood.setTag(R.id.tag_text_fg_color, mMood.getTextColors());
         mMood.setTag(R.id.tag_text_bg_color, mMood.getBackground());
+
+        Rose.tell(R.drawable.ic_account_box_white_48dp, 0);
     }
 
     @Override
@@ -198,7 +200,7 @@ public class ProfileCardView extends FrameLayout
     public void set(ProfileData profileData) {
         mProfileData = profileData;
 
-        Picasso.with(null).load(profileData.portraitUri).fit().centerCrop().error(R.drawable.ic_account_box_white_48dp).into(mPortrait);
+        new Rose(mPortrait).open(profileData.portraitUri);
         mNick.setText(profileData.nick);
         mMood.setText(profileData.mood);
     }
