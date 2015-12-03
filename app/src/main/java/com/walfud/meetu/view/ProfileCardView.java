@@ -83,7 +83,7 @@ public class ProfileCardView extends FrameLayout
         mMood.setTag(R.id.tag_text_fg_color, mMood.getTextColors());
         mMood.setTag(R.id.tag_text_bg_color, mMood.getBackground());
 
-        Rose.tell(R.drawable.ic_account_box_white_48dp, 0);
+        Rose.seed(R.drawable.ic_account_box_white_48dp, 0);
     }
 
     @Override
