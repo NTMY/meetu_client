@@ -68,8 +68,6 @@ dependencies {
     compile 'com.umeng.analytics:analytics:latest.integration'
     provided 'com.baoyz.pg:compiler:2.1.0'
     compile 'com.baoyz.pg:core:2.1.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.makeramen:roundedimageview:2.2.1'
     compile project(':lib-walle')
     compile project(':lib-puller')
     compile project(':lib-flowimageloader')

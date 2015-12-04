@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.walfud.flowimageloader.flower.Sunflower;
 import com.walfud.meetu.R;
 import com.walfud.meetu.presenter.MainFragmentPresenter;
 import com.walfud.walle.DensityTransformer;
@@ -79,7 +79,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                 //
                 Uri portraitUri = friendData.portraitUri;
-                Picasso.with(null).load(portraitUri).fit().centerCrop().error(R.drawable.ic_account_circle_light_gray_48dp).into(portrait);
+                new Sunflower(portrait).open(portraitUri);
                 nick.setText(friendData.nick);
                 mood.setText(friendData.mood);
             }
