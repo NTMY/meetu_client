@@ -30,7 +30,7 @@ public class MeetUApplication extends Application {
         // Umeng full package update
         UmengUpdateAgent.setDeltaUpdate(false);
 
-        WallE.initialize();
+        WallE.initialize(this);
 
         try {
             mVersion = Version.parse(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);

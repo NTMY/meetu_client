@@ -357,7 +357,7 @@ public class ProfileCardView extends FrameLayout
     }
 
     private void showGuideTo(final View view) {
-        view.animate().translationX(DensityTransformer.dp2px(mContext, 24)).setInterpolator(new LinearInterpolator()).setDuration(100).withEndAction(new Runnable() {
+        view.animate().translationX(DensityTransformer.dp2px(24)).setInterpolator(new LinearInterpolator()).setDuration(100).withEndAction(new Runnable() {
             @Override
             public void run() {
                 view.animate().translationX(0).setInterpolator(new BounceInterpolator()).setDuration(500);
