@@ -28,7 +28,7 @@ import java.util.List;
 public class LauncherActivity extends BaseActivity {
 
     public static final String TAG = "LauncherActivity";
-    private Version mUpdateVersion;
+    private Version mUpdateVersion = Version.parse("v0.0.0");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,9 @@ public class LauncherActivity extends BaseActivity {
                     case UpdateStatus.Yes: // has update
                     case UpdateStatus.NoneWifi: // none wifi
                         UmengUpdateAgent.showUpdateDialog(MeetUApplication.getContext(), updateResponse);
-                        mUpdateVersion = Version.parse(updateResponse.version);
+                        if (updateResponse != null) {
+                            mUpdateVersion = Version.parse(updateResponse.version);
+                        }
                         break;
 
                     default:
