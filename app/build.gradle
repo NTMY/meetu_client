@@ -66,6 +66,7 @@ dependencies {
     compile 'de.greenrobot:greendao:2.0.0'
     compile 'com.bugtags.library:bugtags-lib:latest.integration'
     compile 'com.umeng.analytics:analytics:latest.integration'
+    compile 'com.facebook.stetho:stetho:1.2.0'
     provided 'com.baoyz.pg:compiler:2.1.0'
     compile 'com.baoyz.pg:core:2.1.0'
     compile project(':lib-walle')
