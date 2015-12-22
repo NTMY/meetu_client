@@ -200,7 +200,7 @@ public class ProfileCardView extends FrameLayout
     public void set(ProfileData profileData) {
         mProfileData = profileData;
 
-        new Rose(mPortrait).open(profileData.portraitUri);
+        new Rose(mPortrait).open(profileData.portraitUri, R.drawable.ic_account_box_white_48dp, R.drawable.ic_account_box_white_48dp, R.drawable.ic_account_box_white_48dp);
         mNick.setText(profileData.nick);
         mMood.setText(profileData.mood);
     }
@@ -211,16 +211,19 @@ public class ProfileCardView extends FrameLayout
     public void update(final ProfileData profileData) {
         final int duration = 200;
         // Fly out
-        mPortrait.animate().translationX(-mPortrait.getWidth()).setStartDelay(0).setDuration(duration).setInterpolator(new AnticipateInterpolator());
+        mPortrait.animate().translationX(-mPortrait.getWidth()).setStartDelay(0).setDuration(duration).setInterpolator(new AnticipateInterpolator()).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                // Change value
+                set(profileData);
+            }
+        });
         mNick.animate().translationX(-mNick.getWidth()).setStartDelay(50).setDuration(duration).setInterpolator(new AnticipateInterpolator());
         mMood.animate().translationX(-mMood.getWidth()).setStartDelay(100).setDuration(duration).setInterpolator(new AnticipateInterpolator());
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Change value
-                set(profileData);
-
                 // Fly in
                 mPortrait.animate().translationX(0).setStartDelay(0).setDuration(duration).setInterpolator(new DecelerateInterpolator());
                 mNick.animate().translationX(0).setStartDelay(50).setDuration(duration).setInterpolator(new DecelerateInterpolator());

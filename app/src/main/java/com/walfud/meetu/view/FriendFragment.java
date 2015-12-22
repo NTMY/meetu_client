@@ -160,7 +160,7 @@ public class FriendFragment extends Fragment {
 
                 //
                 Uri portraitUri = friendData.portraitUri;
-                new Sunflower(portrait).open(portraitUri);
+                new Sunflower(portrait).open(portraitUri, R.drawable.ic_account_circle_light_gray_48dp, R.drawable.ic_account_circle_light_gray_48dp, R.drawable.ic_account_circle_light_gray_48dp);
                 nick.setText(friendData.nick);
                 mood.setText(friendData.mood);
             }
