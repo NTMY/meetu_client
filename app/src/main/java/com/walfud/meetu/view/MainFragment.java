@@ -155,7 +155,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void showCleanBtn(boolean show) {
         if (show) {
             mFabClean.animate()
-                    .translationX(-DensityTransformer.dp2px(mHostActivity, 100))
+                    .translationX(-DensityTransformer.dp2px(100))
                     .rotation(-720)
                     .setInterpolator(new OvershootInterpolator()).setDuration(500)
                     .withStartAction(new Runnable() {

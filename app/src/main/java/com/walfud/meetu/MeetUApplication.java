@@ -31,7 +31,7 @@ public class MeetUApplication extends Application {
         // Umeng full package update
         UmengUpdateAgent.setDeltaUpdate(false);
 
-        WallE.initialize();
+        WallE.initialize(this);
 
         Stetho.initializeWithDefaults(this);
 

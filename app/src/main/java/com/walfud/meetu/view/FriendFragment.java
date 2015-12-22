@@ -237,7 +237,7 @@ public class FriendFragment extends Fragment {
                                 BitmapFactory.Options boundOptions = new BitmapFactory.Options();
                                 boundOptions.inJustDecodeBounds = true;
                                 BitmapFactory.decodeByteArray(tmpPortrait, 0, tmpPortrait.length, boundOptions);
-                                double scale = Math.max(boundOptions.outWidth, boundOptions.outHeight) / DensityTransformer.dp2px(MeetUApplication.getContext(), 56);
+                                double scale = Math.max(boundOptions.outWidth, boundOptions.outHeight) / DensityTransformer.dp2px(56);
                                 boundOptions.inJustDecodeBounds = false;
                                 boundOptions.inSampleSize = (int) scale;
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(tmpPortrait, 0, tmpPortrait.length, boundOptions);
