@@ -1,14 +1,15 @@
 package com.walfud.meetu.presenter;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 
-import com.umeng.analytics.MobclickAgent;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.LoginEvent;
+import com.crashlytics.android.answers.SignUpEvent;
 import com.walfud.meetu.manager.UserManager;
 import com.walfud.meetu.view.LoginActivity;
 import com.walfud.meetu.view.MainActivity;
+import com.walfud.walle.widget.HardwareUtils;
 
 import org.meetu.client.handler.UserHandler;
 import org.meetu.client.listener.UserAccessListener;
@@ -100,9 +101,15 @@ public class LoginPresenter {
                         if (Constant.ACCESS_STATUS_REG.equals(userAccessDto.getAccess_status())) {
                             // Register
                             mOnLoginListener.onRegister(userAccessDto.getUser());
+                            Answers.getInstance().logSignUp(new SignUpEvent()
+                                    .putCustomAttribute("id", userAccessDto.getUser().getId())
+                                    .putCustomAttribute("imei", HardwareUtils.getImei()));
                         } else {
                             // Login
                             mOnLoginListener.onLogin(userAccessDto.getUser());
+                            Answers.getInstance().logLogin(new LoginEvent()
+                                    .putCustomAttribute("id", userAccessDto.getUser().getId())
+                                    .putCustomAttribute("imei", HardwareUtils.getImei()));
                         }
                     }
 
@@ -112,10 +119,7 @@ public class LoginPresenter {
                     mView.finish();
 
                     // Upload imei
-                    TelephonyManager telephonyManager = (TelephonyManager) mView.getSystemService(Context.TELEPHONY_SERVICE);
-                    uploadImei(userAccessDto.getUser().getId(), telephonyManager.getDeviceId());
-
-                    MobclickAgent.onProfileSignIn(String.valueOf(user.getId()));
+                    uploadImei(userAccessDto.getUser().getId(), HardwareUtils.getImei());
                 } else {
                     // Fail
                     if (mOnLoginListener != null) {
@@ -129,6 +133,7 @@ public class LoginPresenter {
 
     // Function
     private OnLoginListener mOnLoginListener;
+
     public void setOnLoginListener(OnLoginListener loginListener) {
         mOnLoginListener = loginListener;
     }

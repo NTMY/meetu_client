@@ -2,11 +2,12 @@ package com.walfud.meetu.model;
 
 import org.meetu.model.LocationCurr;
 
+import java.io.Serializable;
+
 /**
  * Created by walfud on 2015/8/7.
  */
-@com.baoyz.pg.Parcelable
-public class ParcelableLocationCurr extends LocationCurr {
+public class ParcelableLocationCurr extends LocationCurr implements Serializable {
     public ParcelableLocationCurr() {
         super();
     }

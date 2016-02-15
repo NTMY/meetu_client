@@ -2,11 +2,12 @@ package com.walfud.meetu.model;
 
 import org.meetu.model.User;
 
+import java.io.Serializable;
+
 /**
  * Created by walfud on 2015/8/7.
  */
-@com.baoyz.pg.Parcelable
-public class ParcelableUser extends User {
+public class ParcelableUser extends User implements Serializable{
     public ParcelableUser() {
     }
 

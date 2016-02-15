@@ -1,1 +1,1 @@
-include ':app', ':lib-walle', ':daomeetugenerator', ':lib-puller', ':lib-flowimageloader'
+include ':app', ':lib-walle', ':daomeetugenerator', ':lib-flowimageloader'

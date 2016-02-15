@@ -1,12 +1,12 @@
 package com.walfud.meetu.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by walfud on 2015/8/7.
  */
-@com.baoyz.pg.Parcelable
-public class ParcelableDate extends Date {
+public class ParcelableDate extends Date implements Serializable {
     public ParcelableDate() {
         super();
     }

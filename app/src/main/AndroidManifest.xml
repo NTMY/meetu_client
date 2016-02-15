@@ -73,6 +73,9 @@
             android:name="com.umeng.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="4e2b7007605ef093ad0b6fb288f14c27fdbb338e" />
     </application>
 
 </manifest>
