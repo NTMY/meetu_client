@@ -39,7 +39,7 @@ android {
 
     buildTypes {
         debug {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: 'debug']
+            manifestPlaceholders = [CHANNEL_VALUE: 'debug']
             signingConfig signingConfigs.release
         }
         release {
@@ -52,7 +52,7 @@ android {
                 wandoujia {}
             }
             productFlavors.all { flavor ->
-                manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+                manifestPlaceholders = [CHANNEL_VALUE: name]
             }
             signingConfig signingConfigs.release
 
